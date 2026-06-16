@@ -1,0 +1,278 @@
+import {
+  convertVaultFiles,
+  readVaultFiles,
+  type OutputFile,
+  type ParsedContentFile,
+  type VaultFile,
+} from "fumadocs-obsidian";
+import { generateCanvasPages, syncCanvasFromVault } from "./generate-canvas-pages.ts";
+import { generateBasePages } from "./generate-base-pages.ts";
+import { generateTagPages } from "./generate-tag-pages.ts";
+import {
+  promptIncludeSelection,
+  type VaultEntry,
+} from "./generate-select-ui.ts";
+import {
+  createStepProgress,
+  GenerateProgress,
+  runWithGenerateUi,
+} from "./progress.ts";
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const contentDir = "content";
+const publicDir = "public";
+const preservedFiles = new Set(["index.mdx", "graph.mdx"]);
+const hiddenEntries = new Set([".obsidian", "templates"]);
+const defaultExcludePatterns = ["!.obsidian/**", "!templates/**"];
+
+function resolveTitle(file: ParsedContentFile, fallback: string) {
+  const frontmatter = file.frontmatter as Record<string, unknown> | undefined;
+
+  if (typeof frontmatter?.title === "string" && frontmatter.title.trim()) {
+    return frontmatter.title.trim();
+  }
+
+  const heading = file.content.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  if (heading) return heading;
+
+  return fallback;
+}
+
+function resolveDescription(value: unknown) {
+  if (typeof value === "string" && value.trim()) return value.trim();
+  return undefined;
+}
+
+async function listCleanTargets(dir: string, preserved = new Set<string>()) {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    return entries
+      .filter((entry) => !preserved.has(entry.name))
+      .map((entry) => ({
+        path: path.join(dir, entry.name),
+        label: path.join(path.basename(dir), entry.name),
+      }));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+async function cleanGeneratedDirs(step: ReturnType<typeof createStepProgress>) {
+  const targets = [
+    ...(await listCleanTargets(contentDir, preservedFiles)),
+    ...(await listCleanTargets(publicDir)),
+  ];
+
+  if (targets.length === 0) {
+    step.skip("Nothing to clean");
+    return;
+  }
+
+  step.start(targets.length);
+  for (const target of targets) {
+    await fs.rm(target.path, { recursive: true, force: true });
+    step.advance(target.label);
+  }
+  step.complete(`Removed ${targets.length} item${targets.length === 1 ? "" : "s"}`);
+}
+
+async function writeVaultOutputs(
+  files: OutputFile[],
+  step: ReturnType<typeof createStepProgress>,
+) {
+  const targetDirs: Record<OutputFile["type"], string> = {
+    asset: publicDir,
+    content: contentDir,
+    data: contentDir,
+    custom: "",
+  };
+
+  if (files.length === 0) {
+    step.skip("No files to write");
+    return;
+  }
+
+  step.start(files.length);
+  for (const file of files) {
+    const mappedPath = path.join(targetDirs[file.type], file.path);
+    await fs.mkdir(path.dirname(mappedPath), { recursive: true });
+    await fs.writeFile(mappedPath, file.content);
+    step.advance(file.path);
+  }
+  step.complete(`Wrote ${files.length} file${files.length === 1 ? "" : "s"}`);
+}
+
+async function listVaultEntries(vaultDir: string): Promise<VaultEntry[]> {
+  const entries = await fs.readdir(vaultDir, { withFileTypes: true });
+
+  return entries
+    .filter((entry) => !hiddenEntries.has(entry.name))
+    .map((entry) => ({
+      name: entry.name,
+      isDirectory: entry.isDirectory(),
+    }))
+    .sort((a, b) => {
+      if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+}
+
+function parseSavedInclude(value: string | undefined) {
+  if (!value?.trim()) return [];
+
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function buildIncludePatterns(selected: string[], entries: VaultEntry[]) {
+  const entryMap = new Map(entries.map((entry) => [entry.name, entry]));
+  const patterns: string[] = [];
+
+  for (const name of selected) {
+    const entry = entryMap.get(name);
+    if (!entry) continue;
+    patterns.push(entry.isDirectory ? `${name}/**` : name);
+  }
+
+  return [...patterns, ...defaultExcludePatterns];
+}
+
+async function saveGenerateInclude(names: string[]) {
+  const envPath = path.join(process.cwd(), ".env");
+  const line = `GENERATE_INCLUDE=${names.join(",")}`;
+  let content = "";
+
+  try {
+    content = await fs.readFile(envPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+
+  if (/^GENERATE_INCLUDE=/m.test(content)) {
+    content = content.replace(/^GENERATE_INCLUDE=.*$/m, line);
+  } else {
+    content = content.trimEnd();
+    content = content ? `${content}\n${line}\n` : `${line}\n`;
+  }
+
+  await fs.writeFile(envPath, content);
+}
+
+async function resolveInclude(vaultDir: string) {
+  const forceSelect = process.argv.includes("--select");
+  const saved = parseSavedInclude(process.env.GENERATE_INCLUDE);
+  const entries = await listVaultEntries(vaultDir);
+
+  if (!forceSelect && saved.length > 0) {
+    const patterns = buildIncludePatterns(saved, entries);
+    if (patterns.length > defaultExcludePatterns.length) {
+      console.log(`Using GENERATE_INCLUDE: ${saved.join(", ")}`);
+      return patterns;
+    }
+  }
+
+  if (!process.stdin.isTTY) {
+    console.log("Using default include: all top-level items");
+    return ["**/*", ...defaultExcludePatterns];
+  }
+
+  if (entries.length === 0) {
+    console.error("No includable files or folders found in the vault.");
+    process.exit(1);
+  }
+
+  const selected = await promptIncludeSelection(vaultDir, entries, saved);
+
+  await saveGenerateInclude(selected);
+  console.log(`\nSaved selection to .env as GENERATE_INCLUDE=${selected.join(",")}`);
+
+  return buildIncludePatterns(selected, entries);
+}
+
+async function main() {
+  const vaultDir = process.env.OBSIDIAN_VAULT_PATH;
+
+  if (!vaultDir) {
+    console.error("OBSIDIAN_VAULT_PATH is not set. Add it to .env.");
+    process.exit(1);
+  }
+
+  try {
+    await fs.access(vaultDir);
+  } catch {
+    console.error(`Obsidian vault not found: ${vaultDir}`);
+    process.exit(1);
+  }
+
+  const include = await resolveInclude(vaultDir);
+
+  const progress = new GenerateProgress([
+    { id: "clean", label: "Cleaning generated files" },
+    { id: "convert", label: "Converting vault" },
+    { id: "write", label: "Writing files" },
+    { id: "canvas-sync", label: "Syncing canvas assets" },
+    { id: "canvas-pages", label: "Generating canvas pages" },
+    { id: "base-pages", label: "Generating base pages" },
+    { id: "tag-pages", label: "Generating tag pages" },
+  ]);
+
+  await runWithGenerateUi(progress, async () => {
+    const clean = createStepProgress(progress, "clean");
+    const convert = createStepProgress(progress, "convert");
+    const write = createStepProgress(progress, "write");
+    const canvasSync = createStepProgress(progress, "canvas-sync");
+    const canvasPages = createStepProgress(progress, "canvas-pages");
+    const basePages = createStepProgress(progress, "base-pages");
+    const tagPages = createStepProgress(progress, "tag-pages");
+
+    await cleanGeneratedDirs(clean);
+
+    convert.start(0);
+    convert.setDetail("Reading vault files...");
+    const rawFiles = await readVaultFiles({ dir: vaultDir, include });
+    convert.setDetail(
+      `Found ${rawFiles.length} file${rawFiles.length === 1 ? "" : "s"}. Converting...`,
+    );
+
+    const baseRawFiles = rawFiles.filter((f: VaultFile) => f.path.endsWith('.base'));
+    const nonBaseRawFiles = rawFiles.filter((f: VaultFile) => !f.path.endsWith('.base'));
+
+    const outputs = await convertVaultFiles(nonBaseRawFiles, {
+      transformFrontmatter(frontmatter, { file }) {
+        if (file.format !== "content") return frontmatter;
+
+        const title = resolveTitle(file, String(frontmatter.title ?? ""));
+        const description = resolveDescription(frontmatter.description);
+        const result: Record<string, unknown> = { ...frontmatter, title };
+
+        if (description) result.description = description;
+        else delete result.description;
+
+        return result;
+      },
+    });
+
+    convert.complete(
+      `Converted ${rawFiles.length} file${rawFiles.length === 1 ? "" : "s"}`,
+    );
+
+    await writeVaultOutputs(outputs, write);
+    await syncCanvasFromVault(vaultDir, include, canvasSync);
+    await generateCanvasPages(canvasPages);
+    const notes = await generateBasePages(baseRawFiles, outputs, include, basePages);
+    await generateTagPages(outputs, baseRawFiles, notes, tagPages);
+  });
+}
+
+main().catch((error) => {
+  if (error instanceof Error && error.message === "Selection cancelled") {
+    console.error("Generate cancelled.");
+    process.exit(1);
+  }
+  console.error(error);
+  process.exit(1);
+});

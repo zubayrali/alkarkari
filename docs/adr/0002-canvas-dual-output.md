@@ -1,0 +1,3 @@
+# Canvas files produce two outputs: raw JSON in public/ and an MDX wrapper in content/
+
+Each canvas generates both a raw `.canvas` file copied to `public/` and a thin MDX page wrapper in `content/`. The MDX wrapper is what Fumadocs routes and indexes as a page; the raw JSON is what the React Flow canvas viewer fetches at runtime to render the interactive layout. We kept them separate rather than embedding the canvas data in the MDX because the canvas JSON can be large and spatially structured — it belongs to a runtime renderer, not to the MDX/remark pipeline. The consequence is that canvas pages have two artefacts to keep in sync during generation cleanup; both are deleted and regenerated on each `pnpm generate` run.

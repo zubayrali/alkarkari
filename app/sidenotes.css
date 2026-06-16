@@ -1,0 +1,155 @@
+/* Margin sidenotes, ported from aarnphm/quartz sidenotes.inline.scss onto
+   fumadocs theme tokens. Side placement (left/right/popover) is set by
+   components/sidenotes.tsx at runtime. */
+
+:root {
+  --sidenote-width: 14rem; /* keep in sync with SIDENOTE_WIDTH in components/sidenotes.tsx */
+  --sidenote-spacing: 1rem;
+  --sidenote-accent: var(--color-fd-primary);
+  --sidenote-surface: var(--color-fd-card);
+  --sidenote-border: var(--color-fd-border);
+}
+
+.sidenote {
+  cursor: pointer;
+}
+
+.sidenote-label {
+  position: relative;
+  color: var(--sidenote-accent);
+  border-bottom: 2px dashed
+    color-mix(in srgb, var(--sidenote-accent) 50%, transparent);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.sidenote:hover .sidenote-label,
+.sidenote.active .sidenote-label {
+  border-bottom-style: solid;
+  border-bottom-color: var(--sidenote-accent);
+  background-color: color-mix(in srgb, var(--sidenote-accent) 10%, transparent);
+}
+
+.sidenote-number {
+  vertical-align: super;
+  font-size: 0.75em;
+  font-weight: 500;
+}
+
+.sidenote-arrow {
+  display: none;
+  margin-left: 0.25em;
+  vertical-align: middle;
+  color: var(--sidenote-accent);
+  pointer-events: none;
+}
+
+.sidenote-label[data-inline] .sidenote-arrow-down {
+  display: inline-block;
+  width: 8px;
+  height: 5px;
+}
+
+.sidenote-label.active .sidenote-arrow-down {
+  transform: rotate(180deg);
+}
+
+.sidenote-content {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  width: var(--sidenote-width);
+  box-sizing: border-box;
+  margin-top: -1rem;
+  background-color: var(--sidenote-surface);
+  z-index: 10;
+  line-height: 1.5;
+  font-size: 0.85em;
+  padding: var(--sidenote-spacing);
+  border: 1px solid var(--sidenote-border);
+  border-radius: var(--radius-lg, 0.5rem);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.22s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 0.22s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.sidenote:hover ~ .sidenote-content,
+.sidenote-content:hover,
+.sidenote-content:focus-within {
+  border-color: var(--sidenote-accent);
+  border-style: dashed;
+}
+
+.sidenote-content.sidenote-right,
+.sidenote-content.sidenote-left {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .sidenote-content.sidenote-right {
+    opacity: 0;
+    transform: translateX(-0.85rem);
+  }
+
+  .sidenote-content.sidenote-left {
+    opacity: 0;
+    transform: translateX(0.85rem);
+  }
+}
+
+/* No margin room: the note opens as a floating popover anchored to its
+   label (positioned by components/sidenotes.tsx via floating-ui). */
+.sidenote-content.sidenote-popover {
+  position: fixed;
+  left: 0;
+  top: 0;
+  margin: 0;
+  width: min(20rem, 85vw);
+  z-index: 60;
+  opacity: 1;
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1));
+  background-color: var(--color-fd-popover, var(--sidenote-surface));
+  color: var(--color-fd-popover-foreground, inherit);
+}
+
+.sidenote-paragraph {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.sidenote-paragraph:first-child {
+  margin-top: 0;
+}
+
+.sidenote-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.sidenote-content a {
+  color: var(--sidenote-accent);
+  text-decoration: underline;
+}
+
+.sidenote-content code {
+  font-size: 0.85em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidenote-content {
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+}
+
+/* Safety net: side-positioned notes never render on narrow viewports, even
+   if a resize lands between layout passes. */
+@media (max-width: 1279px) {
+  .sidenote-content:not(.sidenote-popover) {
+    display: none !important;
+  }
+}

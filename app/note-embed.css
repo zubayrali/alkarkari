@@ -1,0 +1,87 @@
+/* Note transclusion (![[Note]]) — collapsible "cartridge" rendered inline in
+   the article body. See components/note-embed.tsx and ADR-0013. */
+
+.note-embed {
+  margin: 1.25rem 0;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-fd-card) 60%, transparent);
+  overflow: hidden;
+}
+
+.note-embed-cartridge {
+  margin: 0;
+}
+
+.note-embed-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fd-muted-foreground);
+  background: color-mix(in oklab, var(--color-fd-muted) 50%, transparent);
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease;
+}
+
+.note-embed-header::-webkit-details-marker {
+  display: none;
+}
+
+.note-embed[data-depth] details[open] > .note-embed-header {
+  border-bottom-color: var(--color-fd-border);
+}
+
+.note-embed-header:hover {
+  color: var(--color-fd-foreground);
+}
+
+.note-embed-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.note-embed-title {
+  text-decoration: none;
+  color: inherit;
+}
+
+.note-embed-title:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-fd-primary);
+}
+
+.note-embed-body {
+  padding: 0.25rem 1rem 0.5rem;
+  font-size: 0.95em;
+}
+
+/* Tighten the embedded body's own margins so nested embeds don't compound. */
+.note-embed-body > :first-child {
+  margin-top: 0.5rem;
+}
+
+.note-embed-body > :last-child {
+  margin-bottom: 0;
+}
+
+.note-embed-link {
+  font-weight: 500;
+}
+
+.note-embed-missing {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-fd-muted-foreground);
+  background: color-mix(in oklab, var(--color-fd-muted) 60%, transparent);
+  font-style: italic;
+}

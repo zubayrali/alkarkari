@@ -1,0 +1,146 @@
+/* Hover link previews, ported from aarnphm/quartz popover.scss onto
+   fumadocs theme tokens. Shown/hidden purely via .active-popover. */
+
+.link-popover {
+  --popover-padding: 1rem;
+  --popover-border: 1px;
+  --popover-arrow-size: 0.58rem;
+  --popover-arrow-leg: calc(var(--popover-arrow-size) * 0.7071);
+  --popover-arrow-overlap: calc(var(--popover-border) / 0.7071);
+  --popover-arrow-inset: calc(var(--popover-padding) - var(--popover-arrow-size) / 2);
+
+  z-index: 60;
+  position: fixed;
+  isolation: isolate;
+  overflow: visible;
+  padding: var(--popover-padding);
+  left: 0;
+  top: 0;
+  will-change: transform;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 120ms linear,
+    visibility 0ms linear 120ms;
+}
+
+.link-popover.active-popover {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 120ms linear;
+}
+
+.link-popover > .link-popover-arrow {
+  position: absolute;
+  width: var(--popover-arrow-size);
+  height: var(--popover-arrow-size);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.link-popover > .link-popover-arrow::before,
+.link-popover > .link-popover-arrow::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: var(--popover-arrow-leg) solid transparent;
+}
+
+.link-popover[data-placement^='bottom'] > .link-popover-arrow::before {
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: var(--color-fd-border);
+}
+
+.link-popover[data-placement^='bottom'] > .link-popover-arrow::after {
+  bottom: calc(50% - var(--popover-arrow-overlap));
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: var(--color-fd-popover);
+}
+
+.link-popover[data-placement^='top'] > .link-popover-arrow::before {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: var(--color-fd-border);
+}
+
+.link-popover[data-placement^='top'] > .link-popover-arrow::after {
+  top: calc(50% - var(--popover-arrow-overlap));
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: var(--color-fd-popover);
+}
+
+.link-popover[data-placement^='right'] > .link-popover-arrow::before {
+  right: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--color-fd-border);
+}
+
+.link-popover[data-placement^='right'] > .link-popover-arrow::after {
+  right: calc(50% - var(--popover-arrow-overlap));
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--color-fd-popover);
+}
+
+.link-popover[data-placement^='left'] > .link-popover-arrow::before {
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: var(--color-fd-border);
+}
+
+.link-popover[data-placement^='left'] > .link-popover-arrow::after {
+  left: calc(50% - var(--popover-arrow-overlap));
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: var(--color-fd-popover);
+}
+
+.link-popover > .link-popover-inner {
+  position: relative;
+  z-index: 1;
+  width: min(30rem, 80vw);
+  max-height: 20rem;
+  padding: 0.75rem 1rem 1rem;
+  border: var(--popover-border) solid var(--color-fd-border);
+  border-radius: var(--radius-lg, 0.5rem);
+  background-color: var(--color-fd-popover);
+  color: var(--color-fd-popover-foreground);
+  overflow: auto;
+  overscroll-behavior: contain;
+  white-space: normal;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  cursor: default;
+}
+
+/* The preview embeds a full docs article: scale its chrome down. */
+.link-popover-inner article {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  gap: 0.5rem;
+}
+
+.link-popover-inner h1 {
+  font-size: 1.1rem;
+  margin: 0 0 0.25rem;
+}
+
+.link-popover-inner img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-popover {
+    transition: none;
+  }
+}

@@ -1,0 +1,3 @@
+# Home page is a shell page, not generated from vault content
+
+The home page at `/` needs a full-width layout with no sidebar or TOC — the `HomeLayout` component from Fumadocs. This cannot be achieved with a vault note processed through `DocsLayout`, which always renders the sidebar chrome. We chose to implement the home page as a hand-maintained React component in `app/(home)/page.tsx` rather than as a generated page from `content/index.mdx`. This is the only page on the site that is not produced by `pnpm generate` and is intentionally exempt from the "all pages come from the vault" invariant. Do not move it into the vault or the generation pipeline — it would lose the full-width layout.

@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+@import "@xyflow/react/dist/style.css";
+@import "./link-popover.css";
+@import "./sidenotes.css";
+@import "./note-embed.css";
+@import "./properties-panel.css";
+
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Breathing room below the "On this page" / Connections section headings. */
+#toc-title {
+  margin-bottom: 0.625rem;
+}
+
+/* Mobile TOC popover: its content panel is `max-h-[50vh]` inside a Radix
+   CollapsibleContent that clips with overflow:hidden, and fumadocs sets no
+   scroll — so a long TOC + the Connections local graph (footer) gets cropped.
+   Let the panel scroll, and keep the graph at its full height. */
+[data-toc-popover-content] > div {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+[data-toc-popover-content] > div > *:last-child {
+  flex-shrink: 0;
+}
+
+/* Rough-notation annotation colors (lib/remark-annotations.ts syntax) */
+:root {
+  --ann-highlight: rgb(250 204 21 / 0.45);
+  --ann-underline: #e11d48;
+  --ann-box: #f97316;
+  --ann-circle: #16a34a;
+  --ann-bracket: #8b5cf6;
+}
+
+.dark {
+  --ann-highlight: rgb(202 138 4 / 0.4);
+  --ann-underline: #fb7185;
+  --ann-box: #fb923c;
+  --ann-circle: #4ade80;
+  --ann-bracket: #a78bfa;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* View Transitions: respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* View Transitions: content "fade-through" with a slight rise.
+   Default behaviour overlaps old+new at 50% opacity, which looks muddy between
+   the wide base tables and narrow articles. Instead the old content fades out
+   first, then the new content fades in rising ~10px — cleaner and directional.
+   (The H1 morph rides on top via its own `entry-*` name; see page.tsx.) */
+::view-transition-old(docs-content) {
+  animation: vp-content-out 0.16s ease both;
+}
+::view-transition-new(docs-content) {
+  animation: vp-content-in 0.26s ease 0.1s both;
+}
+
+@keyframes vp-content-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vp-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* View Transitions: the persistent docs sidebar.
+   It is a named snapshot so it animates independently of the content crossfade.
+   Both old and new fade (rather than `animation: none`, which froze the old
+   snapshot at full opacity on docs→home — where the home layout has no sidebar
+   to pair with — so it lingered then popped). docs↔docs crossfades two nearly
+   identical sidebars, so the fade is imperceptible; docs→home fades the old one
+   cleanly out. We guarantee the name here rather than relying on how the layout
+   prop plumbs `style` through fumadocs. */
+#nd-sidebar {
+  view-transition-name: site-sidebar;
+}
+
+::view-transition-old(site-sidebar) {
+  animation: vp-sidebar-out 0.2s ease both;
+}
+::view-transition-new(site-sidebar) {
+  animation: vp-sidebar-in 0.2s ease both;
+}
+
+@keyframes vp-sidebar-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vp-sidebar-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* View Transitions: keep the nav progress bar live (un-snapshotted) while the
+   crossfade plays, so its 100%-then-fade overlaps the transition smoothly */
+::view-transition-group(nav-progress),
+::view-transition-old(nav-progress),
+::view-transition-new(nav-progress) {
+  animation: none;
+}
