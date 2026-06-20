@@ -10,6 +10,7 @@ import { normalizeProtected } from "./lib/protected-field";
 import { normalizeTags } from "./lib/tags";
 import { normalizeAliases } from "./lib/aliases";
 import { rehypeSidenotes } from "./lib/rehype-sidenotes";
+import { rehypeCitations } from "./lib/rehype-citations";
 import { z } from "zod";
 
 export const docs = defineDocs({
@@ -29,6 +30,9 @@ export const docs = defineDocs({
         .optional()
         .transform(normalizeAliases),
       base: z.boolean().optional(),
+      slides: z.boolean().optional(),
+      draft: z.boolean().optional(),
+      unlisted: z.boolean().optional(),
       tagPage: z.boolean().optional(),
       tag: z.string().optional(),
       // Keep arbitrary vault frontmatter (arabic, root, category, related, …)
@@ -47,6 +51,6 @@ export const docs = defineDocs({
 export default defineConfig({
   mdxOptions: {
     remarkPlugins: [remarkInlineBase, remarkWikilinks, remarkAnnotations, remarkMdxMermaid, remarkMath],
-    rehypePlugins: (v) => [rehypeKatex, ...v, rehypeSidenotes],
+    rehypePlugins: (v) => [rehypeKatex, ...v, ...rehypeCitations(), rehypeSidenotes],
   },
 });

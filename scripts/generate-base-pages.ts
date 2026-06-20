@@ -177,7 +177,7 @@ export async function generateBasePages(
     include
       .filter((p) => !p.startsWith('!'))
       .map((p) => p.split('/')[0].split('*')[0])
-      .filter(Boolean),
+      .filter((p) => Boolean(p) && !p.includes('.')),
   );
 
   if (baseFiles.length === 0 && includedFolders.size === 0) {
@@ -238,19 +238,32 @@ export async function generateBasePages(
       const filter = viewFilters[i] ?? null;
       const filtered = applyFilter(notes, filter);
       const sorted = applySort(filtered, view.sort ?? []);
+      const limited = view.limit ? sorted.slice(0, view.limit) : sorted;
       return {
         name: view.name,
         type: view.type,
         compiledFilter: filter ? bytecodeToBase64(filter) : '',
-        precomputedNotes: sorted,
+        precomputedNotes: limited,
         sortedBy: view.sort ?? [],
         groupBy: view.groupBy,
         order: view.order,
         hideHeader: view.hideHeader,
+        cardSize: view.cardSize,
+        cardAspect: view.cardAspect,
+        image: view.image,
+        limit: view.limit,
+        nestedProperties: view.nestedProperties,
+        separator: view.separator,
       };
     });
 
-    const compiled: CompiledBase = { version: 1, config, views: compiledViews };
+    const compiled: CompiledBase = {
+      version: 1,
+      config,
+      views: compiledViews,
+      defaultView: config.defaultView,
+      hideToolbar: config.hideToolbar,
+    };
 
     const rawStem =
       baseStem === 'index' && parentVaultFolder ? parentVaultFolder : baseStem;

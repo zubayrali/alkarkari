@@ -6,7 +6,7 @@ import { tagUrl } from "@/lib/tags";
 /** Listing of every tag in use, rendered on the generated /tags page. */
 export function TagsIndexContent() {
   const pages = source.getPages();
-  const contentPages = pages.filter((page) => !page.data.tagPage);
+  const contentPages = pages.filter((page) => !page.data.tagPage && !page.data.unlisted);
   const index = buildTagIndex(contentPages, (page) => page.data.tags);
 
   const tagPages = new Map(

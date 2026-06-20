@@ -85,3 +85,14 @@
   background: color-mix(in oklab, var(--color-fd-muted) 60%, transparent);
   font-style: italic;
 }
+
+/* Smooth fade-in masks any SSR/client toggle during hydration */
+.note-embed-body {
+  animation: embed-fade-in 0.15s ease-in;
+}
+
+@keyframes embed-fade-in {
+  from {
+    opacity: 0;
+  }
+}

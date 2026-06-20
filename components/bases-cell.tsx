@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { Fragment } from 'react'
 import type { NoteRecord, WikilinkRef } from '@/lib/base-types'
 
-/** Render a list of pre-resolved wikilink tokens, joined by commas. */
 export function WikilinkRefs({ refs }: { refs: WikilinkRef[] }) {
   return (
     <span className="inline-flex flex-wrap gap-x-1 gap-y-0.5">
@@ -15,24 +14,41 @@ export function WikilinkRefs({ refs }: { refs: WikilinkRef[] }) {
           ) : (
             <span className="whitespace-nowrap">{ref.text}</span>
           )}
-          {i < refs.length - 1 && <span className="text-neutral-400">,</span>}
+          {i < refs.length - 1 && <span className="text-fd-muted-foreground">,</span>}
         </Fragment>
       ))}
     </span>
   )
 }
 
-/**
- * Shared frontmatter-value renderer for every base view. Prefers pre-resolved
- * `[[wikilinks]]` (real links with titles); otherwise plain text, kept on one
- * line for short values so hyphenated tokens like "ذ-ك-ر" don't break.
- */
+function formatDate(val: unknown): string | null {
+  if (typeof val !== 'string') return null
+  const match = val.match(/^\d{4}-\d{2}-\d{2}/)
+  return match ? match[0] : null
+}
+
 export function basesCellContent(note: NoteRecord, col: string): React.ReactNode {
   const refs = note.wikilinks?.[col]
   if (refs) return <WikilinkRefs refs={refs} />
 
   const val = note.frontmatter[col]
   if (val === null || val === undefined) return null
+
+  if (typeof val === 'boolean') {
+    return (
+      <input
+        type="checkbox"
+        checked={val}
+        disabled
+        className="base-checkbox"
+      />
+    )
+  }
+
+  const dateStr = formatDate(val)
+  if (dateStr) {
+    return <span className="whitespace-nowrap tabular-nums">{dateStr}</span>
+  }
 
   const text = Array.isArray(val) ? val.join(', ') : String(val)
   return <span className={text.length > 48 ? '' : 'whitespace-nowrap'}>{text}</span>

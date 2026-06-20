@@ -112,26 +112,47 @@ function transformNoteEmbeds(parent: MdastParent) {
 function buildPageIndex(contentDir: string) {
   const map = new Map<string, string>();
 
-  for (const file of fs.readdirSync(contentDir)) {
-    if (!/\.mdx?$/.test(file)) continue;
+  function scan(dir: string, prefix: string) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        const sub = prefix ? `${prefix}/${entry.name}` : entry.name;
+        scan(path.join(dir, entry.name), sub);
+        continue;
+      }
+      if (!/\.mdx?$/.test(entry.name)) continue;
 
-    const stem = file.replace(/\.mdx?$/, '');
-    if (stem === 'index') continue;
+      const stem = entry.name.replace(/\.mdx?$/, '');
+      if (stem === 'index') continue;
 
-    map.set(stem.toLowerCase(), `./${stem}`);
+      const rel = prefix ? `/${prefix}/${stem}` : `/${stem}`;
 
-    const raw = fs.readFileSync(path.join(contentDir, file), 'utf8');
-    const { data } = frontmatter(raw);
-    const { title, aliases } = data as { title?: string; aliases?: string | string[] };
-    if (title) map.set(title.toLowerCase(), `./${stem}`);
+      // Folder-qualified key (e.g. "dictionary/wird") always indexed.
+      if (prefix) {
+        map.set(`${prefix}/${stem}`.toLowerCase(), rel);
+      }
 
-    // Obsidian wikilinks may target a note by any of its aliases.
-    for (const alias of Array.isArray(aliases) ? aliases : aliases ? [aliases] : []) {
-      const key = alias.trim().toLowerCase();
-      if (key && !map.has(key)) map.set(key, `./${stem}`);
+      // Bare stem: first occurrence wins (Obsidian "shortest path" heuristic).
+      const bareStem = stem.toLowerCase();
+      if (!map.has(bareStem)) {
+        map.set(bareStem, rel);
+      }
+
+      const raw = fs.readFileSync(path.join(dir, entry.name), 'utf8');
+      const { data } = frontmatter(raw);
+      const { title, aliases } = data as { title?: string; aliases?: string | string[] };
+      if (title) {
+        const titleKey = title.toLowerCase();
+        if (!map.has(titleKey)) map.set(titleKey, rel);
+      }
+
+      for (const alias of Array.isArray(aliases) ? aliases : aliases ? [aliases] : []) {
+        const key = alias.trim().toLowerCase();
+        if (key && !map.has(key)) map.set(key, rel);
+      }
     }
   }
 
+  scan(contentDir, '');
   return map;
 }
 
@@ -159,6 +180,7 @@ function splitBaseEmbeds(node: { type: 'text'; value: string }): MdastNode[] | n
 function splitWikilinks(
   node: { type: 'text'; value: string },
   resolve: (target: string) => string,
+  isKnown: (target: string) => boolean,
   asLink: boolean,
 ): MdastNode[] | null {
   const { value } = node;
@@ -173,11 +195,19 @@ function splitWikilinks(
 
     const target = match[1].trim();
     const label = (match[2] ?? target).trim();
-    parts.push(
-      asLink
-        ? { type: 'link', url: resolve(target), children: [{ type: 'text', value: label }] }
-        : { type: 'text', value: label },
-    );
+    if (asLink) {
+      const link: Record<string, unknown> = {
+        type: 'link',
+        url: resolve(target),
+        children: [{ type: 'text', value: label }],
+      };
+      if (!isKnown(target)) {
+        link.data = { hProperties: { 'data-orphan': '' } };
+      }
+      parts.push(link as unknown as MdastNode);
+    } else {
+      parts.push({ type: 'text', value: label });
+    }
     last = start + match[0].length;
   }
 
@@ -188,6 +218,7 @@ function splitWikilinks(
 function transformWikilinks(
   parent: MdastParent,
   resolve: (target: string) => string,
+  isKnown: (target: string) => boolean,
   insideHeading = false,
 ) {
   for (let i = 0; i < parent.children.length; i++) {
@@ -205,13 +236,13 @@ function transformWikilinks(
       }
       // Headings are wrapped in their own <a data-card> anchor by fumadocs-ui;
       // rendering wikilinks as <a> there would nest anchors, which is invalid HTML.
-      const parts = splitWikilinks(child, resolve, !insideHeading);
+      const parts = splitWikilinks(child, resolve, isKnown, !insideHeading);
       if (parts) parent.children.splice(i, 1, ...parts);
       continue;
     }
 
     if ('children' in child && Array.isArray(child.children)) {
-      transformWikilinks(child, resolve, insideHeading || child.type === 'heading');
+      transformWikilinks(child, resolve, isKnown, insideHeading || child.type === 'heading');
     }
   }
 }
@@ -221,10 +252,12 @@ export function remarkWikilinks(contentDir = 'content') {
 
   const resolve = (target: string) =>
     index.get(target.toLowerCase()) ??
-    `./${target.toLowerCase().replace(/\s+/g, '-')}`;
+    `/${target.toLowerCase().replace(/\s+/g, '-')}`;
+
+  const isKnown = (target: string) => index.has(target.toLowerCase());
 
   return (tree: MdastParent) => {
     transformNoteEmbeds(tree);
-    transformWikilinks(tree, resolve);
+    transformWikilinks(tree, resolve, isKnown);
   };
 }

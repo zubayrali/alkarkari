@@ -6,10 +6,43 @@
 @import "./sidenotes.css";
 @import "./note-embed.css";
 @import "./properties-panel.css";
+@import "./citations.css";
+
+.title-aliases {
+  margin: 0;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--color-fd-muted-foreground);
+  letter-spacing: 0.01em;
+}
 
 html {
   scrollbar-gutter: stable;
 }
+
+/* Pre-hydration sidebar collapse: a blocking <script> in <head> sets
+   data-sidebar-collapsed on <html> from localStorage before paint.
+   This zeroes the sidebar grid column so the layout doesn't shift when
+   SidebarPersist hydrates and calls setCollapsed(true). Once React takes
+   over, SidebarPersist removes the attribute. */
+html[data-sidebar-collapsed="true"] #nd-docs-layout {
+  --fd-sidebar-col: 0px !important;
+}
+html[data-sidebar-collapsed="true"] #nd-sidebar {
+  visibility: hidden;
+}
+
+/* Block CSS transitions on the docs grid. During view-transition updates
+   the sidebar context resets to collapsed=false, changing --fd-sidebar-col
+   from 0px to 268px. When SidebarPersist restores it, fumadocs' Container
+   sets data-column-changed=true which activates transition-[grid-template-
+   columns] — the visible "content slide." Suppressing transitions here
+   makes the grid snap instead of animating. The sidebar itself still has
+   its own translate animation on #nd-sidebar. */
+#nd-docs-layout {
+  transition: none !important;
+}
+
 
 /* Breathing room below the "On this page" / Connections section headings. */
 #toc-title {
@@ -45,6 +78,184 @@ html {
   --ann-bracket: #a78bfa;
 }
 
+/* Callout content reveal animation */
+.prose-no-margin.empty\:hidden {
+  animation: callout-reveal 0.2s ease both;
+}
+
+@keyframes callout-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Figure image cartridge */
+#nd-page .figure-image {
+  display: block;
+  perspective: 800px;
+}
+
+#nd-page .figcaption {
+  display: block;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-fd-muted-foreground);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+#nd-page .figure-image img {
+  filter: grayscale(80%) contrast(1.1) brightness(1.02);
+  transform: scale(1.02) rotateX(2deg) rotateY(1deg);
+  transform-origin: center center;
+  transition:
+    filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#nd-page .figure-image:hover img {
+  filter: grayscale(0%) contrast(1) brightness(1);
+  transform: scale(1) rotateX(0deg) rotateY(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nd-page .figure-image img {
+    transform: none;
+    transition: filter 0.2s ease;
+  }
+}
+
+/* GFM task list checkboxes */
+#nd-page li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+#nd-page input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  min-width: 1rem;
+  margin-top: 0.25rem;
+  border: 1.5px solid var(--color-fd-border);
+  border-radius: 0.25rem;
+  background: var(--color-fd-background);
+  cursor: default;
+  position: relative;
+  transition: border-color 0.15s ease;
+}
+
+#nd-page input[type="checkbox"]:checked {
+  background: var(--color-fd-primary);
+  border-color: var(--color-fd-primary);
+}
+
+#nd-page input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+#nd-page input[type="checkbox"]:checked + * {
+  color: var(--color-fd-muted-foreground);
+  text-decoration: line-through;
+}
+
+/* Orphan wikilinks — references to pages that don't exist in the vault */
+a[data-orphan] {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--color-fd-warning, #f59e0b);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  color: var(--color-fd-muted-foreground);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Reader mode: sidebar is collapsed via useSidebar(); hide TOC + widen content */
+html[data-reader-mode="on"] #nd-toc,
+html[data-reader-mode="on"] [data-toc-popover] {
+  display: none !important;
+}
+
+html[data-reader-mode="on"] article#nd-page {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+html[data-reader-mode="on"] .page-actions,
+html[data-reader-mode="on"] .properties-panel,
+html[data-reader-mode="on"] article#nd-page > .\@container {
+  display: none !important;
+}
+
+/* Floating exit bar — shown in reader mode at the bottom of the viewport */
+.reader-exit-bar {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-fd-border);
+  background: var(--color-fd-background);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+  animation: reader-exit-fade-in 0.2s ease;
+}
+
+.reader-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-fd-muted-foreground);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.reader-exit-btn:hover {
+  color: var(--color-fd-foreground);
+  background: var(--color-fd-accent);
+}
+
+.reader-exit-hint {
+  font-size: 0.625rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+  background: var(--color-fd-muted);
+  line-height: 1.4;
+}
+
+@keyframes reader-exit-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(0.5rem); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
@@ -60,16 +271,21 @@ html > body[data-scroll-locked] {
   }
 }
 
-/* View Transitions: content "fade-through" with a slight rise.
-   Default behaviour overlaps old+new at 50% opacity, which looks muddy between
-   the wide base tables and narrow articles. Instead the old content fades out
-   first, then the new content fades in rising ~10px — cleaner and directional.
-   (The H1 morph rides on top via its own `entry-*` name; see page.tsx.) */
+/* View Transitions: content crossfade.
+   The group snaps to the new element's position/size instantly (0s duration)
+   instead of interpolating — even tiny position differences between old and
+   new pages caused a visible right-then-left shift. The wildcard covers both
+   the explicit "docs-content" and the browser's "root" group. The old/new
+   rules below (separate pseudo-elements, unaffected by the group override)
+   provide the opacity crossfade. */
+::view-transition-group(*) {
+  animation-duration: 0s;
+}
 ::view-transition-old(docs-content) {
-  animation: vp-content-out 0.16s ease both;
+  animation: vp-content-out 0.15s ease both;
 }
 ::view-transition-new(docs-content) {
-  animation: vp-content-in 0.26s ease 0.1s both;
+  animation: vp-content-in 0.15s ease both;
 }
 
 @keyframes vp-content-out {
@@ -80,37 +296,43 @@ html > body[data-scroll-locked] {
 @keyframes vp-content-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
 }
 
-/* View Transitions: the persistent docs sidebar.
-   It is a named snapshot so it animates independently of the content crossfade.
-   Both old and new fade (rather than `animation: none`, which froze the old
-   snapshot at full opacity on docs→home — where the home layout has no sidebar
-   to pair with — so it lingered then popped). docs↔docs crossfades two nearly
-   identical sidebars, so the fade is imperceptible; docs→home fades the old one
-   cleanly out. We guarantee the name here rather than relying on how the layout
-   prop plumbs `style` through fumadocs. */
-#nd-sidebar {
-  view-transition-name: site-sidebar;
+/* View Transitions: sidebar is excluded from named transitions so it never
+   creates its own snapshot. It stays part of the root crossfade instead,
+   which avoids the collapsed sidebar briefly flashing during navigation. */
+
+/* Nav progress bar: gradient shimmer over trickle width */
+.nav-progress-bar {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-fd-primary) 40%,
+    var(--color-fd-primary) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
 }
 
-::view-transition-old(site-sidebar) {
-  animation: vp-sidebar-out 0.2s ease both;
-}
-::view-transition-new(site-sidebar) {
-  animation: vp-sidebar-in 0.2s ease both;
+.nav-progress-sweep {
+  animation: nav-progress-sweep 2s linear infinite;
 }
 
-@keyframes vp-sidebar-out {
-  to {
-    opacity: 0;
-  }
-}
-@keyframes vp-sidebar-in {
+@keyframes nav-progress-sweep {
   from {
-    opacity: 0;
+    background-position: -100% 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress-sweep {
+    animation: none;
+    background: var(--color-fd-primary);
   }
 }
 
@@ -120,4 +342,480 @@ html > body[data-scroll-locked] {
 ::view-transition-old(nav-progress),
 ::view-transition-new(nav-progress) {
   animation: none;
+}
+
+/* ── Bases: toolbar ── */
+.base-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-fd-background);
+}
+
+.base-view-tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+.base-view-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.base-view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-fd-muted-foreground);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+
+.base-view-tab:hover {
+  color: var(--color-fd-foreground);
+}
+
+.base-view-tab.active {
+  color: var(--color-fd-foreground);
+  border-bottom-color: var(--color-fd-primary);
+  font-weight: 500;
+}
+
+.base-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  padding-bottom: 0.5rem;
+}
+
+.base-results-count {
+  font-size: 0.8125rem;
+  color: var(--color-fd-muted-foreground);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.base-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.base-search-icon {
+  position: absolute;
+  left: 0.5rem;
+  width: 14px;
+  height: 14px;
+  color: var(--color-fd-muted-foreground);
+  pointer-events: none;
+}
+
+.base-search-input {
+  width: 10rem;
+  padding: 0.375rem 0.5rem 0.375rem 1.75rem;
+  font-size: 0.8125rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.375rem;
+  background: var(--color-fd-background);
+  color: var(--color-fd-foreground);
+  outline: none;
+  transition: border-color 0.15s ease, width 0.2s ease;
+}
+
+.base-search-input:focus {
+  border-color: var(--color-fd-primary);
+  width: 14rem;
+}
+
+.base-search-clear {
+  position: absolute;
+  right: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem;
+  border: none;
+  background: var(--color-fd-muted);
+  border-radius: 50%;
+  color: var(--color-fd-muted-foreground);
+  cursor: pointer;
+}
+
+/* ── Bases: table ── */
+.base-table-wrapper {
+  overflow: auto;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.5rem;
+}
+
+.base-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.base-table thead th {
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--color-fd-background);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+}
+
+.base-table tbody tr {
+  border-bottom: 1px solid var(--color-fd-border);
+  transition: background-color 0.15s ease;
+}
+
+.base-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.base-table tbody tr:hover:not(.base-group-header) {
+  background: var(--color-fd-muted);
+}
+
+.base-table tbody td {
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  max-width: var(--base-cell-max-width, 24rem);
+}
+
+.base-first-col {
+  width: var(--base-first-col-width, 18rem);
+  max-width: var(--base-first-col-width, 18rem);
+}
+
+.base-cell-content {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.base-first-col .base-cell-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Group headers */
+.base-group-header td {
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  background: var(--color-fd-muted);
+  border-top: 2px solid var(--color-fd-border);
+  border-bottom: 2px solid var(--color-fd-border);
+}
+
+.base-group-label {
+  font-weight: 500;
+  color: var(--color-fd-muted-foreground);
+  text-transform: lowercase;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+}
+
+.base-group-count {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* Summary footer */
+.base-table tfoot {
+  border-top: 2px solid var(--color-fd-border);
+  background: var(--color-fd-muted);
+}
+
+.base-table tfoot td {
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Boolean checkbox */
+.base-checkbox {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.1875rem;
+  vertical-align: middle;
+  position: relative;
+  cursor: default;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.base-checkbox:checked {
+  background: var(--color-fd-primary);
+  border-color: var(--color-fd-primary);
+}
+
+.base-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--color-fd-primary-foreground);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ── Bases: gallery/cards ── */
+.base-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--base-card-min, 280px), 1fr));
+  gap: 1rem;
+}
+
+.base-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.base-card-group-header {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-fd-muted-foreground);
+  border-bottom: 2px solid var(--color-fd-border);
+  padding-bottom: 0.25rem;
+}
+
+.base-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-fd-background);
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  position: relative;
+}
+
+.base-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.base-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / var(--base-card-aspect, 0.625);
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-fd-muted);
+  transition: transform 0.3s ease;
+}
+
+.base-card:hover .base-card-image {
+  transform: scale(1.03);
+}
+
+.base-card-content {
+  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.base-card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-fd-foreground);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.base-card-title:hover {
+  color: var(--color-fd-primary);
+}
+
+.base-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.base-card-meta-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.base-card-meta-label {
+  color: var(--color-fd-muted-foreground);
+  font-weight: 500;
+  min-width: 5rem;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+
+.base-card-meta-value {
+  color: var(--color-fd-foreground);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Bases: list ── */
+.base-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.base-list-group-header {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-fd-muted-foreground);
+  border-bottom: 2px solid var(--color-fd-border);
+  padding-bottom: 0.25rem;
+}
+
+.base-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.base-list-item {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+.base-list-item:last-child {
+  border-bottom: none;
+}
+
+.base-list-nested {
+  width: 100%;
+  list-style: none;
+  padding-left: 1.25rem;
+  margin-top: 0.375rem;
+}
+
+.base-list-nested li {
+  margin: 0.25rem 0;
+  padding-left: 0.75rem;
+  position: relative;
+  font-size: 0.8125rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+.base-list-nested li::before {
+  content: '◦';
+  position: absolute;
+  left: 0;
+  color: var(--color-fd-muted-foreground);
+}
+
+.base-list-meta-label {
+  font-weight: 600;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* ── Bases: load more ── */
+.base-load-more {
+  display: block;
+  width: 100%;
+  padding: 0.625rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  text-align: center;
+  color: var(--color-fd-muted-foreground);
+  background: var(--color-fd-muted);
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.base-load-more:hover {
+  color: var(--color-fd-foreground);
+  border-color: var(--color-fd-foreground);
+}
+
+/* ── Bases: mobile ── */
+@media (max-width: 640px) {
+  .base-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .base-toolbar-right {
+    width: 100%;
+  }
+
+  .base-search-input {
+    width: 100%;
+  }
+
+  .base-search-input:focus {
+    width: 100%;
+  }
+
+  .base-search {
+    flex: 1;
+  }
+
+  .base-table {
+    font-size: 0.8125rem;
+  }
+
+  .base-table thead th,
+  .base-table tbody td {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .base-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .base-card-content {
+    padding: 0.75rem;
+  }
 }

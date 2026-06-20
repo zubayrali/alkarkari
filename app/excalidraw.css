@@ -1,0 +1,110 @@
+/* Excalidraw drawing viewer — ported from quartz-community/obsidian-plugin-excalidraw */
+
+:root {
+  --excalidraw-fg: #000000;
+  --excalidraw-bg: #ffffff;
+}
+
+.dark, [data-theme="dark"] {
+  --excalidraw-fg: #d3d3d3;
+  --excalidraw-bg: #121212;
+  --excalidraw-color-1e1e1e: #d3d3d3;
+  --excalidraw-color-000000: #ededed;
+  --excalidraw-color-ffffff: #121212;
+  --excalidraw-color-343a40: #b7bcc1;
+  --excalidraw-color-868e96: #6e757c;
+  --excalidraw-color-ced4da: #33383d;
+  --excalidraw-color-e03131: #ff8383;
+  --excalidraw-color-fa5252: #fa6969;
+  --excalidraw-color-c2255c: #ff8dbc;
+  --excalidraw-color-9c36b5: #e28af8;
+  --excalidraw-color-6741d9: #b595ff;
+  --excalidraw-color-1971c2: #56a2e8;
+  --excalidraw-color-228be6: #3791e0;
+  --excalidraw-color-0c8599: #3da5b6;
+  --excalidraw-color-099268: #32a783;
+  --excalidraw-color-2f9e44: #39994b;
+  --excalidraw-color-40c057: #16842a;
+  --excalidraw-color-f08c00: #b86200;
+  --excalidraw-color-e8590c: #f17634;
+  --excalidraw-color-846358: #a98d84;
+}
+
+.excalidraw-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+.excalidraw-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.excalidraw-container:active {
+  cursor: grabbing;
+}
+
+.excalidraw-container svg {
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center center;
+  transition: none;
+}
+
+.excalidraw-controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
+.excalidraw-controls button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--fd-border);
+  border-radius: 6px;
+  background: var(--fd-background);
+  color: var(--fd-muted-foreground);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.1s ease;
+}
+
+.excalidraw-controls button:hover {
+  background: var(--fd-accent);
+  color: var(--fd-accent-foreground);
+}
+
+/* Embedded in popover previews */
+.link-popover-inner .excalidraw-page {
+  height: auto;
+}
+
+.link-popover-inner .excalidraw-container {
+  height: auto;
+  min-height: 200px;
+  max-height: 300px;
+}
+
+.link-popover-inner .excalidraw-controls {
+  display: none;
+}

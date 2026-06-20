@@ -79,6 +79,10 @@ Each documentation page includes:
   - **Open in GitHub** — Link to the page source under `content/` (configure `lib/shared.ts` → `gitConfig` for your repo)
   - **View as Markdown** — Open the raw Markdown endpoint for the page
 
+## Home page
+
+The home page shows a hero section, a dictionary term strip, a **Recently Updated** section (the 6 most recently modified notes by file modification time), and section cards linking to content areas.
+
 ## Protected pages
 
 Protected pages use **shared-password access control**. They are **not encrypted**: generated MDX still lives in `content/` like any other page. The site only withholds the **body** and some exports until a visitor proves they know `SITE_PROTECT_PASSWORD`.
@@ -170,9 +174,19 @@ After cleanup, `generate` repopulates both directories from the current vault se
 
 Do not store hand-maintained static files under `public/` — they will be deleted on the next run. Keep long-lived documentation in `content/index.mdx`, `content/graph.mdx`, or outside the generated output paths.
 
+### Draft exclusion
+
+Notes with `draft: true` or `private: true` in frontmatter are excluded from generation:
+
+```yaml
+draft: true
+```
+
+This is the primary way to keep notes out of the site while they're still being written. The site will never generate pages for draft notes.
+
 ### Include selection
 
-The first interactive run shows the vault's top-level tree so you can pick folders and files to include. The choice is saved as `GENERATE_INCLUDE` in `.env`. Use `pnpm generate -- --select` to re-pick. In non-interactive environments, all top-level items are included by default.
+By default, all top-level vault items are included (minus drafts). To curate which folders/files are synced, use `pnpm generate -- --select` to pick interactively. The choice is saved as `GENERATE_INCLUDE` in `.env`. Clear `GENERATE_INCLUDE` to return to "include everything" mode.
 
 Excluded from generation:
 
@@ -227,11 +241,109 @@ Canvas pages use `full: true` layout (no table of contents) and render inside a 
 - `![[note.canvas]]` embeds in notes are not supported yet
 - File `subpath` (heading anchors) is appended to links but does not scroll the in-node preview
 
+## Reading affordances
+
+### Reading time
+
+Every docs page shows estimated reading time and word count in the table of contents sidebar, above the local graph. Computed server-side from the page's structured data.
+
+### Reader mode
+
+Toggle distraction-free reading with the book icon in the page actions bar (next to Copy Markdown), or press `Ctrl+B` / `Cmd+B`. Hides the sidebar, table of contents, and mobile TOC popover. The preference persists to localStorage across sessions. Sidenotes automatically fall back to inline popovers when margins disappear.
+
+### Orphan link styling
+
+Wikilinks that reference pages not in the vault are rendered with a wavy amber underline and disabled pointer — immediate visual feedback that a link target is missing.
+
+### Figure image cartridge
+
+Every markdown image is wrapped in a `<figure>` with a `<figcaption>` from the alt text. Images start with a subtle grayscale + 3D tilt (noir effect) and flatten to full color on hover. Respects `prefers-reduced-motion`.
+
+### Embed fade-in
+
+Note transclusion bodies (`![[Note]]`) fade in on render to prevent hydration flash.
+
+### Callout animation
+
+Obsidian callout bodies animate in with a subtle fade + rise on page load.
+
+### Task checkbox styling
+
+GFM task lists (`- [x] Done`) render with custom styled checkboxes — primary color when checked, with a checkmark and strikethrough on completed items.
+
+### Link popover caching
+
+Hover previews for internal links cache fetched HTML in memory. The first hover fetches and cleans the target page; subsequent hovers for the same link are instant.
+
+## Slides
+
+Pages with `slides: true` in frontmatter can be viewed as a full-screen slide presentation.
+
+### Setup
+
+Add `slides: true` to a note's frontmatter:
+
+```yaml
+---
+title: My Presentation
+slides: true
+---
+```
+
+Structure the content with H1 or H2 headings — each heading starts a new slide. Content before the first heading becomes the title slide.
+
+### Viewing
+
+Visit `/<page-path>/slides` to enter the slide viewer. For example, if the page is at `/foundations/overview`, slides are at `/foundations/overview/slides`.
+
+### Controls
+
+| Key | Action |
+|---|---|
+| `→` or `Space` | Next slide |
+| `←` | Previous slide |
+| `Escape` / `×` button | Return to the page |
+
+The URL hash (`#slide-3`) updates as you navigate for deep linking. A progress bar at the top shows position.
+
+A demo page is available at [/slides-demo/slides](/slides-demo/slides).
+
+## Masonry layout
+
+A reusable component for displaying pages in a multi-column card grid:
+
+```tsx
+import { MasonryLayout } from '@/components/masonry-layout';
+
+const pages = source.getPages()
+  .filter(p => p.slugs[0] === 'history')
+  .map(p => ({
+    url: p.url,
+    title: p.data.title,
+    description: p.data.description,
+    tags: p.data.tags,
+  }));
+
+<MasonryLayout pages={pages} columns={2} />
+```
+
+Cards show title, description (3-line clamp), and up to 4 tag chips. Hover lifts the card. Uses CSS `column-count` — no JavaScript layout.
+
+## RSS feed
+
+An RSS 2.0 feed is available at [`/rss.xml`](/rss.xml). It includes all non-protected, non-tag pages (up to 50 items). Feed readers auto-discover it via the `<link rel="alternate">` in the page head.
+
+Set the `SITE_URL` environment variable for absolute URLs in the feed:
+
+```bash
+SITE_URL=https://your-domain.com
+```
+
 ## Stack
 
 - **Framework**: Next.js + Fumadocs + React Flow
 - **Content**: Obsidian Markdown → MDX ([fumadocs-obsidian](https://fumadocs.dev/docs/integrations/obsidian))
-- **Features**: Full-text search, knowledge graph, Obsidian Canvas, page tags, shared-password page gating, Obsidian/GitHub/Markdown actions, Mermaid, math
+- **Features**: Full-text search, knowledge graph, Obsidian Canvas, page tags, shared-password page gating, Obsidian/GitHub/Markdown actions, Mermaid, math, sidenotes, link popovers, annotations, backlinks, slides, reader mode, RSS, masonry layout
 
 ## TODO
 

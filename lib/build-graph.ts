@@ -7,7 +7,7 @@ import { getTagPrefixes, tagUrl } from '@/lib/tags';
 
 export function buildGraph(hasAccess = false): Graph {
   const pages = source.getPages().filter(
-    (page) => hasAccess || !pageRequiresAuth(page),
+    (page) => !page.data.unlisted && (hasAccess || !pageRequiresAuth(page)),
   );
   const graph: Graph = { links: [], nodes: [] };
 

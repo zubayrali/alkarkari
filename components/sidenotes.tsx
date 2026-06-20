@@ -62,14 +62,19 @@ function getMarginSpace(mainColumn: HTMLElement | null): MarginSpace {
   const needed = remToPx(SIDENOTE_WIDTH + SIDENOTE_GUTTER);
   const mainRect = mainColumn.getBoundingClientRect();
 
-  const sidebar = document.querySelector('#nd-sidebar');
-  const sidebarRect = sidebar?.getBoundingClientRect();
-  const leftBoundary = sidebarRect && sidebarRect.width > 0 ? sidebarRect.right : 0;
+  const sidebar = document.querySelector<HTMLElement>('#nd-sidebar');
+  const sidebarVisible =
+    sidebar &&
+    sidebar.getBoundingClientRect().width > 0 &&
+    getComputedStyle(sidebar).display !== 'none';
+  const leftBoundary = sidebarVisible ? sidebar.getBoundingClientRect().right : 0;
 
-  const toc = document.querySelector('#nd-toc');
-  const tocRect = toc?.getBoundingClientRect();
-  const rightBoundary =
-    tocRect && tocRect.width > 0 ? tocRect.left : window.innerWidth;
+  const toc = document.querySelector<HTMLElement>('#nd-toc');
+  const tocVisible =
+    toc &&
+    toc.getBoundingClientRect().width > 0 &&
+    getComputedStyle(toc).display !== 'none';
+  const rightBoundary = tocVisible ? toc.getBoundingClientRect().left : window.innerWidth;
 
   return {
     left: mainRect.left - leftBoundary >= needed,
@@ -212,7 +217,8 @@ class SidenoteManager {
 
       this.setActiveState(state, false);
 
-      content.style.cssText = 'display:none';
+      content.style.cssText = '';
+      content.style.display = 'none';
       content.classList.remove(...CONTENT_CLASSES);
       content.setAttribute('aria-hidden', 'true');
     });
@@ -227,22 +233,31 @@ class SidenoteManager {
 
     const mainColumn = getMainColumn(content);
     if (!mainColumn) return false;
-
-    // Never overflow past the bottom of the article body.
     const mainRect = mainColumn.getBoundingClientRect();
-    if (topPosition + contentHeight > mainRect.bottom + scrollTop) return false;
 
     const allowLeft = this.margins.left && span.getAttribute('data-allow-left') !== 'false';
     const allowRight = this.margins.right && span.getAttribute('data-allow-right') !== 'false';
     const gap = remToPx(GAP);
-    const leftSpace = topPosition - this.lastBottomLeft;
-    const rightSpace = topPosition - this.lastBottomRight;
+
+    // Allow nudging down to clear the previous note on that side.
+    // With both margins the notes alternate, so drift is moderate.
+    // With one margin all notes stack, so allow more drift.
+    const bothSides = allowLeft && allowRight;
+    const maxDrift = remToPx(bothSides ? 8 : 14);
+
+    const rightStart = Math.max(topPosition, this.lastBottomRight + gap);
+    const leftStart = Math.max(topPosition, this.lastBottomLeft + gap);
+    const canRight = allowRight && rightStart - topPosition <= maxDrift;
+    const canLeft = allowLeft && leftStart - topPosition <= maxDrift;
 
     let side: 'left' | 'right';
-    if (allowRight && rightSpace >= contentHeight + gap) {
+    let effectiveTop: number;
+    if (canRight && (!canLeft || rightStart <= leftStart)) {
       side = 'right';
-    } else if (allowLeft && leftSpace >= contentHeight + gap) {
+      effectiveTop = rightStart;
+    } else if (canLeft) {
       side = 'left';
+      effectiveTop = leftStart;
     } else {
       return false;
     }
@@ -263,11 +278,27 @@ class SidenoteManager {
     content.style.right = '';
     content.style[side] = `${sideOffset}px`;
 
-    const bottomPosition = topPosition + contentHeight;
+    // Position vertically relative to the offset parent.
+    const parentTop = (content.offsetParent as HTMLElement | null)?.getBoundingClientRect().top ?? 0;
+    content.style.top = `${effectiveTop - (parentTop + scrollTop)}px`;
+    content.style.marginTop = '0';
+
+    const bottomPosition = effectiveTop + contentHeight;
     if (side === 'left') this.lastBottomLeft = bottomPosition;
     else this.lastBottomRight = bottomPosition;
 
     state.side = side;
+
+    // JS-based hover highlighting — the CSS `~` sibling combinator can't
+    // reach the content reliably once we use explicit `top` positioning.
+    state.controller = new AbortController();
+    const { signal } = state.controller;
+    const highlight = (on: boolean) => content.classList.toggle('sidenote-highlight', on);
+    span.addEventListener('mouseenter', () => highlight(true), { signal });
+    span.addEventListener('mouseleave', () => highlight(false), { signal });
+    content.addEventListener('mouseenter', () => { highlight(true); this.setActiveState(state, true); }, { signal });
+    content.addEventListener('mouseleave', () => { highlight(false); this.setActiveState(state, false); }, { signal });
+
     return true;
   }
 
@@ -322,18 +353,55 @@ class SidenoteManager {
 
   public layout() {
     const first = this.sidenotes[0];
-    this.margins = getMarginSpace(first ? getMainColumn(first.content) : null);
+    const mainColumn = first ? getMainColumn(first.content) : null;
+    this.margins = getMarginSpace(mainColumn);
     this.closePopover();
     this.reset();
+
+    // Clear any previous overflow padding.
+    if (mainColumn) mainColumn.style.paddingBottom = '';
+
+    // Track which footnote markers (e.g. "1") are already placed so
+    // duplicate references (same [^1] used twice) don't appear twice.
+    const placedMarkers = new Map<string, SidenoteState>();
 
     this.sidenotes.forEach((state) => {
       const forceInline = state.span.getAttribute('data-force-inline') === 'true';
       const sideAvailable = this.margins.left || this.margins.right;
+      const marker = state.label.querySelector('.sidenote-number')?.textContent ?? '';
+
+      // Duplicate reference — hide this content but wire the label's hover
+      // to highlight the already-placed sidenote's content.
+      const original = marker ? placedMarkers.get(marker) : undefined;
+      if (original) {
+        state.content.style.display = 'none';
+        state.content.setAttribute('aria-hidden', 'true');
+        state.controller = new AbortController();
+        const { signal } = state.controller;
+        const highlight = (on: boolean) => original.content.classList.toggle('sidenote-highlight', on);
+        state.span.addEventListener('mouseenter', () => highlight(true), { signal });
+        state.span.addEventListener('mouseleave', () => highlight(false), { signal });
+        return;
+      }
 
       if (!sideAvailable || forceInline || !this.positionSideToSide(state)) {
         this.positionPopover(state);
       }
+
+      if (marker) placedMarkers.set(marker, state);
     });
+
+    // If margin sidenotes extend below the article, add padding so the
+    // prev/next footer doesn't overlap them.
+    if (mainColumn) {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const articleBottom = mainColumn.getBoundingClientRect().bottom + scrollTop;
+      const lowestSidenote = Math.max(this.lastBottomLeft, this.lastBottomRight);
+      if (lowestSidenote > articleBottom) {
+        const overflow = lowestSidenote - articleBottom + remToPx(2);
+        mainColumn.style.paddingBottom = `${overflow}px`;
+      }
+    }
   }
 
   public destroy() {
@@ -364,9 +432,29 @@ export function Sidenotes() {
     const debouncedLayout = debounce(() => manager.layout(), 100);
     window.addEventListener('resize', debouncedLayout, { passive: true });
 
+    // Re-layout when reader mode toggles or sidebar collapses — the margin
+    // geometry changes but no resize event fires. Use a longer debounce so
+    // CSS transitions (sidebar slide, content reflow) settle before measuring.
+    const debouncedRelayout = debounce(() => manager.layout(), 250);
+
+    const htmlObserver = new MutationObserver(debouncedRelayout);
+    htmlObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-reader-mode'],
+    });
+
+    const sidebar = document.getElementById('nd-sidebar');
+    const sidebarObserver = sidebar ? new MutationObserver(debouncedRelayout) : null;
+    sidebarObserver?.observe(sidebar!, {
+      attributes: true,
+      attributeFilter: ['data-collapsed'],
+    });
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', debouncedLayout);
+      htmlObserver.disconnect();
+      sidebarObserver?.disconnect();
       manager.destroy();
     };
   }, [pathname]);

@@ -26,6 +26,10 @@ export const siteLanguages = {
     graphStatPages: "pages",
     graphStatTags: "tags",
     graphStatLinks: "links",
+    readingTimeUnit: "min read",
+    recentNotesLabel: "Recently Updated",
+    readerModeLabel: "Reader mode",
+    readerExitLabel: "Exit reader mode",
     translations: defineTranslations().extend(uiTranslations()),
   },
   cn: {
@@ -52,6 +56,10 @@ export const siteLanguages = {
     graphStatPages: "页面",
     graphStatTags: "标签",
     graphStatLinks: "连接",
+    readingTimeUnit: "分钟阅读",
+    recentNotesLabel: "最近更新",
+    readerModeLabel: "阅读模式",
+    readerExitLabel: "退出阅读模式",
     translations: defineTranslations()
       .extend(uiTranslations())
       .add("ui", {

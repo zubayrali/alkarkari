@@ -6,6 +6,7 @@ import {
   type VaultFile,
 } from "fumadocs-obsidian";
 import { generateCanvasPages, syncCanvasFromVault } from "./generate-canvas-pages.ts";
+import { syncExcalidrawFromVault } from "./generate-excalidraw-pages.ts";
 import { generateBasePages } from "./generate-base-pages.ts";
 import { generateTagPages } from "./generate-tag-pages.ts";
 import {
@@ -17,6 +18,7 @@ import {
   GenerateProgress,
   runWithGenerateUi,
 } from "./progress.ts";
+import { frontmatter as parseFrontmatter } from "fumadocs-core/content/md/frontmatter";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -25,6 +27,13 @@ const publicDir = "public";
 const preservedFiles = new Set(["index.mdx", "graph.mdx"]);
 const hiddenEntries = new Set([".obsidian", "templates"]);
 const defaultExcludePatterns = ["!.obsidian/**", "!templates/**"];
+
+function isDraft(file: VaultFile): boolean {
+  if (typeof file.content !== "string") return false;
+  if (!file.path.endsWith(".md") && !file.path.endsWith(".mdx")) return false;
+  const { data } = parseFrontmatter(file.content);
+  return data.draft === true || data.private === true;
+}
 
 function resolveTitle(file: ParsedContentFile, fallback: string) {
   const frontmatter = file.frontmatter as Record<string, unknown> | undefined;
@@ -78,6 +87,26 @@ async function cleanGeneratedDirs(step: ReturnType<typeof createStepProgress>) {
   step.complete(`Removed ${targets.length} item${targets.length === 1 ? "" : "s"}`);
 }
 
+const SIDENOTE_SYNTAX_RE = /\{\{sidenotes\[([^\]]+)\]:\s*([\s\S]*?)\}\}/g;
+
+function transformSidenoteSyntax(content: string): string {
+  SIDENOTE_SYNTAX_RE.lastIndex = 0;
+  if (!SIDENOTE_SYNTAX_RE.test(content)) return content;
+
+  let counter = 0;
+  const definitions: string[] = [];
+  SIDENOTE_SYNTAX_RE.lastIndex = 0;
+
+  const transformed = content.replace(SIDENOTE_SYNTAX_RE, (_match, label: string, body: string) => {
+    const id = `_sn_${++counter}`;
+    definitions.push(`[^${id}]: ${body.trim()}`);
+    return `${label}[^${id}]`;
+  });
+
+  if (definitions.length === 0) return content;
+  return transformed.trimEnd() + "\n\n" + definitions.join("\n\n") + "\n";
+}
+
 async function writeVaultOutputs(
   files: OutputFile[],
   step: ReturnType<typeof createStepProgress>,
@@ -98,7 +127,11 @@ async function writeVaultOutputs(
   for (const file of files) {
     const mappedPath = path.join(targetDirs[file.type], file.path);
     await fs.mkdir(path.dirname(mappedPath), { recursive: true });
-    await fs.writeFile(mappedPath, file.content);
+    let content = file.content;
+    if (file.type === "content" && typeof content === "string") {
+      content = transformSidenoteSyntax(content);
+    }
+    await fs.writeFile(mappedPath, content);
     step.advance(file.path);
   }
   step.complete(`Wrote ${files.length} file${files.length === 1 ? "" : "s"}`);
@@ -175,8 +208,13 @@ async function resolveInclude(vaultDir: string) {
     }
   }
 
-  if (!process.stdin.isTTY) {
-    console.log("Using default include: all top-level items");
+  if (!forceSelect && !process.stdin.isTTY) {
+    console.log("Using default include: all top-level items (draft/private notes excluded)");
+    return ["**/*", ...defaultExcludePatterns];
+  }
+
+  if (!forceSelect) {
+    console.log("Using default include: all top-level items (draft/private notes excluded)");
     return ["**/*", ...defaultExcludePatterns];
   }
 
@@ -216,6 +254,7 @@ async function main() {
     { id: "write", label: "Writing files" },
     { id: "canvas-sync", label: "Syncing canvas assets" },
     { id: "canvas-pages", label: "Generating canvas pages" },
+    { id: "excalidraw", label: "Generating excalidraw pages" },
     { id: "base-pages", label: "Generating base pages" },
     { id: "tag-pages", label: "Generating tag pages" },
   ]);
@@ -226,6 +265,7 @@ async function main() {
     const write = createStepProgress(progress, "write");
     const canvasSync = createStepProgress(progress, "canvas-sync");
     const canvasPages = createStepProgress(progress, "canvas-pages");
+    const excalidrawStep = createStepProgress(progress, "excalidraw");
     const basePages = createStepProgress(progress, "base-pages");
     const tagPages = createStepProgress(progress, "tag-pages");
 
@@ -233,7 +273,12 @@ async function main() {
 
     convert.start(0);
     convert.setDetail("Reading vault files...");
-    const rawFiles = await readVaultFiles({ dir: vaultDir, include });
+    const allFiles = await readVaultFiles({ dir: vaultDir, include });
+    const drafts = allFiles.filter(isDraft);
+    const rawFiles = allFiles.filter((f) => !isDraft(f));
+    if (drafts.length > 0) {
+      console.log(`Skipping ${drafts.length} draft/private file${drafts.length === 1 ? "" : "s"}`);
+    }
     convert.setDetail(
       `Found ${rawFiles.length} file${rawFiles.length === 1 ? "" : "s"}. Converting...`,
     );
@@ -263,6 +308,7 @@ async function main() {
     await writeVaultOutputs(outputs, write);
     await syncCanvasFromVault(vaultDir, include, canvasSync);
     await generateCanvasPages(canvasPages);
+    await syncExcalidrawFromVault(vaultDir, include, excalidrawStep);
     const notes = await generateBasePages(baseRawFiles, outputs, include, basePages);
     await generateTagPages(outputs, baseRawFiles, notes, tagPages);
   });

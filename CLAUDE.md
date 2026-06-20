@@ -61,15 +61,36 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/canvas-view.tsx` — top-level canvas page component (React Flow wrapper)
 - `components/canvas-flow-nodes.tsx` — per-node-type renderers
 
+**Excalidraw rendering** (ported from quartz-community/obsidian-plugin-excalidraw)
+- `lib/excalidraw-types.ts` — `ExcalidrawData`, `ExcalidrawElement`, `ExcalidrawRenderOptions`
+- `lib/excalidraw-parser.ts` — parses `.excalidraw.md` (LZ-compressed JSON in code fences, embedded files section) and `.excalidraw` (raw JSON)
+- `lib/excalidraw-renderer.ts` — server-side SVG rendering using `roughjs` (hand-drawn style) and `perfect-freehand`; handles rectangles, ellipses, diamonds, lines, arrows, text, freedraw, images, frames, embeddables
+- `scripts/generate-excalidraw-pages.ts` — detects excalidraw files in vault, writes JSON to `public/excalidraw/` and MDX wrappers to `content/`
+- `components/excalidraw-page.tsx` — RSC: reads JSON from disk, renders SVG via the renderer
+- `components/excalidraw-view.tsx` — client component: pan/zoom interaction (mouse drag, scroll wheel, pinch-to-zoom)
+- `app/excalidraw.css` — styles + dark mode color variable overrides
+
+**Citations** (ported from quartz-community/citations)
+- `lib/rehype-citations.ts` — wraps `rehype-citation` (Pandoc-style `[@key]` citations from a `.bib` file); uses `createRequire` to force Node.js module resolution past turbopack's browser-conditional export; runs BEFORE `rehypeSidenotes` so citations inside footnotes resolve before footnotes become sidenotes; post-processor embeds `data-citation-text` on each citation `<a>` with the full bibliography entry for hover tooltips
+- `components/citation-tooltip.tsx` — client component: on hover over `a[data-citation]`, shows a styled floating tooltip with the full formatted reference (the popover from aarnphm/quartz's citation links)
+- `app/citations.css` — citation link styling, bibliography section formatting, tooltip appearance
+- Bibliography file defaults to `./references.bib`; configurable via `CitationsOptions`; when the file is absent the plugin returns an empty array (no-op, no build error)
+- `linkCitations: true` (default) makes inline citations clickable `<a>` elements pointing to `#bib-<key>` anchors in the bibliography section
+
+**Custom sidenote syntax** (`{{sidenotes[label]: content}}`)
+- `scripts/generate.ts` `transformSidenoteSyntax()` — runs at generation time (before MDX parsing) to convert `{{sidenotes[label]: content}}` into `label[^_sn_N]` + GFM footnote definitions. Must happen before MDX sees the `{{` (acorn treats it as a JSX expression). Citations inside the content (e.g. `[@key]`) resolve normally since the transform produces standard GFM footnotes that flow through the `rehypeCitations` → `rehypeSidenotes` pipeline.
+- `lib/remark-sidenote-syntax.ts` — standalone utility (same transform as above, available for non-generation contexts)
+
 **Bases (Obsidian Bases)**
 - `lib/base-types.ts` — `NoteRecord`, `BaseConfig`, `BaseView`, `CompiledBase`, etc.
 - `lib/base-compiler/` — Pratt-parser → bytecode IR → stack VM (ported from aarnphm/quartz)
 - `lib/base-parser.ts` — YAML → `BaseConfig` + filter compilation; `vaultPathToSlug`
 - `lib/base-query.ts` — `applyFilter`, `applySort`, `groupNotes` over `NoteRecord[]`
+- `lib/base-properties.ts` — shared column → value resolution (`resolveNoteProperty`, `isNameColumn`, `resolveDisplayName`); single source of truth for all view components
 - `lib/remark-inline-base.ts` — remark plugin: ` ```base ``` ` fenced blocks → `<BasesInlineView>`
-- `components/bases-page.tsx` — RSC: reads compiled JSON from disk, renders first view (no fetch)
+- `components/bases-page.tsx` — RSC: reads compiled JSON from disk, renders first view (no fetch); properties come from `compiled.config.properties` (single source, not duplicated at top level)
 - `components/bases-inline-view.tsx` — client component: view-tab switching, lazy VM re-evaluation
-- `components/bases-view-table.tsx` / `bases-view-gallery.tsx` / `bases-view-list.tsx` — view renderers
+- `components/bases-view-table.tsx` / `bases-view-gallery.tsx` / `bases-view-list.tsx` — view renderers; all import property resolution from `lib/base-properties.ts`
 
 **Tags**
 - `lib/tags.ts` — tag primitives: `normalizeTags`, `getTagPrefixes`, `tagUrl`
@@ -84,12 +105,17 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/protected-gate.tsx` — UI shown when a page is locked
 - `app/api/protected-auth/` — password verification endpoint (sets HttpOnly cookie)
 
+**Draft & unlisted pages**
+- `draft: true` — excluded at generation time by `isDraft()` in `scripts/generate.ts`; runtime guard in the catch-all route returns 404. Never appears in sidebar, search, graph, RSS, sitemap, or any listing.
+- `unlisted: true` — generated normally and routable by direct URL, but hidden from: sidebar (`lib/page-tree.ts`), search (`app/api/search/route.ts` tags as `unlisted`), graph (`lib/build-graph.ts`), RSS (`app/rss.xml/route.ts`), sitemap (`app/sitemap.ts`), home page recent notes, tags index, and `generateStaticParams`. Gets `robots: noindex, follow` metadata.
+
 **Graph view** (renderer kept on react-force-graph-2d; behaviors ported from aarnphm/quartz — see ADR-0011)
 - `lib/build-graph.ts` — builds graph data from all pages, their extracted wikilink references (via `resolveReference`), and tag nodes (tag pages become `kind: 'tag'` nodes linked to tagged pages); precomputes node neighbors (`enrichNeighbors`)
 - `lib/graph-utils.ts` — pure helpers shared by server and client: `enrichNeighbors`, `localGraph` (sentinel-BFS depth slice)
 - `components/graph-view.tsx` — canvas renderer: degree-sized nodes, zoom-faded labels, focus-on-hover dimming (tweened), visited tint (localStorage `graph-visited`), radial layout on the global variant, zoom-to-fit/fullscreen controls. Auto-fit runs **once per dataset** — after that, pan/zoom belongs to the user (no refit on engine stop or resize); the fit button re-fits manually
 - `components/local-graph.tsx` — client local graph ("Connections") in the docs TOC footer (`tableOfContent.footer` **and** `tableOfContentPopover.footer`, so it's available on mobile); depth selector re-slices the full graph client-side; heading mirrors fumadocs' `#toc-title` markup. The TOC itself is the stock fumadocs `clerk` table of contents — no custom collapse/sidebar treatment.
-- `components/sidebar-persist.tsx` — persists fumadocs' left-sidebar `collapsed` state (via `useSidebar` from `fumadocs-ui/components/sidebar/base`) to localStorage; mounted inside `DocsLayout`
+- `components/sidebar-persist.tsx` — persists fumadocs' left-sidebar `collapsed` state (via `useSidebar` from `fumadocs-ui/components/sidebar/base`) to localStorage; mounted inside `DocsLayout`. A blocking `<script>` in `app/layout.tsx` reads `sidebar-collapsed` from localStorage and sets `data-sidebar-collapsed="true"` on `<html>` before paint; CSS in `app/global.css` zeroes `--fd-sidebar-col` when that attribute is present, preventing a layout shift before React hydrates. `SidebarPersist` removes the attribute only after `collapsed=true` has been applied by React — removing it earlier would briefly expose the 268px sidebar column.
+- `components/reader-toggle.tsx` — ephemeral (non-persistent) reader mode: sets `data-reader-mode="on"` on `<html>`, collapses sidebar, hides TOC/actions/properties/footer via CSS. Exits on `Escape`, `Ctrl+B`, or sidebar expand. A floating exit bar (portaled to `document.body`) shows an exit button + ESC hint when active.
 - `components/graph-page.tsx` — `/graph` page content: legend + page/tag/link stats above the global graph
 
 **Reading affordances** (aliases, backlinks, link previews, sidenotes — ported from aarnphm/quartz, see ADR-0010)
@@ -111,12 +137,16 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `.claude/skills/create-term/` — authoring contract (frontmatter schema + section layout) these two surfaces render; the KM consistency strategy
 
 **Content schema**
-- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `protected` (bool or string → normalized), `aliases` (string or array → normalized); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, sidenotes)
+- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `protected` (bool or string → normalized), `aliases` (string or array → normalized), `draft` (bool), `unlisted` (bool); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, citations, sidenotes)
 - `lib/source.ts` — `source` loader; `resolvePage` (handles encoded/decoded slugs); `resolveReference` (extracted-reference href → page; relative hrefs resolve by slugs, not file path); `getLLMText`
 - `lib/shared.ts` — app-wide constants: `appName`, `docsRoute`, `gitConfig`
 
 **View transitions**
-- Native Next 16 `experimental.viewTransition` (`next.config.mjs`) crossfades `docs-content` (`app/(docs)/[...slug]/page.tsx`) and gives the sidebar a named `site-sidebar` snapshot (via `viewTransitionName` in `app/(docs)/[...slug]/layout.tsx` **and** a guaranteed `#nd-sidebar { view-transition-name }` in `app/global.css`) so it animates independently of the content crossfade. Its old/new snapshots **fade** (`vp-sidebar-out`/`vp-sidebar-in`) rather than `animation: none` — the old `animation: none` froze the unmatched old sidebar at full opacity on docs→home (home has no sidebar to pair with), so it lingered then popped; the fade is imperceptible on docs↔docs (two near-identical sidebars) and clean on docs→home. Reduced-motion overrides for all names live in `app/global.css`. Content navigations use a **fade-through with rise** (old fades out, new fades in +10px — `vp-content-out`/`vp-content-in` on `docs-content`) instead of a muddy 50/50 dissolve, and base-table rows **morph into the entry's H1** ("magic move"): `lib/transition-name.ts` derives a shared `entry-<path>` `view-transition-name` from the row's `NoteRecord.slug` (`components/bases-view-table.tsx`) and the destination page's `page.url` (`DocsTitle` in the catch-all route), so the browser pairs them. See ADR-0007. `app/(home)/page.tsx` wraps its content in `<ViewTransition name="docs-content" share="auto" enter="auto" default="none">` — the **same name** as the docs page's wrapper — so home↔docs navigation (in both directions) pairs as one shared "update" transition instead of relying on unmatched enter/exit across the unrelated `HomeLayout`/`DocsLayout` subtrees. `types/react-view-transition.d.ts` is a temporary type shim for `ViewTransition` — delete once `@types/react` ships real types. See ADR-0007.
+- Native Next 16 `experimental.viewTransition` (`next.config.mjs`) + React's `<ViewTransition>` component crossfade page content. Both `app/(docs)/[...slug]/page.tsx` and `app/(home)/page.tsx` wrap their content in `<ViewTransition name="docs-content" share="auto" enter="auto" default="none">` so home↔docs navigation pairs as a shared transition. See ADR-0007.
+- **React 19's `<ViewTransition>` assigns a separate `vt-name` to each direct child**: `docs-content`, `docs-content_1`, `docs-content_2`, etc. Only `::view-transition-group(docs-content)` has the `animation-duration: 0s` snap fix — the suffixed groups get the browser's default 0.25s position interpolation. Worse: when pages have different sets of conditional children (aliases, tags, properties), the indices misalign and unrelated elements morph into each other. **Fix**: the `<ViewTransition>` must have exactly **one** child element (a wrapper `<div>`) so the entire content block gets the single `docs-content` name. The docs page wraps its content in `<div className="flex flex-col gap-4 flex-1">`.
+- The `::view-transition-group(docs-content)` uses `animation-duration: 0s` so it **snaps** to the new element's position/size instead of interpolating. Without this, even sub-pixel position differences between old and new pages cause a visible horizontal shift (content drifts right then settles left). The old/new snapshots crossfade via `vp-content-out`/`vp-content-in` (opacity only, no `translateY`). Reduced-motion overrides for all names live in `app/global.css`.
+- The sidebar does **not** participate in named view transitions. Earlier attempts gave `#nd-sidebar` its own `site-sidebar` view-transition-name, but when the sidebar is collapsed (floating mode) its old snapshot would briefly flash during navigation. No inline `viewTransitionName` is set on the sidebar via the layout's `sidebar` prop — CSS is the sole source for any sidebar transition styling.
+- Base-table row links set their `viewTransitionName` only on click (`onClick` handler in `components/bases-view-table.tsx`), not permanently. A permanent name on every row carves holes in the parent `docs-content` snapshot (the View Transitions API excludes named children from the parent's bitmap), causing rows to animate independently — the table appeared to "load up piece by piece." The click-time name enables the "magic move" morph from the clicked row to the destination page's H1 when navigating via a table link, while keeping the `docs-content` snapshot intact for all other navigations. `lib/transition-name.ts` derives the shared `entry-<path>` name.
 - Navigation progress bar (`components/nav-progress.tsx`, mounted in `app/layout.tsx`) fills the server round-trip before the crossfade: `instrumentation-client.ts` broadcasts `onRouterTransitionStart` as a `vaultpress:nav-start` window event, the bar trickles, completes on the `usePathname()` commit (the same commit that starts the crossfade), and fades out under its own animation-suppressed `nav-progress` view-transition name (`app/global.css`). Changing `instrumentation-client.ts` requires a dev-server restart. See ADR-0009.
 
 ## Environment variables
@@ -144,10 +174,23 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - The Bases VM's `hasTag` is hierarchy-aware: `file.hasTag("a")` matches notes tagged `a/b` (Obsidian nested-tag semantics). Don't rely on exact matching in `.base` filters.
 - `extractedReferences` hrefs are raw link URLs — wikilink-resolved ones are URL-relative without an extension (`./wird`), which `source.getPageByHref` cannot resolve (its relative branch is keyed by file path **with** extension). Always go through `resolveReference` in `lib/source.ts`.
 - GFM footnotes (`[^n]`) never reach the page as footnotes — `lib/rehype-sidenotes.ts` rewrites them into sidenote spans and deletes the bottom footnote section at build time.
+- Citations (`[@key]`) inside footnotes work because `rehype-citation` runs before `rehypeSidenotes` in the plugin chain. If the order in `source.config.ts` is changed, citations inside sidenotes will break.
+- Citations require a `references.bib` (or configured path) at the project root. Without it, `[@key]` references render as-is with no error.
+- Excalidraw pages require both the JSON in `public/excalidraw/` **and** the MDX wrapper in `content/`. Both are produced together by generation; the pattern mirrors canvas files.
+- The excalidraw SVG renderer loads the Virgil font from unpkg CDN. If the CDN is unavailable, hand-drawn text falls back to system sans-serif.
 - `components/link-popover.tsx` and `components/sidenotes.tsx` depend on fumadocs-ui's stable DOM ids (`nd-page`, `nd-toc`, `nd-sidebar`). Re-verify them when upgrading fumadocs-ui.
 - An alias that matches an existing page slug is silently ignored (real pages always win); see `lib/alias-index.ts`.
 - Remark plugins must emit `mdxJsxTextElement`/`mdxJsxFlowElement` nodes, never raw `html` nodes — html nodes make the whole MDX module unparsable (`MODULE_UNPARSABLE`).
 - Annotation delimiters (`==`, `!!`, `^^`, `((`, `||`) are reserved in note prose — `((text))` in particular annotates any double-parenthesized text. See ADR-0012.
+- `{{sidenotes[label]: content}}` syntax is transformed at generation time, not at MDX compile time. MDX's acorn parser treats `{{` as a JSX expression and crashes if the syntax reaches it. The `transformSidenoteSyntax()` in `scripts/generate.ts` must run before any MDX processing. Hand-maintained `content/` files cannot use this syntax — use standard GFM footnotes (`[^n]`) instead.
+- `rehype-citation` ships with browser and Node conditional exports. Turbopack resolves to the browser build (which can't read local `.bib` files). `lib/rehype-citations.ts` uses `createRequire(import.meta.url)` to force Node resolution. Do not replace with a static `import` — it will break with "Cannot read non valid bibliography URL in node env."
+- `rehype-citation` joins `options.path` and `options.bibliography` with `path.join()`. Passing an absolute `bibliography` path doubles the directory (e.g. `/cwd/abs/path/ref.bib`). Always pass the relative filename and let `path: process.cwd()` resolve it.
+- **View transition named children create holes.** Any element with a `viewTransitionName` inside a `<ViewTransition>` wrapper is excluded from the parent's captured bitmap — the browser transitions it independently. On table pages this caused every row to animate separately ("table loads up piece by piece"). Only assign `viewTransitionName` to elements that will have a matching partner on the destination page; use onClick-time assignment for one-off morphs.
+- **View transition group interpolation causes layout shift.** The default `::view-transition-group` animation interpolates position/size from old to new. Even tiny position differences (e.g., different `max-width` between page types, or sub-pixel centering changes) animate as a visible horizontal drift. The CSS uses `::view-transition-group(*) { animation-duration: 0s }` to snap all groups (docs-content, root) instead of interpolating. The old/new pseudo-elements are separate and unaffected by the group override, so the crossfade is preserved.
+- **`<ViewTransition>` with multiple direct children creates per-child transition names.** React 19 assigns `vt-name="name"`, `vt-name="name_1"`, `vt-name="name_2"`, etc. to each direct child. CSS targeting `::view-transition-group(name)` only applies to the first child; the suffixed names get the browser's default 0.25s position/size interpolation. When pages have different sets of conditional children, the indices misalign (aliases→description, description→tags, etc.) causing elements to morph into unrelated partners. Always wrap `<ViewTransition>` children in a single `<div>` wrapper.
+- **Sidebar state resets during view-transition updates.** When navigating between docs pages, fumadocs' sidebar context briefly resets to `collapsed=false`, changing `--fd-sidebar-col` from `0px` to `var(--fd-sidebar-width)` (268px). When `SidebarPersist` restores it, fumadocs' Container detects the change and activates `transition-[grid-template-columns]`, causing the visible "content slide." The fix is `#nd-docs-layout { transition: none !important }` in `app/global.css`, which makes the grid snap instead of animating. The sidebar's own translate animation on `#nd-sidebar` is unaffected. Do not remove this rule.
+- Do not set `viewTransitionName` on the sidebar via inline styles (e.g. the layout's `sidebar={{ style: { viewTransitionName } }}` prop). Inline styles override CSS selectors, so conditional rules like `#nd-sidebar[data-collapsed] { view-transition-name: none }` would be silently ignored.
+- **Fumadocs has a CSS transition on the docs grid.** The `Container` component (`fumadocs-ui/dist/layouts/docs/slots/container.js`) sets `data-column-changed="true"` on `#nd-docs-layout` for one render cycle when `collapsed` changes. The CSS `data-[column-changed=true]:transition-[grid-template-columns]` smoothly animates the sidebar column resize. This is separate from view transitions — it fires on user-initiated sidebar toggling (including reader mode), not during page navigation.
 
 ## Fumadocs reference
 

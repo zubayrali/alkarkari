@@ -39,12 +39,14 @@
 
 .sidenote-arrow {
   display: none;
-  margin-left: 0.25em;
+  margin-left: 0.15em;
   vertical-align: middle;
   color: var(--sidenote-accent);
   pointer-events: none;
+  transition: transform 0.15s ease;
 }
 
+/* Show the expand arrow when the sidenote is in popover (click-to-open) mode */
 .sidenote-label[data-inline] .sidenote-arrow-down {
   display: inline-block;
   width: 8px;
@@ -55,13 +57,23 @@
   transform: rotate(180deg);
 }
 
+/* Stronger affordance that inline labels are clickable */
+.sidenote-label[data-inline] {
+  cursor: pointer;
+  border-bottom-style: dotted;
+}
+
+.sidenote-label[data-inline]:hover {
+  border-bottom-style: solid;
+  background-color: color-mix(in srgb, var(--sidenote-accent) 12%, transparent);
+}
+
 .sidenote-content {
   display: none;
   opacity: 0;
   position: absolute;
   width: var(--sidenote-width);
   box-sizing: border-box;
-  margin-top: -1rem;
   background-color: var(--sidenote-surface);
   z-index: 10;
   line-height: 1.5;
@@ -76,8 +88,8 @@
     transform 0.22s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.sidenote:hover ~ .sidenote-content,
-.sidenote-content:hover,
+/* Highlight the margin note when hovering its label or the note itself */
+.sidenote-content.sidenote-highlight,
 .sidenote-content:focus-within {
   border-color: var(--sidenote-accent);
   border-style: dashed;

@@ -46,14 +46,20 @@ export interface BaseView {
   sort?: Array<{ property: string; direction: 'ASC' | 'DESC' }>
   order?: string[]
   cardSize?: number
+  cardAspect?: number
   image?: string
   hideHeader?: boolean
+  limit?: number
+  nestedProperties?: boolean
+  separator?: string
 }
 
 export interface BaseConfig {
   filters?: FilterNode
   properties?: Record<string, PropertyConfig>
   views?: BaseView[]
+  defaultView?: string
+  hideToolbar?: boolean
 }
 
 export interface CompiledView {
@@ -65,10 +71,18 @@ export interface CompiledView {
   groupBy?: { property: string; direction: string }
   order?: string[]
   hideHeader?: boolean
+  cardSize?: number
+  cardAspect?: number
+  image?: string
+  limit?: number
+  nestedProperties?: boolean
+  separator?: string
 }
 
 export interface CompiledBase {
   version: 1
   config: BaseConfig
   views: CompiledView[]
+  defaultView?: string
+  hideToolbar?: boolean
 }

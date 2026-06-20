@@ -109,8 +109,13 @@ function parseViews(raw: unknown): BaseView[] {
   return raw
     .filter((v): v is Record<string, unknown> => typeof v === 'object' && v !== null)
     .map(v => {
+      const rawType = typeof v.type === 'string' ? v.type : 'table'
       const type: BaseView['type'] =
-        v.type === 'gallery' ? 'gallery' : v.type === 'list' ? 'list' : 'table'
+        rawType === 'cards' || rawType === 'card' || rawType === 'gallery' || rawType === 'board'
+          ? 'gallery'
+          : rawType === 'list'
+            ? 'list'
+            : 'table'
       const name = typeof v.name === 'string' ? v.name : type[0].toUpperCase() + type.slice(1)
       const view: BaseView = { type, name }
       if (v.filters) view.filters = v.filters as FilterNode
@@ -135,8 +140,12 @@ function parseViews(raw: unknown): BaseView[] {
         view.order = v.order.filter((o): o is string => typeof o === 'string')
       }
       if (typeof v.cardSize === 'number') view.cardSize = v.cardSize
+      if (typeof v.cardAspect === 'number') view.cardAspect = v.cardAspect
       if (typeof v.image === 'string') view.image = v.image
       if (typeof v.hideHeader === 'boolean') view.hideHeader = v.hideHeader
+      if (typeof v.limit === 'number') view.limit = v.limit
+      if (typeof v.nestedProperties === 'boolean') view.nestedProperties = v.nestedProperties
+      if (typeof v.separator === 'string') view.separator = v.separator
       return view
     })
 }
@@ -152,6 +161,8 @@ export function parseBaseConfig(content: string): ParsedBase {
     filters: parsed.filters as FilterNode | undefined,
     properties: parsePropertyConfig(parsed.properties),
     views,
+    defaultView: typeof parsed.defaultView === 'string' ? parsed.defaultView : undefined,
+    hideToolbar: parsed.hideToolbar === true ? true : undefined,
   }
 
   const topLevelFilter = compileFilterNode(config.filters)

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback, useTransition } from 'react'
+import { useState, useCallback, useTransition, useMemo } from 'react'
+import { List, LayoutGrid, Table2, Search, X } from 'lucide-react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
 import { BasesViewTable } from './bases-view-table'
 import { BasesViewGallery } from './bases-view-gallery'
@@ -10,6 +11,14 @@ interface ViewMeta {
   name: string
   type: 'table' | 'gallery' | 'list'
   hideHeader?: boolean
+  groupBy?: { property: string; direction: string }
+  order?: string[]
+  cardSize?: number
+  cardAspect?: number
+  image?: string
+  limit?: number
+  nestedProperties?: boolean
+  separator?: string
 }
 
 interface Props {
@@ -19,6 +28,13 @@ interface Props {
   properties?: Record<string, PropertyConfig>
   initialView?: string
   configBase64?: string
+  hideToolbar?: boolean
+}
+
+const viewIcons: Record<string, React.ReactNode> = {
+  table: <Table2 className="size-3.5" />,
+  list: <List className="size-3.5" />,
+  gallery: <LayoutGrid className="size-3.5" />,
 }
 
 export function BasesInlineView({
@@ -28,15 +44,30 @@ export function BasesInlineView({
   properties = {},
   initialView,
   configBase64: _configBase64,
+  hideToolbar,
 }: Props) {
   const [activeViewName, setActiveViewName] = useState(
     initialView ?? views[0]?.name ?? '',
   )
   const [notes, setNotes] = useState<NoteRecord[]>(precomputedNotes)
   const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [, startTransition] = useTransition()
 
   const activeView = views.find(v => v.name === activeViewName) ?? views[0]
+
+  const filteredNotes = useMemo(() => {
+    if (!searchQuery.trim()) return notes
+    const q = searchQuery.toLowerCase()
+    return notes.filter(note => {
+      if (note.title.toLowerCase().includes(q)) return true
+      for (const val of Object.values(note.frontmatter)) {
+        if (val !== null && val !== undefined && String(val).toLowerCase().includes(q)) return true
+      }
+      if (note.tags.some(t => t.toLowerCase().includes(q))) return true
+      return false
+    })
+  }, [notes, searchQuery])
 
   const switchView = useCallback(
     async (viewName: string) => {
@@ -99,36 +130,85 @@ export function BasesInlineView({
 
   return (
     <div className="not-prose">
-      {views.length > 1 && (
-        <div className="mb-3 flex gap-2 border-b pb-2">
-          {views.map(v => (
-            <button
-              key={v.name}
-              onClick={() => { void switchView(v.name) }}
-              className={`px-3 py-1 text-sm rounded transition-colors ${
-                v.name === activeViewName
-                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
-                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
-              }`}
-            >
-              {v.name}
-            </button>
-          ))}
+      {!hideToolbar && (
+      <div className="base-toolbar">
+        {views.length > 1 && (
+          <div className="base-view-tabs">
+            {views.map(v => (
+              <button
+                key={v.name}
+                onClick={() => { void switchView(v.name) }}
+                className={`base-view-tab ${v.name === activeViewName ? 'active' : ''}`}
+              >
+                {viewIcons[v.type] ?? viewIcons.table}
+                <span>{v.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="base-toolbar-right">
+          <span className="base-results-count">
+            {filteredNotes.length === notes.length
+              ? `${notes.length} results`
+              : `${filteredNotes.length} of ${notes.length}`}
+          </span>
+          <div className="base-search">
+            <Search className="base-search-icon" />
+            <input
+              type="text"
+              placeholder="Filter…"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="base-search-input"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="base-search-clear"
+              >
+                <X className="size-3" />
+              </button>
+            )}
+          </div>
         </div>
+      </div>
       )}
 
       {loading && (
-        <div className="h-8 animate-pulse rounded bg-neutral-100 dark:bg-neutral-800 mb-3" />
+        <div className="h-8 animate-pulse rounded bg-fd-muted mb-3" />
       )}
 
       {viewType === 'table' && (
-        <BasesViewTable notes={notes} properties={properties} hideHeader={activeView?.hideHeader} />
+        <BasesViewTable
+          notes={filteredNotes}
+          properties={properties}
+          order={activeView?.order}
+          hideHeader={activeView?.hideHeader}
+          groupBy={activeView?.groupBy}
+        />
       )}
       {viewType === 'gallery' && (
-        <BasesViewGallery notes={notes} properties={properties} />
+        <BasesViewGallery
+          notes={filteredNotes}
+          properties={properties}
+          order={activeView?.order}
+          cardSize={activeView?.cardSize}
+          cardAspect={activeView?.cardAspect}
+          imageProperty={activeView?.image}
+          groupBy={activeView?.groupBy}
+        />
       )}
       {viewType === 'list' && (
-        <BasesViewList notes={notes} properties={properties} />
+        <BasesViewList
+          notes={filteredNotes}
+          properties={properties}
+          order={activeView?.order}
+          groupBy={activeView?.groupBy}
+          nestedProperties={activeView?.nestedProperties}
+          separator={activeView?.separator}
+        />
       )}
     </div>
   )

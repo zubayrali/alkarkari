@@ -1,0 +1,40 @@
+---
+title: Citations & Sidenotes Test
+description: Testing Pandoc-style citations inside sidenotes
+---
+
+## Citations inside Sidenotes (GFM footnotes)
+
+Aesthetic realism holds that values exist independently of human responses — aesthetic properties are objective features objects genuinely possess[^1].
+
+Anti-realism counters that values are constituted by ideal responses[^2]. Fitting attitude theories attempt a middle path: something has aesthetic value if it merits particular responses — admiration, contemplation, delight [@scanlon1998what].
+
+[^1]: Mackie's challenge: values would be "metaphysically queer" — objectively prescriptive, motivating by their mere apprehension. Would require a special faculty of aesthetic perception. "To-be-appreciated-ness somehow built into" the property [@mackie1977ethics].
+
+[^2]: The problem is explaining normativity. If beauty just is whatever produces pleasure in ideal observers, why should non-ideal observers care? Why does "this is beautiful" make a normative claim on us?
+
+## Custom sidenote syntax (pre-transformed)
+
+Values are objective yet relationally constituted — determined by responses under ideal conditions.[^_sn_1]
+
+Aesthetic properties are objective features objects genuinely possess.[^_sn_2]
+
+[^_sn_1]: adequate perception, no distorting factors, appropriate background knowledge.
+
+[^_sn_2]: mackie's challenge: values would be "metaphysically queer" — objectively prescriptive, motivating by their mere apprehension. Would require a special faculty of aesthetic perception. "to-be-appreciated-ness somehow built into" the property [@mackie1977ethics].
+
+## Standalone Citation
+
+Kant argued that beauty is disinterested pleasure claiming universal validity [@kant1790critique]. The judgment is grounded in pleasure (subjective) yet claims validity for all (universal).
+
+## Collapsed Sidenote in Blockquote
+
+> x is beautiful iff x would produce aesthetic pleasure in ideal observers under ideal conditions.[^_sn_3]
+
+[^_sn_3]: adequate perception, no distorting factors, appropriate background knowledge.
+
+## Regular Sidenote
+
+A footnote without any citation[^3] to verify regular sidenotes still work alongside cited ones.
+
+[^3]: This sidenote has no citation — it should render identically to the ones above, just without the parenthetical reference.

@@ -22,16 +22,33 @@ export async function BasesPageContent({ src }: Props) {
     )
   }
 
-  const firstView = compiled.views[0]
-  if (!firstView) {
+  const defaultView = compiled.defaultView
+    ? compiled.views.find(v => v.name === compiled.defaultView)
+    : undefined
+  const initialView = defaultView ?? compiled.views[0]
+  if (!initialView) {
     return <div className="text-sm text-neutral-500">No views defined.</div>
   }
 
   return (
     <BasesInlineView
       src={src}
-      precomputedNotes={firstView.precomputedNotes}
-      views={compiled.views.map(v => ({ name: v.name, type: v.type, hideHeader: v.hideHeader }))}
+      precomputedNotes={initialView.precomputedNotes}
+      initialView={initialView.name}
+      hideToolbar={compiled.hideToolbar}
+      views={compiled.views.map(v => ({
+        name: v.name,
+        type: v.type,
+        hideHeader: v.hideHeader,
+        groupBy: v.groupBy,
+        order: v.order,
+        cardSize: v.cardSize,
+        cardAspect: v.cardAspect,
+        image: v.image,
+        limit: v.limit,
+        nestedProperties: v.nestedProperties,
+        separator: v.separator,
+      }))}
       properties={compiled.config.properties ?? {}}
     />
   )

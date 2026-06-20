@@ -12,6 +12,7 @@ const server = createFromSource(source, {
       description?: string;
       structuredData?: unknown;
       protected?: boolean;
+      unlisted?: boolean;
       load?: () => Promise<{ structuredData?: unknown }>;
     };
 
@@ -24,13 +25,14 @@ const server = createFromSource(source, {
       throw new Error(`Cannot index page: ${page.url}`);
     }
 
+    const tag = data.unlisted ? 'unlisted' : data.protected ? 'protected' : 'public';
     return {
       title: data.title ?? page.url,
       description: data.description,
       url: page.url,
       id: page.url,
       structuredData: structuredData as StructuredData,
-      tag: data.protected ? 'protected' : 'public',
+      tag,
     };
   },
 });
@@ -39,8 +41,8 @@ export async function GET(request: Request) {
   const hasAccess = await hasProtectedAccess();
   const url = new URL(request.url);
 
-  if (!hasAccess && !url.searchParams.has('tag')) {
-    url.searchParams.set('tag', 'public');
+  if (!url.searchParams.has('tag')) {
+    url.searchParams.set('tag', hasAccess ? 'public,protected' : 'public');
   }
 
   return server.GET(new Request(url, request));

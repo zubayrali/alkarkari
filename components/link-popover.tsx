@@ -18,6 +18,8 @@ import { useEffect } from 'react';
 
 let activeAnchor: HTMLAnchorElement | null = null;
 let activeRequest: { abort: () => void; link: HTMLAnchorElement } | null = null;
+let dismissTimer: ReturnType<typeof setTimeout> | null = null;
+const htmlCache = new Map<string, string>();
 
 function createPopoverElement(): {
   popoverElement: HTMLElement;
@@ -150,23 +152,33 @@ async function setPosition(link: HTMLElement, popoverElement: HTMLElement) {
   }
 }
 
+function cancelDismiss() {
+  if (dismissTimer !== null) {
+    clearTimeout(dismissTimer);
+    dismissTimer = null;
+  }
+}
+
 /** Hide popovers (optionally keeping one) WITHOUT touching the active anchor. */
 function deactivatePopovers(except?: HTMLElement) {
+  cancelDismiss();
   document.querySelectorAll<HTMLElement>('.link-popover').forEach((popoverElement) => {
     if (popoverElement === except) return;
     popoverElement.classList.remove('active-popover');
   });
 }
 
-/**
- * Fully dismiss: drop the active anchor and hide every popover. Kept separate
- * from {@link deactivatePopovers} because nulling `activeAnchor` while merely
- * *showing* a popover would make the link's own mouseout early-return and leave
- * the preview stuck on screen.
- */
 function clearActivePopover() {
   activeAnchor = null;
   deactivatePopovers();
+}
+
+function scheduleDismiss() {
+  cancelDismiss();
+  dismissTimer = setTimeout(() => {
+    dismissTimer = null;
+    clearActivePopover();
+  }, 300);
 }
 
 async function showPopover(
@@ -198,6 +210,12 @@ async function populatePagePreview(
   popoverInner: HTMLDivElement,
   signal: AbortSignal,
 ): Promise<boolean> {
+  const cached = htmlCache.get(targetUrl.pathname);
+  if (cached) {
+    popoverInner.innerHTML = cached;
+    return true;
+  }
+
   const response = await fetch(targetUrl.toString(), {
     headers: { Accept: 'text/html' },
     signal,
@@ -212,7 +230,6 @@ async function populatePagePreview(
 
   const html = new DOMParser().parseFromString(contents, 'text/html');
   normalizeRelativeUrls(html, targetUrl);
-  // Prefix every id so anchors inside the preview never collide with the host page.
   html.querySelectorAll('[id]').forEach((el) => {
     el.id = `popover-${el.id}`;
   });
@@ -222,7 +239,13 @@ async function populatePagePreview(
   );
   if (!article) return false;
 
+  // Base pages are data tables — previewing them is ugly and wasteful.
+  if (article.querySelector('.base-table-wrapper, .base-card-grid, .base-card-container, .base-list-container')) {
+    return false;
+  }
+
   popoverInner.replaceChildren(cleanPreviewElement(article));
+  htmlCache.set(targetUrl.pathname, popoverInner.innerHTML);
   return true;
 }
 
@@ -258,10 +281,14 @@ async function handleInternalLink(link: HTMLAnchorElement) {
 
   document.body.appendChild(popoverElement);
 
+  popoverElement.addEventListener('mouseenter', () => {
+    cancelDismiss();
+  });
+
   popoverElement.addEventListener('mouseleave', (event) => {
     const related = event.relatedTarget;
     if (related instanceof Node && activeAnchor && activeAnchor.contains(related)) return;
-    clearActivePopover();
+    scheduleDismiss();
   });
 
   await showPopover(link, popoverElement, hash);
@@ -273,6 +300,7 @@ function previewableLink(target: EventTarget | null): HTMLAnchorElement | null {
   if (!(link instanceof HTMLAnchorElement)) return null;
   if (!link.closest('article')) return null;
   if (link.closest('.link-popover')) return null;
+  if (link.classList.contains('base-card-image')) return null;
   if (link.dataset.noPopover === '' || link.dataset.noPopover === 'true') return null;
   if (link.origin !== window.location.origin) return null;
   if (link.hasAttribute('download')) return null;
@@ -286,7 +314,11 @@ function previewableLink(target: EventTarget | null): HTMLAnchorElement | null {
 
 function onMouseOver(event: MouseEvent) {
   const link = previewableLink(event.target);
-  if (!link || link === activeAnchor) return;
+  if (!link) return;
+  // Re-entering the active link (or entering it for the first time) cancels
+  // any pending dismiss so the popover stays alive.
+  cancelDismiss();
+  if (link === activeAnchor) return;
   activeAnchor = link;
   void handleInternalLink(link);
 }
@@ -298,7 +330,6 @@ function onMouseOut(event: MouseEvent) {
   const related = event.relatedTarget;
   if (related instanceof Node) {
     if (link.contains(related)) return;
-    // Moving into the popover keeps it open; its own mouseleave closes it.
     if (related instanceof Element && related.closest('.link-popover')) return;
   }
 
@@ -306,7 +337,8 @@ function onMouseOut(event: MouseEvent) {
     activeRequest.abort();
     activeRequest = null;
   }
-  clearActivePopover();
+  // Grace period: cursor may be crossing the gap toward the popover.
+  scheduleDismiss();
 }
 
 export function LinkPopover() {

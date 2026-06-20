@@ -83,7 +83,19 @@ export function remarkInlineBase() {
 
       const payload = {
         compiledFilter,
-        views: views.map((v) => ({ name: v.name, type: v.type, order: v.order })),
+        views: views.map((v) => ({
+          name: v.name,
+          type: v.type,
+          order: v.order,
+          hideHeader: v.hideHeader,
+          groupBy: v.groupBy,
+          cardSize: v.cardSize,
+          cardAspect: v.cardAspect,
+          image: v.image,
+          limit: v.limit,
+          nestedProperties: v.nestedProperties,
+          separator: v.separator,
+        })),
         limit: config.limit,
       }
 

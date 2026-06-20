@@ -107,13 +107,13 @@ export function NavProgress() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-0.5"
-      style={{ viewTransitionName: "nav-progress" }}
+      className="pointer-events-none fixed inset-x-0 top-0 z-[100]"
+      style={{ viewTransitionName: "nav-progress", height: "2.5px" }}
     >
       <div
         className={cn(
-          "h-full bg-fd-primary motion-reduce:transition-none",
-          phase === "active" && "opacity-100 transition-[width] duration-200 ease-out",
+          "nav-progress-bar h-full motion-reduce:transition-none",
+          phase === "active" && "nav-progress-sweep opacity-100 transition-[width] duration-200 ease-out",
           phase === "done" && "opacity-0 transition-opacity duration-300 ease-out",
           phase === "idle" && "opacity-0 transition-none",
         )}

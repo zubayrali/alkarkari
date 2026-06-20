@@ -77,17 +77,28 @@ export function RoughAnnotations() {
     const relayout = debounce(() => init(false), 150);
     window.addEventListener('resize', relayout, { passive: true });
 
-    // Colors are theme tokens — redraw when light/dark flips.
-    const observer = new MutationObserver(relayout);
-    observer.observe(document.documentElement, {
+    // Redraw when theme flips, reader mode toggles, or sidebar collapses.
+    // Hide SVGs instantly to avoid stale positions during layout shift.
+    const layoutChanged = () => { cleanup(); relayout(); };
+
+    const htmlObserver = new MutationObserver(layoutChanged);
+    htmlObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class'],
+      attributeFilter: ['class', 'data-reader-mode'],
+    });
+
+    const sidebar = document.getElementById('nd-sidebar');
+    const sidebarObserver = sidebar ? new MutationObserver(layoutChanged) : null;
+    sidebarObserver?.observe(sidebar!, {
+      attributes: true,
+      attributeFilter: ['data-collapsed'],
     });
 
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener('resize', relayout);
-      observer.disconnect();
+      htmlObserver.disconnect();
+      sidebarObserver?.disconnect();
       cleanup();
     };
   }, [pathname]);

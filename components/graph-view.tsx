@@ -289,15 +289,16 @@ function ClientOnly({
   const labelAlphas = useRef(new Map<string, number>());
   const linkAlphas = useRef(new Map<string, number>());
   const router = useRouter();
-  const [tooltip, setTooltip] = useState<{
-    x: number;
-    y: number;
-    title: string;
-    description?: string;
-  } | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   // d3 mutates node objects (x/y/vx/vy); never hand it the RSC-owned props.
   const data = useMemo(() => structuredClone(graph), [graph]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverClearTimer.current) clearTimeout(hoverClearTimer.current);
+    };
+  }, []);
 
   useEffect(() => {
     visitedRef.current = getVisited();
@@ -403,24 +404,67 @@ function ClientOnly({
     );
   }, []);
 
-  const handleNodeHover = (node: Node | null) => {
-    hoveredRef.current = node;
-    const container = containerRef.current;
-    if (container) container.style.cursor = node ? 'pointer' : '';
+  const hoverClearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const fg = graphRef.current;
-    if (node && fg) {
-      const coords = fg.graph2ScreenCoords(node.x!, node.y!);
-      setTooltip({
-        x: coords.x + 8,
-        y: coords.y + 8,
-        title: node.text,
-        description: node.description,
-      });
-    } else {
-      setTooltip(null);
-    }
-  };
+  const applyHover = useCallback(
+    (node: Node | null) => {
+      hoveredRef.current = node;
+      const container = containerRef.current;
+      if (container) container.style.cursor = node ? 'pointer' : '';
+
+      const el = tooltipRef.current;
+      if (!el) return;
+
+      if (node) {
+        const fg = graphRef.current;
+        if (fg) {
+          const coords = fg.graph2ScreenCoords(node.x!, node.y!);
+          el.style.top = `${coords.y + 8}px`;
+          el.style.left = `${coords.x + 8}px`;
+          el.style.display = '';
+          const titleEl = el.firstElementChild as HTMLElement | null;
+          const descEl = el.lastElementChild as HTMLElement | null;
+          if (titleEl) titleEl.textContent = node.text;
+          if (descEl) {
+            descEl.textContent = node.description ?? '';
+            descEl.style.display = node.description ? '' : 'none';
+          }
+        }
+      } else {
+        el.style.display = 'none';
+      }
+    },
+    [containerRef],
+  );
+
+  const handleNodeHover = useCallback(
+    (node: Node | null) => {
+      if (hoverClearTimer.current) {
+        clearTimeout(hoverClearTimer.current);
+        hoverClearTimer.current = null;
+      }
+
+      if (node) {
+        applyHover(node);
+      } else {
+        // The shadow canvas used for hit detection refreshes on an 800ms
+        // throttle, so stale pixels can briefly report "nothing hovered"
+        // while the cursor is still over a node. Delay the clear so these
+        // false nulls don't flicker the UI.
+        hoverClearTimer.current = setTimeout(() => applyHover(null), 120);
+      }
+    },
+    [applyHover],
+  );
+
+  const nodeRadius = useCallback(
+    (node: Node) => {
+      const degree = node.neighbors?.length ?? 0;
+      const isCurrent = currentUrl !== undefined && node.url === currentUrl;
+      return 2 + Math.sqrt(degree) + (isCurrent ? 1.5 : 0);
+    },
+    [currentUrl],
+  );
 
   const nodeCanvasObject: ForceGraphProps<Node, Link>['nodeCanvasObject'] = (
     node,
@@ -431,10 +475,8 @@ function ClientOnly({
     if (!colors) return;
 
     const id = node.id as string;
-    const degree = node.neighbors?.length ?? 0;
     const isCurrent = currentUrl !== undefined && node.url === currentUrl;
-    // Degree-sized radius, ported from quartz: 2 + sqrt(links).
-    const radius = 2 + Math.sqrt(degree) + (isCurrent ? 1.5 : 0);
+    const radius = nodeRadius(node);
 
     const active = isActive(node);
     const alpha = tween(nodeAlphas.current, id, active ? 1 : DIM_ALPHA);
@@ -520,6 +562,12 @@ function ClientOnly({
         ref={fgRefObject.current}
         graphData={data}
         nodeCanvasObject={nodeCanvasObject}
+        nodePointerAreaPaint={(node, color, ctx) => {
+          ctx.beginPath();
+          ctx.arc(node.x!, node.y!, nodeRadius(node) + 2, 0, 2 * Math.PI, false);
+          ctx.fillStyle = color;
+          ctx.fill();
+        }}
         linkColor={linkColor}
         onNodeHover={handleNodeHover}
         onNodeClick={(node) => {
@@ -548,19 +596,14 @@ function ClientOnly({
         enableNodeDrag
         enableZoomInteraction
       />
-      {tooltip && (
-        <div
-          className="pointer-events-none absolute z-10 max-w-xs rounded-lg border bg-fd-popover p-2 text-sm text-fd-popover-foreground shadow-lg"
-          style={{ top: tooltip.y, left: tooltip.x }}
-        >
-          <div className="font-medium">{tooltip.title}</div>
-          {tooltip.description && (
-            <div className="mt-0.5 text-xs text-fd-muted-foreground">
-              {tooltip.description}
-            </div>
-          )}
-        </div>
-      )}
+      <div
+        ref={tooltipRef}
+        className="pointer-events-none absolute z-10 max-w-xs rounded-lg border bg-fd-popover p-2 text-sm text-fd-popover-foreground shadow-lg"
+        style={{ display: 'none' }}
+      >
+        <div className="font-medium" />
+        <div className="mt-0.5 text-xs text-fd-muted-foreground" />
+      </div>
     </>
   );
 }

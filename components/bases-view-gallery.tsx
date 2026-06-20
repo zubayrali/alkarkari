@@ -1,67 +1,178 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
+import { resolveNoteProperty, isNameColumn, resolveDisplayName } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
+
+const PAGE_SIZE = 60
 
 interface Props {
   notes: NoteRecord[]
   properties: Record<string, PropertyConfig>
   order?: string[]
   cardSize?: number
+  cardAspect?: number
   imageProperty?: string
+  groupBy?: { property: string; direction: string }
 }
 
-export function BasesViewGallery({ notes, properties, order, cardSize = 280, imageProperty }: Props) {
-  const columns = order ?? []
+function groupByProperty(
+  notes: NoteRecord[],
+  groupBy: { property: string; direction: string },
+): Map<string, NoteRecord[]> {
+  const grouped = new Map<string, NoteRecord[]>()
+  for (const note of notes) {
+    const val = resolveNoteProperty(note, groupBy.property)
+    const key = val === null || val === undefined ? '(empty)' : String(val)
+    if (!grouped.has(key)) grouped.set(key, [])
+    grouped.get(key)!.push(note)
+  }
+  const sorted = [...grouped.entries()].sort(([a], [b]) => {
+    const cmp = a.localeCompare(b)
+    return groupBy.direction === 'DESC' ? -cmp : cmp
+  })
+  return new Map(sorted)
+}
+
+function Card({
+  note,
+  imageProperty,
+  cardAspect,
+  columns,
+  properties,
+}: {
+  note: NoteRecord
+  imageProperty?: string
+  cardAspect?: number
+  columns: string[]
+  properties: Record<string, PropertyConfig>
+}) {
+  const imageUrl = imageProperty && !note.protected
+    ? String(note.frontmatter[imageProperty] ?? '')
+    : ''
 
   return (
-    <div
-      className="grid gap-4"
-      style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${cardSize}px, 1fr))` }}
-    >
-      {notes.map(note => {
-        const imageUrl = imageProperty && !note.protected
-          ? String(note.frontmatter[imageProperty] ?? '')
-          : ''
-
-        return (
-          <div
-            key={note.slug}
-            className="relative rounded-lg border overflow-hidden flex flex-col"
-          >
-            {imageUrl && (
-              <div className="h-40 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-                <img
-                  src={imageUrl}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            {note.protected && (
-              <div className="absolute inset-0 backdrop-blur-sm bg-white/30 dark:bg-black/30 flex items-center justify-center">
-                <span className="text-xs text-neutral-500">Protected</span>
-              </div>
-            )}
-            <div className="p-3 flex flex-col gap-1">
-              <Link href={note.slug} className="font-medium text-sm hover:underline">
-                {note.title}
-              </Link>
-              {!note.protected && columns.map(col => {
-                const val = note.frontmatter[col]
-                if (val === null || val === undefined) return null
-                return (
-                  <div key={col} className="text-xs text-neutral-500 dark:text-neutral-400">
-                    <span className="font-medium">{properties[col]?.displayName ?? col}:</span>{' '}
+    <div className="base-card">
+      {imageUrl && (
+        <Link
+          href={note.slug}
+          className="base-card-image"
+          style={{
+            backgroundImage: `url(${imageUrl})`,
+            aspectRatio: cardAspect ? `1 / ${cardAspect}` : undefined,
+          }}
+        />
+      )}
+      {note.protected && (
+        <div className="absolute inset-0 backdrop-blur-sm bg-white/30 dark:bg-black/30 flex items-center justify-center z-10">
+          <span className="text-xs text-fd-muted-foreground">Protected</span>
+        </div>
+      )}
+      <div className="base-card-content">
+        <Link href={note.slug} className="base-card-title">
+          {note.title}
+        </Link>
+        {!note.protected && columns.length > 0 && (
+          <div className="base-card-meta">
+            {columns.map(col => {
+              const val = resolveNoteProperty(note, col)
+              if (val === null || val === undefined) return null
+              return (
+                <div key={col} className="base-card-meta-item">
+                  <span className="base-card-meta-label">
+                    {resolveDisplayName(col, properties)}
+                  </span>
+                  <span className="base-card-meta-value">
                     {basesCellContent(note, col)}
-                  </div>
-                )
-              })}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export function BasesViewGallery({
+  notes,
+  properties,
+  order,
+  cardSize = 280,
+  cardAspect,
+  imageProperty,
+  groupBy,
+}: Props) {
+  const columns = (order ?? []).filter(
+    c => !isNameColumn(c) && c !== imageProperty,
+  )
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+
+  const gridStyle = {
+    '--base-card-min': `${cardSize}px`,
+    ...(cardAspect ? { '--base-card-aspect': String(cardAspect) } : {}),
+  } as React.CSSProperties
+
+  const groups = groupBy ? groupByProperty(notes, groupBy) : null
+  const isGrouped = groups !== null && groups.size > 0
+
+  if (isGrouped) {
+    return (
+      <div className="base-card-container" style={gridStyle}>
+        {Array.from(groups!.entries()).map(([groupName, groupedNotes]) => (
+          <div key={groupName} className="base-card-group">
+            <h3 className="base-card-group-header">{groupName}</h3>
+            <div className="base-card-grid">
+              {groupedNotes.map(note => (
+                <Card
+                  key={note.slug}
+                  note={note}
+                  imageProperty={imageProperty}
+                  cardAspect={cardAspect}
+                  columns={columns}
+                  properties={properties}
+                />
+              ))}
             </div>
           </div>
-        )
-      })}
+        ))}
+        {notes.length === 0 && (
+          <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+        )}
+      </div>
+    )
+  }
+
+  const displayed = notes.slice(0, visibleCount)
+
+  return (
+    <div>
+      <div className="base-card-grid" style={gridStyle}>
+        {displayed.map(note => (
+          <Card
+            key={note.slug}
+            note={note}
+            imageProperty={imageProperty}
+            cardAspect={cardAspect}
+            columns={columns}
+            properties={properties}
+          />
+        ))}
+      </div>
       {notes.length === 0 && (
-        <p className="col-span-full py-4 text-center text-sm text-neutral-400">No results.</p>
+        <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+      )}
+      {visibleCount < notes.length && (
+        <button
+          type="button"
+          className="base-load-more"
+          onClick={() => setVisibleCount(v => v + PAGE_SIZE)}
+        >
+          Show more ({notes.length - visibleCount} remaining)
+        </button>
       )}
     </div>
   )
