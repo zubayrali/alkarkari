@@ -1,16 +1,17 @@
 import { createMDX } from 'fumadocs-mdx/next';
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
 const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const config = {
+  output: 'export',
   serverExternalPackages: ['rehype-citation'],
   reactStrictMode: true,
   experimental: {
     viewTransition: true,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       { hostname: 'images.unsplash.com' },
     ],
@@ -18,5 +19,3 @@ const config = {
 };
 
 export default withMDX(config);
-
-initOpenNextCloudflareForDev();

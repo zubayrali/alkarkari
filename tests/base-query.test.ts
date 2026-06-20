@@ -5,7 +5,7 @@ import type { NoteRecord } from '../lib/base-types'
 
 const note = (overrides: Partial<NoteRecord>): NoteRecord => ({
   slug: '/test', title: 'Test', path: 'test.md', folder: '',
-  tags: [], protected: false, frontmatter: {},
+  tags: [], frontmatter: {},
   ...overrides,
 })
 

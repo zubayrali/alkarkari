@@ -12,7 +12,6 @@ export interface NoteRecord {
   path: string
   folder: string
   tags: string[]
-  protected: boolean
   frontmatter: Record<string, unknown>
   /**
    * Frontmatter values that contain `[[wikilinks]]`, pre-resolved at generation

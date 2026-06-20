@@ -1,17 +1,14 @@
 import { getPageImage, resolvePage, source } from '@/lib/source';
-import { hasProtectedAccess, isPageProtected, pageRequiresAuth } from '@/lib/protected';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 import { appName } from '@/lib/shared';
 
-export async function GET(_req: Request, { params }: RouteContext<'/og/[...slug]'>) {
+export const dynamicParams = false;
+
+export async function GET(_: Request, { params }: RouteContext<'/og/[...slug]'>) {
   const { slug } = await params;
   const page = resolvePage(slug.slice(0, -1));
   if (!page) notFound();
-
-  if (pageRequiresAuth(page) && !(await hasProtectedAccess())) {
-    notFound();
-  }
 
   return new ImageResponse(
     (
@@ -71,7 +68,7 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/[...slug]
 }
 
 export function generateStaticParams() {
-  return source.getPages().filter((page) => !isPageProtected(page) && !page.data.unlisted).map((page) => ({
+  return source.getPages().filter((page) => !page.data.unlisted).map((page) => ({
     slug: getPageImage(page).segments,
   }));
 }

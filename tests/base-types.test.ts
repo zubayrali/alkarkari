@@ -8,7 +8,6 @@ describe('NoteRecord', () => {
     expectTypeOf<NoteRecord>().toHaveProperty('path')
     expectTypeOf<NoteRecord>().toHaveProperty('folder')
     expectTypeOf<NoteRecord>().toHaveProperty('tags')
-    expectTypeOf<NoteRecord>().toHaveProperty('protected')
     expectTypeOf<NoteRecord>().toHaveProperty('frontmatter')
   })
 })

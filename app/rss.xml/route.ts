@@ -1,7 +1,8 @@
 import { source } from '@/lib/source';
 import { appName } from '@/lib/shared';
-import { pageRequiresAuth } from '@/lib/protected';
 import { getSiteLanguage } from '@/lib/locale';
+
+export const dynamic = 'force-static';
 
 function escapeXml(text: string): string {
   return text
@@ -34,7 +35,6 @@ export function GET() {
     .getPages()
     .filter(
       (page) =>
-        !pageRequiresAuth(page) &&
         !page.data.tagPage &&
         !page.data.unlisted &&
         !page.data.base,

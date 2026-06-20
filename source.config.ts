@@ -6,7 +6,6 @@ import remarkMath from "remark-math";
 import { remarkWikilinks } from "./lib/remark-wikilinks";
 import { remarkInlineBase } from "./lib/remark-inline-base";
 import { remarkAnnotations } from "./lib/remark-annotations";
-import { normalizeProtected } from "./lib/protected-field";
 import { normalizeTags } from "./lib/tags";
 import { normalizeAliases } from "./lib/aliases";
 import { rehypeSidenotes } from "./lib/rehype-sidenotes";
@@ -21,10 +20,6 @@ export const docs = defineDocs({
         .union([z.string(), z.array(z.string())])
         .optional()
         .transform(normalizeTags),
-      protected: z
-        .union([z.boolean(), z.string()])
-        .optional()
-        .transform(normalizeProtected),
       aliases: z
         .union([z.string(), z.array(z.string())])
         .optional()

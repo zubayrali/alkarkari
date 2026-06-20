@@ -1,9 +1,10 @@
-import { getAccessiblePages, hasProtectedAccess } from '@/lib/protected';
+import { source } from '@/lib/source';
 import { appName } from '@/lib/shared';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
-  const hasAccess = await hasProtectedAccess();
-  const pages = getAccessiblePages(hasAccess);
+  const pages = source.getPages();
   const body = pages
     .map((page) => `- [${page.data.title}](${page.url})`)
     .join('\n');

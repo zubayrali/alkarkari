@@ -1,5 +1,4 @@
 import { resolveReference, source } from './source';
-import { pageRequiresAuth } from './protected';
 
 export interface BacklinkEntry {
   url: string;
@@ -9,19 +8,11 @@ export interface BacklinkEntry {
 
 type Page = ReturnType<typeof source.getPages>[number];
 
-/**
- * Pages whose body references the target page, inverted from the same
- * `extractedReferences` data the graph view is built on. Protected pages are
- * excluded unless the visitor has unlocked access (mirrors `buildGraph`).
- */
-export function getBacklinks(target: Page, hasAccess = false): BacklinkEntry[] {
+export function getBacklinks(target: Page): BacklinkEntry[] {
   const backlinks: BacklinkEntry[] = [];
 
   for (const page of source.getPages()) {
     if (page.url === target.url) continue;
-    if (!hasAccess && pageRequiresAuth(page)) continue;
-    // Tag pages list members by query, not by reference; membership is
-    // already visible via the page's tag chips.
     if (page.data.tagPage) continue;
 
     const { extractedReferences = [] } = page.data;

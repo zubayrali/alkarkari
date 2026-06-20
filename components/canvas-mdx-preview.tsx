@@ -1,7 +1,6 @@
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/components/mdx';
 import { normalizeCanvasPath } from '@/lib/canvas-paths';
-import { pageRequiresAuth } from '@/lib/protected';
 import { source } from '@/lib/source';
 
 function toSlugSegments(filePath: string) {
@@ -13,20 +12,14 @@ function toSlugSegments(filePath: string) {
 
 type CanvasMdxPreviewProps = {
   file: string;
-  hasProtectedAccess: boolean;
 };
 
 export async function CanvasMdxPreview({
   file,
-  hasProtectedAccess,
 }: CanvasMdxPreviewProps) {
   const page = source.getPage(toSlugSegments(file));
   if (!page) {
     return <span className="text-xs text-fd-muted-foreground">Note</span>;
-  }
-
-  if (pageRequiresAuth(page) && !hasProtectedAccess) {
-    return <span className="text-xs text-fd-muted-foreground">Protected</span>;
   }
 
   const MDX = page.data.body;

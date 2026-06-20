@@ -1,15 +1,10 @@
 import { getLLMText, getPageMarkdownUrl, resolvePage, source } from '@/lib/source';
-import { hasProtectedAccess, isPageProtected, pageRequiresAuth } from '@/lib/protected';
 import { notFound } from 'next/navigation';
 
-export async function GET(_req: Request, { params }: RouteContext<'/llms.mdx/[[...slug]]'>) {
+export async function GET(_: Request, { params }: RouteContext<'/llms.mdx/[[...slug]]'>) {
   const { slug } = await params;
   const page = resolvePage(slug?.slice(0, -1));
   if (!page) notFound();
-
-  if (pageRequiresAuth(page) && !(await hasProtectedAccess())) {
-    return new Response('Unauthorized', { status: 401 });
-  }
 
   return new Response(await getLLMText(page), {
     headers: {
@@ -19,7 +14,7 @@ export async function GET(_req: Request, { params }: RouteContext<'/llms.mdx/[[.
 }
 
 export function generateStaticParams() {
-  return source.getPages().filter((page) => !isPageProtected(page) && !page.data.unlisted).map((page) => ({
+  return source.getPages().filter((page) => !page.data.unlisted).map((page) => ({
     slug: getPageMarkdownUrl(page).segments,
   }));
 }

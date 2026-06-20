@@ -1,11 +1,9 @@
 import { GraphView } from "@/components/graph-view";
 import { buildGraph } from "@/lib/build-graph";
 import { getSiteLanguage } from "@/lib/locale";
-import { hasProtectedAccess } from "@/lib/protected";
 
 export async function GraphPageContent() {
-  const hasAccess = await hasProtectedAccess();
-  const graph = buildGraph(hasAccess);
+  const graph = buildGraph();
   const siteLanguage = getSiteLanguage();
 
   const tagCount = graph.nodes.filter((node) => node.kind === 'tag').length;

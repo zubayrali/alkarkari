@@ -41,8 +41,6 @@ function buildNoteRecords(outputs: OutputFile[]): NoteRecord[] {
     const { data } = frontmatter(content);
     const fm = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
 
-    const isProtected = fm.protected === true || fm.protected === 'true';
-
     const slug = '/' + file.path.replace(/\.mdx$/, '');
     const vaultPath = file.path.replace(/\.mdx$/, '.md');
     const folder = vaultPath.includes('/')
@@ -54,18 +52,13 @@ function buildNoteRecords(outputs: OutputFile[]): NoteRecord[] {
         ? fm.title.trim()
         : (file.path.split('/').pop()?.replace(/\.mdx$/, '') ?? '');
 
-    const safeFrontmatter: Record<string, unknown> = isProtected
-      ? { title: fm.title, description: fm.description, tags: fm.tags }
-      : { ...fm };
-
     records.push({
       slug,
       title,
       path: vaultPath,
       folder,
       tags: normalizeRecordTags(fm.tags),
-      protected: isProtected,
-      frontmatter: safeFrontmatter,
+      frontmatter: { ...fm },
     });
   }
 

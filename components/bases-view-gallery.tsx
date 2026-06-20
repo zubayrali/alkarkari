@@ -49,7 +49,7 @@ function Card({
   columns: string[]
   properties: Record<string, PropertyConfig>
 }) {
-  const imageUrl = imageProperty && !note.protected
+  const imageUrl = imageProperty
     ? String(note.frontmatter[imageProperty] ?? '')
     : ''
 
@@ -65,16 +65,11 @@ function Card({
           }}
         />
       )}
-      {note.protected && (
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/30 dark:bg-black/30 flex items-center justify-center z-10">
-          <span className="text-xs text-fd-muted-foreground">Protected</span>
-        </div>
-      )}
       <div className="base-card-content">
         <Link href={note.slug} className="base-card-title">
           {note.title}
         </Link>
-        {!note.protected && columns.length > 0 && (
+        {columns.length > 0 && (
           <div className="base-card-meta">
             {columns.map(col => {
               const val = resolveNoteProperty(note, col)

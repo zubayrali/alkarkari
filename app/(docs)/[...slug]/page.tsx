@@ -16,7 +16,6 @@ import { LocalGraph } from "@/components/local-graph";
 import { ReadingTime } from "@/components/reading-time";
 import { PageTags } from "@/components/page-tags";
 import { buildGraph } from "@/lib/build-graph";
-import { ProtectedGate } from "@/components/protected-gate";
 import { ViewOptionsPopover } from "@/components/view-options-popover";
 import { ReaderToggle } from "@/components/reader-toggle";
 import { getBacklinks } from "@/lib/backlinks";
@@ -31,12 +30,6 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getSiteLanguage } from "@/lib/locale";
 import { getObsidianUrl } from "@/lib/obsidian";
-import {
-  hasProtectedAccess,
-  isPageProtected,
-  isProtectionEnabled,
-  pageRequiresAuth,
-} from "@/lib/protected";
 import { gitConfig } from "@/lib/shared";
 import { Presentation } from "lucide-react";
 import { SlideViewer } from "@/components/slide-viewer";
@@ -73,16 +66,12 @@ export default async function Page(props: PageProps<"/[...slug]">) {
   }
 
   const siteLanguage = getSiteLanguage();
-  const needsAuth = pageRequiresAuth(page);
-  const hasAccess = needsAuth ? await hasProtectedAccess() : true;
-  const notConfigured = isPageProtected(page) && !isProtectionEnabled();
-  const locked = needsAuth && !hasAccess;
   const MDX = page.data.body;
 
   // Base pages (incl. tag pages) and full-width pages (the graph) carry no
   // page chrome: no TOC, no actions bar, no prev/next footer.
   const chromeless = Boolean(page.data.base || page.data.full);
-  const showToc = !locked && !notConfigured && !chromeless;
+  const showToc = !chromeless;
   const structuredData = showToc ? page.data.structuredData : null;
   const tocExtra = showToc ? (
     <>
@@ -93,7 +82,7 @@ export default async function Page(props: PageProps<"/[...slug]">) {
         />
       )}
       <LocalGraph
-        graph={buildGraph(hasAccess)}
+        graph={buildGraph()}
         currentUrl={page.url}
         label={siteLanguage.localGraphLabel}
         globalGraphLabel={siteLanguage.openGlobalGraphLabel}
@@ -128,7 +117,7 @@ export default async function Page(props: PageProps<"/[...slug]">) {
             <DocsTitle>
               {page.data.title}
             </DocsTitle>
-            {!locked && !notConfigured && !chromeless && (
+            {!chromeless && (
               <div className="page-actions flex flex-row gap-2 items-center shrink-0 mt-1">
                 {page.data.slides && (
                   <Link
@@ -161,35 +150,22 @@ export default async function Page(props: PageProps<"/[...slug]">) {
 
           {page.data.tags && <PageTags tags={page.data.tags} className="" />}
 
-          {!locked && !notConfigured && !chromeless && (
+          {!chromeless && (
             <PropertiesPanel data={page.data as Record<string, unknown>} />
           )}
 
           <DocsBody>
-            {notConfigured ? (
-              <p className="text-sm text-fd-muted-foreground">
-                {siteLanguage.protectedNotConfigured}
-              </p>
-            ) : locked ? (
-              <ProtectedGate
-                description={siteLanguage.protectedDescription}
-                passwordLabel={siteLanguage.protectedPassword}
-                submitLabel={siteLanguage.protectedSubmit}
-                errorMessage={siteLanguage.protectedError}
-              />
-            ) : (
-              <MDX
-                components={getMDXComponents({
-                  a: createRelativeLink(source, page),
-                  NoteEmbed,
-                })}
-              />
-            )}
+            <MDX
+              components={getMDXComponents({
+                a: createRelativeLink(source, page),
+                NoteEmbed,
+              })}
+            />
           </DocsBody>
 
-          {!locked && !notConfigured && !chromeless && (
+          {!chromeless && (
             <Backlinks
-              links={getBacklinks(page, hasAccess)}
+              links={getBacklinks(page)}
               label={siteLanguage.backlinksLabel}
             />
           )}
@@ -203,12 +179,12 @@ export async function generateStaticParams() {
   const base = source.generateParams().filter((params) => {
     const page = resolvePage(params.slug);
     if (!page) return true;
-    return !isPageProtected(page) && !page.data.unlisted;
+    return !page.data.unlisted;
   });
 
   const slides = source
     .getPages()
-    .filter((p) => p.data.slides && !isPageProtected(p) && !p.data.unlisted)
+    .filter((p) => p.data.slides && !p.data.unlisted)
     .map((p) => ({ slug: [...p.slugs, "slides"] }));
 
   return [...base, ...slides];
@@ -235,17 +211,6 @@ export async function generateMetadata(
     return {
       title: `${page.data.title} — Slides`,
       description: page.data.description,
-    };
-  }
-
-  const needsAuth = pageRequiresAuth(page);
-  const hasAccess = needsAuth ? await hasProtectedAccess() : true;
-
-  if (needsAuth && !hasAccess) {
-    return {
-      title: page.data.title,
-      description: page.data.description,
-      robots: { index: false, follow: false },
     };
   }
 

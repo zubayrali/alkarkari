@@ -2,12 +2,11 @@ import { resolveReference, source } from '@/lib/source';
 import { enrichNeighbors } from '@/lib/graph-utils';
 import type { Graph } from '../components/graph-view';
 
-import { pageRequiresAuth } from '@/lib/protected';
 import { getTagPrefixes, tagUrl } from '@/lib/tags';
 
-export function buildGraph(hasAccess = false): Graph {
+export function buildGraph(): Graph {
   const pages = source.getPages().filter(
-    (page) => !page.data.unlisted && (hasAccess || !pageRequiresAuth(page)),
+    (page) => !page.data.unlisted,
   );
   const graph: Graph = { links: [], nodes: [] };
 
@@ -57,7 +56,6 @@ export function buildGraph(hasAccess = false): Graph {
     for (const ref of extractedReferences) {
       const refPage = resolveReference(page, ref.href);
       if (!refPage) continue;
-      if (!hasAccess && pageRequiresAuth(refPage)) continue;
       // Wikilinks into /tags pages would dangle when the tag node is absent.
       if (refPage.data.tagPage) continue;
 

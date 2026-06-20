@@ -7,7 +7,7 @@
 # test & build
 /coverage
 /.next/
-/out/
+/out
 /build
 *.tsbuildinfo
 
@@ -20,13 +20,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# cloudflare
-/.open-next/
-.wrangler/
-
 # env
 .env
-.dev.vars
 
 # others
 .env*.local

@@ -28,9 +28,7 @@ function getColumns(notes: NoteRecord[], order?: string[]): string[] {
 
 function renderCell(note: NoteRecord, col: string): React.ReactNode {
   if (isNameColumn(col)) {
-    return note.protected ? (
-      <span className="text-fd-muted-foreground">{note.title}</span>
-    ) : (
+    return (
       <Link
         href={note.slug}
         className="underline underline-offset-2"
@@ -43,7 +41,6 @@ function renderCell(note: NoteRecord, col: string): React.ReactNode {
       </Link>
     )
   }
-  if (note.protected) return null
   const val = resolveNoteProperty(note, col)
   if (val !== undefined && val !== note.frontmatter?.[col]) {
     return <span>{String(val)}</span>

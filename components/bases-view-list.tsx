@@ -49,7 +49,7 @@ function ListItem({
   separator?: string
 }) {
   const secondaryCols = columns.filter(c => !isNameColumn(c))
-  const hasSecondary = !note.protected && secondaryCols.some(col => {
+  const hasSecondary = secondaryCols.some(col => {
     const val = resolveNoteProperty(note, col)
     return val !== null && val !== undefined
   })
@@ -57,13 +57,9 @@ function ListItem({
   if (nestedProperties && hasSecondary) {
     return (
       <li className="base-list-item">
-        {note.protected ? (
-          <span className="text-fd-muted-foreground text-sm">{note.title}</span>
-        ) : (
-          <Link href={note.slug} className="text-sm font-medium hover:underline">
-            {note.title}
-          </Link>
-        )}
+        <Link href={note.slug} className="text-sm font-medium hover:underline">
+          {note.title}
+        </Link>
         <ul className="base-list-nested">
           {secondaryCols.map(col => {
             const val = resolveNoteProperty(note, col)
@@ -84,14 +80,10 @@ function ListItem({
 
   return (
     <li className="base-list-item">
-      {note.protected ? (
-        <span className="text-fd-muted-foreground text-sm">{note.title}</span>
-      ) : (
-        <Link href={note.slug} className="text-sm font-medium hover:underline">
-          {note.title}
-        </Link>
-      )}
-      {!note.protected && secondaryCols.map(col => {
+      <Link href={note.slug} className="text-sm font-medium hover:underline">
+        {note.title}
+      </Link>
+      {secondaryCols.map(col => {
         const val = resolveNoteProperty(note, col)
         if (val === null || val === undefined) return null
         return (

@@ -25,7 +25,7 @@ describe('evaluateFilterExpression', () => {
     const bytecode = compileExpression(program.body!)
     const note: NoteRecord = {
       slug: '/dict/test', title: 'Test', path: 'dict/test.md',
-      folder: 'dict', tags: ['review'], protected: false, frontmatter: {},
+      folder: 'dict', tags: ['review'], frontmatter: {},
     }
     const ctx = { file: note, allFiles: [note] }
     expect(evaluateFilterExpression(bytecode, ctx)).toBe(true)
@@ -36,7 +36,7 @@ describe('evaluateFilterExpression', () => {
     const bytecode = compileExpression(program.body!)
     const note: NoteRecord = {
       slug: '/dict/other', title: 'Other', path: 'dict/other.md',
-      folder: 'dict', tags: [], protected: false, frontmatter: {},
+      folder: 'dict', tags: [], frontmatter: {},
     }
     expect(evaluateFilterExpression(bytecode, { file: note, allFiles: [note] })).toBe(false)
   })

@@ -1,6 +1,7 @@
 import { getSiteLanguage } from '@/lib/locale';
-import { hasProtectedAccess } from '@/lib/protected';
 import { source } from '@/lib/source';
+
+export const dynamic = 'force-static';
 import type { StructuredData } from 'fumadocs-core/mdx-plugins/remark-structure';
 import { createFromSource } from 'fumadocs-core/search/server';
 
@@ -11,7 +12,6 @@ const server = createFromSource(source, {
       title?: string;
       description?: string;
       structuredData?: unknown;
-      protected?: boolean;
       unlisted?: boolean;
       load?: () => Promise<{ structuredData?: unknown }>;
     };
@@ -25,7 +25,7 @@ const server = createFromSource(source, {
       throw new Error(`Cannot index page: ${page.url}`);
     }
 
-    const tag = data.unlisted ? 'unlisted' : data.protected ? 'protected' : 'public';
+    const tag = data.unlisted ? 'unlisted' : 'public';
     return {
       title: data.title ?? page.url,
       description: data.description,
@@ -37,13 +37,4 @@ const server = createFromSource(source, {
   },
 });
 
-export async function GET(request: Request) {
-  const hasAccess = await hasProtectedAccess();
-  const url = new URL(request.url);
-
-  if (!url.searchParams.has('tag')) {
-    url.searchParams.set('tag', hasAccess ? 'public,protected' : 'public');
-  }
-
-  return server.GET(new Request(url, request));
-}
+export const GET = server.staticGET;
