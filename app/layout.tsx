@@ -1,4 +1,4 @@
-import { RootProvider } from "fumadocs-ui/provider/next";
+import { RootProvider } from "@/components/root-provider";
 import { i18nProvider } from "fumadocs-ui/i18n";
 import { getSiteLanguage } from "@/lib/locale";
 import { NavProgress } from "@/components/nav-progress";
@@ -24,7 +24,6 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <RootProvider
           i18n={i18nProvider(siteLanguage.translations)}
-          search={{ options: { type: 'static', defaultTag: 'public' } }}
         >
           <NavProgress />
           {children}

@@ -7,6 +7,7 @@
 @import "./note-embed.css";
 @import "./properties-panel.css";
 @import "./citations.css";
+@import "./search.css";
 
 .title-aliases {
   margin: 0;

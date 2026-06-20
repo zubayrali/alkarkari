@@ -56,7 +56,7 @@ export function ReaderToggle({ label, exitLabel }: { label: string; exitLabel: s
           applyCSS(true);
           setActive(true);
         }
-      } else if (e.key === 'Escape' && activeRef.current) {
+      } else if (e.key === 'Escape' && activeRef.current && !document.querySelector('dialog[open]')) {
         setCollapsed(prevCollapsed.current);
         applyCSS(false);
         setActive(false);

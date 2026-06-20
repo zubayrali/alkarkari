@@ -7,6 +7,9 @@ const config = {
   output: 'export',
   basePath: process.env.PAGES_BASE_PATH || '',
   serverExternalPackages: ['rehype-citation'],
+  env: {
+    NEXT_PUBLIC_BASE_PATH: process.env.PAGES_BASE_PATH || '',
+  },
   reactStrictMode: true,
   experimental: {
     viewTransition: true,
