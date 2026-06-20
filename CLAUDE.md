@@ -1,6 +1,6 @@
 ## Project
 
-VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js + Fumadocs + React Flow. Domain glossary: `CONTEXT.md`. Architecture decisions: `docs/adr/`.
+VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js + Fumadocs + React Flow. Deployed as a **static export** (`output: 'export'`) to **GitHub Pages**. Domain glossary: `CONTEXT.md`. Architecture decisions: `docs/adr/`.
 
 ## Commands
 
@@ -8,7 +8,7 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 |---|---|
 | `pnpm generate` | Convert vault → site content (run before dev if `content/` is stale) |
 | `pnpm dev` | Local dev server at http://localhost:3000 |
-| `pnpm build` | Production build |
+| `pnpm build` | Production build (static export to `out/`) |
 | `pnpm types:check` | MDX codegen + Next.js typegen + TypeScript — run after any schema or content change |
 | `pnpm lint` | Oxlint |
 | `pnpm generate -- --select` | Re-pick which vault folders/files to include |
@@ -22,7 +22,7 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 |---|---|
 | `content/` | **Generated** MDX. Fully deleted and rebuilt on every `pnpm generate` run. Only `index.mdx` and `graph.mdx` are hand-maintained and preserved. |
 | `public/` | **Generated** static assets. Fully deleted and rebuilt on every `pnpm generate` run. No hand-maintained files. |
-| `app/` | Next.js routes. `(home)/[[...slug]]/` is the catch-all page route. `api/` has `protected-auth` and `search`. |
+| `app/` | Next.js routes. `(home)/page.tsx` is the home page. `(docs)/[...slug]/` is the catch-all docs route. `api/search/` exports the static search index. |
 | `components/` | React components. `canvas-*.tsx` for canvas rendering; `graph-*.tsx` for graph view. |
 | `lib/` | Domain logic — no React. |
 | `scripts/` | Generation pipeline (`generate.ts`, `generate-canvas-pages.ts`, `generate-base-pages.ts`) and `open-obsidian.ts`. |
@@ -41,7 +41,9 @@ Obsidian vault
                          → public/notes-index.json (full NoteRecord index for client-side re-evaluation)
                                         ↓
                                Next.js + Fumadocs
-                     (full-text search, graph view, canvas viewer, page gating, base views)
+                     (client-side search, graph view, canvas viewer, base views)
+                                        ↓
+                            Static export (out/) → GitHub Pages
 ```
 
 Generation is read-only on the vault — it never modifies Obsidian files.
@@ -100,11 +102,6 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/page-tags.tsx` — clickable tag chips
 - `lib/page-tree.ts` — hides `/tags` pages from the sidebar tree
 
-**Protected pages**
-- `lib/protected.ts` — auth logic: `pageRequiresAuth`, `hasProtectedAccess`, `filterPageTree`
-- `components/protected-gate.tsx` — UI shown when a page is locked
-- `app/api/protected-auth/` — password verification endpoint (sets HttpOnly cookie)
-
 **Draft & unlisted pages**
 - `draft: true` — excluded at generation time by `isDraft()` in `scripts/generate.ts`; runtime guard in the catch-all route returns 404. Never appears in sidebar, search, graph, RSS, sitemap, or any listing.
 - `unlisted: true` — generated normally and routable by direct URL, but hidden from: sidebar (`lib/page-tree.ts`), search (`app/api/search/route.ts` tags as `unlisted`), graph (`lib/build-graph.ts`), RSS (`app/rss.xml/route.ts`), sitemap (`app/sitemap.ts`), home page recent notes, tags index, and `generateStaticParams`. Gets `robots: noindex, follow` metadata.
@@ -121,7 +118,7 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 **Reading affordances** (aliases, backlinks, link previews, sidenotes — ported from aarnphm/quartz, see ADR-0010)
 - `lib/aliases.ts` — `normalizeAliases` (frontmatter field), alias → slug-segment resolution (pure; safe for `source.config.ts`)
 - `lib/alias-index.ts` — lazy alias→URL map over `source`; `resolveAliasUrl` powers the 308 redirect in the catch-all route when slug lookup fails
-- `lib/backlinks.ts` — `getBacklinks`: inverts `extractedReferences`; excludes protected pages without access and tag-page sources
+- `lib/backlinks.ts` — `getBacklinks`: inverts `extractedReferences`; excludes tag-page sources
 - `components/backlinks.tsx` — RSC panel below the article body (fumadocs `Cards`)
 - `components/link-popover.tsx` + `app/link-popover.css` — client hover previews for internal links inside `article`; fetches the target page HTML, extracts `article#nd-page`, prefixes ids with `popover-`; positioned with `@floating-ui/dom`; mounted once in the docs layout
 - `lib/rehype-sidenotes.ts` — rehype plugin: GFM footnotes → `span.sidenote` + `span.sidenote-content` pairs; removes the bottom footnote section
@@ -137,7 +134,7 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `.claude/skills/create-term/` — authoring contract (frontmatter schema + section layout) these two surfaces render; the KM consistency strategy
 
 **Content schema**
-- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `protected` (bool or string → normalized), `aliases` (string or array → normalized), `draft` (bool), `unlisted` (bool); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, citations, sidenotes)
+- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `aliases` (string or array → normalized), `draft` (bool), `unlisted` (bool); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, citations, sidenotes)
 - `lib/source.ts` — `source` loader; `resolvePage` (handles encoded/decoded slugs); `resolveReference` (extracted-reference href → page; relative hrefs resolve by slugs, not file path); `getLLMText`
 - `lib/shared.ts` — app-wide constants: `appName`, `docsRoute`, `gitConfig`
 
@@ -149,6 +146,37 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - Base-table row links set their `viewTransitionName` only on click (`onClick` handler in `components/bases-view-table.tsx`), not permanently. A permanent name on every row carves holes in the parent `docs-content` snapshot (the View Transitions API excludes named children from the parent's bitmap), causing rows to animate independently — the table appeared to "load up piece by piece." The click-time name enables the "magic move" morph from the clicked row to the destination page's H1 when navigating via a table link, while keeping the `docs-content` snapshot intact for all other navigations. `lib/transition-name.ts` derives the shared `entry-<path>` name.
 - Navigation progress bar (`components/nav-progress.tsx`, mounted in `app/layout.tsx`) fills the server round-trip before the crossfade: `instrumentation-client.ts` broadcasts `onRouterTransitionStart` as a `vaultpress:nav-start` window event, the bar trickles, completes on the `usePathname()` commit (the same commit that starts the crossfade), and fades out under its own animation-suppressed `nav-progress` view-transition name (`app/global.css`). Changing `instrumentation-client.ts` requires a dev-server restart. See ADR-0009.
 
+## Deployment (GitHub Pages)
+
+The site is deployed as a **static export** via GitHub Actions (`.github/workflows/deploy.yml`).
+
+**How it works:**
+1. Push to `main` triggers the workflow.
+2. CI runs `pnpm install` → `pnpm build` (which produces `out/`).
+3. `out/` is uploaded as a GitHub Pages artifact and deployed.
+
+**Setup (one-time):**
+- Go to repo **Settings → Pages → Source** and select **GitHub Actions**.
+- `content/` and `public/` are committed to the repo — CI does not run `pnpm generate` (no vault access in CI). Run `pnpm generate` locally before committing content changes.
+
+**`basePath` for subpath hosting:**
+- GitHub Pages serves project sites at `/<repo-name>/` (e.g. `/alkarkari/`).
+- `next.config.mjs` reads `PAGES_BASE_PATH` env var. The workflow sets it to `/${{ github.event.repository.name }}` automatically.
+- For local dev, `PAGES_BASE_PATH` is empty (or unset), so the site runs at `/`.
+- If you move to a custom domain (root path), remove the `PAGES_BASE_PATH` env from the workflow.
+
+**Static export constraints:**
+- No API routes at runtime — `app/api/search/route.ts` uses `server.staticGET` to export a pre-built search index as a static JSON file.
+- No middleware — content negotiation for LLM markdown routes (`/llms.txt`, `/llms-full.txt`, `/llms.mdx/`) is handled by `generateStaticParams` + `export const dynamic = 'force-static'`.
+- No `cookies()` or `headers()` — all pages are pre-rendered at build time.
+- `images.unoptimized: true` — Next.js Image Optimization requires a server; images are served as-is.
+- OG images are pre-generated at build time via `next/og` `ImageResponse` + `generateStaticParams`, output as static `.webp` files in `out/og/`.
+- All route handlers (`rss.xml`, `sitemap.xml`, `llms.txt`, `llms-full.txt`, `llms.mdx`) must have `export const dynamic = 'force-static'` to be compatible with `output: 'export'`.
+
+**Search:**
+- Server side: `createFromSource` builds the search index at build time; `server.staticGET` exports it as a static file at `/api/search`.
+- Client side: `app/layout.tsx` configures `RootProvider` with `search: { options: { type: 'static' } }`, which uses fumadocs' `oramaStaticClient` to download the pre-built index and search entirely client-side.
+
 ## Environment variables
 
 | Variable | Purpose |
@@ -156,14 +184,13 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 | `OBSIDIAN_VAULT_PATH` | Absolute path to the vault. Required for `pnpm generate` and `pnpm obsidian`. Not read at runtime. |
 | `SITE_LANGUAGE` | UI locale: `en` (default) or `cn`. Restart dev server after changing. |
 | `GENERATE_INCLUDE` | Comma-separated top-level vault folders/files to include. Saved by `--select`. |
-| `SITE_PROTECT_PASSWORD` | Shared password for protected pages. Never commit this value. |
+| `PAGES_BASE_PATH` | URL base path for GitHub Pages subpath hosting (e.g. `/alkarkari`). Set automatically in CI. Leave empty for local dev or custom domain. |
 
 ## Footguns
 
 - `content/` and `public/` are **fully deleted** at the start of every `pnpm generate` run. Only `content/index.mdx` and `content/graph.mdx` survive. Never store hand-maintained files in `public/`.
 - `pnpm types:check` runs `fumadocs-mdx` codegen first — if `content/` is empty, unrelated type errors will appear. Run `pnpm generate` first if content is missing.
 - Wikilink resolution builds a page index from `content/` at **build time**. Links to notes excluded from `GENERATE_INCLUDE` silently become dead links.
-- `protected: true` gates the **body only** — title, description, and tags are always visible. This is intentional; see ADR-0001.
 - `base: true` and `full: true` pages are **chromeless**: no TOC (desktop or mobile popover), no actions bar, no prev/next footer, no backlinks/local graph. They also render **full content width** (`DocsPage full={chromeless}` in the catch-all route) since they're data tables. The graph page uses `full: true` in hand-maintained `content/graph.mdx`.
 - Canvas pages require both the MDX wrapper in `content/` **and** the raw `.canvas` file in `public/`. Both are produced together by generation; see ADR-0002.
 - A `.base` file and a `.md` note with the same stem in the same vault folder both generate `content/<path>.mdx`. The Base is written last and silently overwrites the note. This mirrors how canvas/note collisions are handled — no runtime check.
@@ -191,6 +218,10 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - **Sidebar state resets during view-transition updates.** When navigating between docs pages, fumadocs' sidebar context briefly resets to `collapsed=false`, changing `--fd-sidebar-col` from `0px` to `var(--fd-sidebar-width)` (268px). When `SidebarPersist` restores it, fumadocs' Container detects the change and activates `transition-[grid-template-columns]`, causing the visible "content slide." The fix is `#nd-docs-layout { transition: none !important }` in `app/global.css`, which makes the grid snap instead of animating. The sidebar's own translate animation on `#nd-sidebar` is unaffected. Do not remove this rule.
 - Do not set `viewTransitionName` on the sidebar via inline styles (e.g. the layout's `sidebar={{ style: { viewTransitionName } }}` prop). Inline styles override CSS selectors, so conditional rules like `#nd-sidebar[data-collapsed] { view-transition-name: none }` would be silently ignored.
 - **Fumadocs has a CSS transition on the docs grid.** The `Container` component (`fumadocs-ui/dist/layouts/docs/slots/container.js`) sets `data-column-changed="true"` on `#nd-docs-layout` for one render cycle when `collapsed` changes. The CSS `data-[column-changed=true]:transition-[grid-template-columns]` smoothly animates the sidebar column resize. This is separate from view transitions — it fires on user-initiated sidebar toggling (including reader mode), not during page navigation.
+- **Static export requires `dynamic = 'force-static'` on all route handlers.** Without it, `next build` with `output: 'export'` fails with "export const dynamic not configured". Every `route.ts` file must export `export const dynamic = 'force-static'`.
+- **No runtime server features in static export.** `cookies()`, `headers()`, `NextRequest`, `NextResponse.rewrite/redirect` all fail with `output: 'export'`. All data must be available at build time.
+- **`basePath` must match the GitHub Pages subpath.** GitHub Pages project sites serve at `/<repo-name>/`. Without `basePath`, all asset URLs (`/_next/static/...`) resolve to the root domain and CSS/JS fail to load. The `PAGES_BASE_PATH` env var in the workflow handles this automatically.
+- **Alias redirects (`permanentRedirect`) work differently in static export.** Next.js generates a `<meta http-equiv="refresh">` tag instead of a 308 HTTP redirect. The redirect still works but is client-side only.
 
 ## Fumadocs reference
 
