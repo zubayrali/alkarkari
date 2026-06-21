@@ -12,6 +12,7 @@ import {
   MarkdownCopyButton,
 } from "fumadocs-ui/layouts/docs/page";
 import { Backlinks } from "@/components/backlinks";
+import { CusdisComments } from "@/components/cusdis-comments";
 import { LocalGraph } from "@/components/local-graph";
 import { ReadingTime } from "@/components/reading-time";
 import { PageTags } from "@/components/page-tags";
@@ -167,6 +168,14 @@ export default async function Page(props: PageProps<"/[...slug]">) {
             <Backlinks
               links={getBacklinks(page)}
               label={siteLanguage.backlinksLabel}
+            />
+          )}
+
+          {!chromeless && (
+            <CusdisComments
+              pageId={page.slugs.join("/") || "index"}
+              pageUrl={page.url}
+              pageTitle={page.data.title}
             />
           )}
         </div>
