@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
-import { resolveNoteProperty, isNameColumn, resolveDisplayName } from '@/lib/base-properties'
+import { resolveNoteProperty, isNameColumn, resolveDisplayName, resolveImageUrl } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
 
 const PAGE_SIZE = 60
@@ -49,15 +49,14 @@ function Card({
   columns: string[]
   properties: Record<string, PropertyConfig>
 }) {
-  const imageUrl = imageProperty
-    ? String(note.frontmatter[imageProperty] ?? '')
-    : ''
+  const imageUrl = imageProperty ? resolveImageUrl(note, imageProperty) : ''
+  const description = note.frontmatter.description as string | undefined
+  const tags = note.tags.length > 0 ? note.tags : null
 
   return (
-    <div className="base-card">
+    <Link href={note.slug} className="base-card">
       {imageUrl && (
-        <Link
-          href={note.slug}
+        <div
           className="base-card-image"
           style={{
             backgroundImage: `url(${imageUrl})`,
@@ -65,30 +64,36 @@ function Card({
           }}
         />
       )}
-      <div className="base-card-content">
-        <Link href={note.slug} className="base-card-title">
-          {note.title}
-        </Link>
-        {columns.length > 0 && (
-          <div className="base-card-meta">
+      <div className="base-card-body">
+        <h3 className="base-card-title">{note.title}</h3>
+        {description && (
+          <p className="base-card-desc">{description}</p>
+        )}
+        {(tags || columns.length > 0) && (
+          <div className="base-card-footer">
+            {tags && (
+              <div className="base-card-tags">
+                {tags.slice(0, 3).map(t => (
+                  <span key={t} className="base-card-tag">{t}</span>
+                ))}
+                {tags.length > 3 && (
+                  <span className="base-card-tag base-card-tag-more">+{tags.length - 3}</span>
+                )}
+              </div>
+            )}
             {columns.map(col => {
               const val = resolveNoteProperty(note, col)
               if (val === null || val === undefined) return null
               return (
-                <div key={col} className="base-card-meta-item">
-                  <span className="base-card-meta-label">
-                    {resolveDisplayName(col, properties)}
-                  </span>
-                  <span className="base-card-meta-value">
-                    {basesCellContent(note, col)}
-                  </span>
-                </div>
+                <span key={col} className="base-card-meta-value">
+                  {basesCellContent(note, col)}
+                </span>
               )
             })}
           </div>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -102,7 +107,7 @@ export function BasesViewGallery({
   groupBy,
 }: Props) {
   const columns = (order ?? []).filter(
-    c => !isNameColumn(c) && c !== imageProperty,
+    c => !isNameColumn(c) && c !== imageProperty && c !== 'description' && c !== 'tags',
   )
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
@@ -135,7 +140,7 @@ export function BasesViewGallery({
           </div>
         ))}
         {notes.length === 0 && (
-          <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+          <p className="base-empty">No results.</p>
         )}
       </div>
     )
@@ -158,7 +163,7 @@ export function BasesViewGallery({
         ))}
       </div>
       {notes.length === 0 && (
-        <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+        <p className="base-empty">No results.</p>
       )}
       {visibleCount < notes.length && (
         <button

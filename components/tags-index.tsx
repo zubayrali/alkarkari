@@ -1,7 +1,7 @@
-import Link from "fumadocs-core/link";
 import { source } from "@/lib/source";
 import { buildTagIndex } from "@/lib/tag-index";
 import { tagUrl } from "@/lib/tags";
+import { TagsFilter } from "./tags-filter";
 
 /** Listing of every tag in use, rendered on the generated /tags page. */
 export function TagsIndexContent() {
@@ -19,31 +19,24 @@ export function TagsIndexContent() {
     return <p className="text-sm text-fd-muted-foreground">No tags yet.</p>;
   }
 
-  return (
-    <ul className="flex flex-col gap-3 list-none p-0 m-0">
-      {[...index.entries()].map(([tag, tagged]) => {
-        const tagPage = tagPages.get(tag);
-        const depth = tag.split("/").length - 1;
+  const tags = [...index.entries()].map(([tag, tagged]) => {
+    const tagPage = tagPages.get(tag);
+    const depth = tag.split("/").length - 1;
+    return {
+      tag,
+      count: tagged.length,
+      depth,
+      href: tagPage?.url ?? tagUrl(tag),
+      description: tagPage?.data.description as string | undefined,
+    };
+  });
 
-        return (
-          <li key={tag} style={{ marginInlineStart: `${depth * 1.25}rem` }}>
-            <Link
-              href={tagPage?.url ?? tagUrl(tag)}
-              className="inline-flex items-baseline gap-2 no-underline"
-            >
-              <span className="font-medium text-fd-primary">#{tag}</span>
-              <span className="text-xs text-fd-muted-foreground">
-                {tagged.length} {tagged.length === 1 ? "note" : "notes"}
-              </span>
-            </Link>
-            {tagPage?.data.description && (
-              <p className="m-0 text-sm text-fd-muted-foreground">
-                {tagPage.data.description}
-              </p>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+  return (
+    <div className="tags-index">
+      <p className="tags-index-summary">
+        {tags.length} {tags.length === 1 ? "tag" : "tags"}
+      </p>
+      <TagsFilter tags={tags} />
+    </div>
   );
 }

@@ -52,7 +52,44 @@ function CanvasFlow({ data }: CanvasViewProps) {
   );
 }
 
+function useCanvasFullbleed() {
+  useEffect(() => {
+    const page = document.getElementById('nd-page');
+    if (!page) return;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    page.style.maxWidth = 'none';
+    page.style.padding = '0';
+    page.style.paddingInline = '0';
+    page.style.paddingBlock = '0';
+    page.style.margin = '0';
+    page.style.marginInline = '0';
+    page.style.gap = '0';
+    page.style.overflow = 'hidden';
+    page.style.position = 'relative';
+    page.style.gridColumn = '3 / -1';
+    const h1 = page.querySelector('h1');
+    if (h1) h1.style.display = 'none';
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      page.style.maxWidth = '';
+      page.style.padding = '';
+      page.style.paddingInline = '';
+      page.style.paddingBlock = '';
+      page.style.margin = '';
+      page.style.marginInline = '';
+      page.style.gap = '';
+      page.style.overflow = '';
+      page.style.position = '';
+      page.style.gridColumn = '';
+      if (h1) h1.style.display = '';
+    };
+  }, []);
+}
+
 export function CanvasView({ data, mdxPreviews = {} }: CanvasViewProps) {
+  useCanvasFullbleed();
   if (data.nodes.length === 0) {
     return (
       <div className="not-prose flex h-[min(480px,60vh)] items-center justify-center rounded-xl border bg-fd-background text-sm text-fd-muted-foreground">
@@ -62,7 +99,7 @@ export function CanvasView({ data, mdxPreviews = {} }: CanvasViewProps) {
   }
 
   return (
-    <div className="not-prose relative h-[min(640px,75vh)] w-full max-w-full overflow-hidden rounded-xl border [&_.canvas-flow]:h-full">
+    <div className="not-prose absolute inset-0 overflow-hidden [&_.canvas-flow]:h-full">
       <CanvasMdxPreviewContext.Provider value={mdxPreviews}>
         <ReactFlowProvider>
           <CanvasFlow data={data} />

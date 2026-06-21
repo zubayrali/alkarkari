@@ -22,7 +22,7 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 |---|---|
 | `content/` | **Generated** MDX. Fully deleted and rebuilt on every `pnpm generate` run. Only `index.mdx` and `graph.mdx` are hand-maintained and preserved. |
 | `public/` | **Generated** static assets. Fully deleted and rebuilt on every `pnpm generate` run. No hand-maintained files. |
-| `app/` | Next.js routes. `(home)/page.tsx` is the home page. `(docs)/[...slug]/` is the catch-all docs route. `api/search/` exports the static search index. |
+| `app/` | Next.js routes. `(home)/page.tsx` is the home page. `(docs)/[...slug]/` is the catch-all docs route. `api/search-index/` exports the static search index. |
 | `components/` | React components. `canvas-*.tsx` for canvas rendering; `graph-*.tsx` for graph view. |
 | `lib/` | Domain logic — no React. |
 | `scripts/` | Generation pipeline (`generate.ts`, `generate-canvas-pages.ts`, `generate-base-pages.ts`) and `open-obsidian.ts`. |
@@ -166,7 +166,7 @@ The site is deployed as a **static export** via GitHub Actions (`.github/workflo
 - If you move to a custom domain (root path), remove the `PAGES_BASE_PATH` env from the workflow.
 
 **Static export constraints:**
-- No API routes at runtime — `app/api/search/route.ts` uses `server.staticGET` to export a pre-built search index as a static JSON file.
+- No API routes at runtime — `app/api/search-index/route.ts` exports a pre-built JSON search index as a static file.
 - No middleware — content negotiation for LLM markdown routes (`/llms.txt`, `/llms-full.txt`, `/llms.mdx/`) is handled by `generateStaticParams` + `export const dynamic = 'force-static'`.
 - No `cookies()` or `headers()` — all pages are pre-rendered at build time.
 - `images.unoptimized: true` — Next.js Image Optimization requires a server; images are served as-is.
@@ -174,8 +174,9 @@ The site is deployed as a **static export** via GitHub Actions (`.github/workflo
 - All route handlers (`rss.xml`, `sitemap.xml`, `llms.txt`, `llms-full.txt`, `llms.mdx`) must have `export const dynamic = 'force-static'` to be compatible with `output: 'export'`.
 
 **Search:**
-- Server side: `createFromSource` builds the search index at build time; `server.staticGET` exports it as a static file at `/api/search`.
-- Client side: `app/layout.tsx` configures `RootProvider` with `search: { options: { type: 'static' } }`, which uses fumadocs' `oramaStaticClient` to download the pre-built index and search entirely client-side.
+- Build side: `app/api/search-index/route.ts` iterates `source.getPages()`, extracts `structuredData` (headings + contents), and exports a static JSON array of `{url, title, section?, sectionId?, content}` entries at `/api/search-index`.
+- Client side: `components/search-dialog.tsx` fetches the JSON index, builds a `flexsearch` `Index` (tokenize: forward), and renders a split-pane dialog (results left, content preview right) wired into fumadocs via `components/root-provider.tsx` → `search: { SearchDialog }`. The dialog uses a native `<dialog>` element with `showModal()`. The index is cached module-level so it persists across dialog open/close.
+- Reader mode's Escape handler (`components/reader-toggle.tsx`) guards against `dialog[open]` so Escape closes the search dialog without also exiting reader mode.
 
 ## Environment variables
 

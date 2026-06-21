@@ -1,13 +1,15 @@
 import type { Node, Root } from "fumadocs-core/page-tree";
 import { source } from "./source";
 
-function containsTagPage(node: Node): boolean {
+const sidebarLinkedUrls = new Set(["/tags", "/graph"]);
+
+function isSidebarLinkedPage(node: Node): boolean {
   if (node.type === "page") {
-    return node.url === "/tags" || node.url.startsWith("/tags/");
+    return sidebarLinkedUrls.has(node.url) || node.url.startsWith("/tags/");
   }
   if (node.type === "folder") {
-    if (node.index && containsTagPage(node.index)) return true;
-    return node.children.some(containsTagPage);
+    if (node.index && isSidebarLinkedPage(node.index)) return true;
+    return node.children.some(isSidebarLinkedPage);
   }
   return false;
 }
@@ -27,7 +29,7 @@ function isUnlistedNode(node: Node): boolean {
 function filterNodes(nodes: Node[]): Node[] {
   const result: Node[] = [];
   for (const node of nodes) {
-    if (containsTagPage(node) || isUnlistedNode(node)) continue;
+    if (isSidebarLinkedPage(node) || isUnlistedNode(node)) continue;
     if (node.type === "folder") {
       const children = filterNodes(node.children);
       if (children.length === 0 && !node.index) continue;

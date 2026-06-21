@@ -48,53 +48,89 @@ function ListItem({
   nestedProperties?: boolean
   separator?: string
 }) {
-  const secondaryCols = columns.filter(c => !isNameColumn(c))
-  const hasSecondary = secondaryCols.some(col => {
-    const val = resolveNoteProperty(note, col)
-    return val !== null && val !== undefined
-  })
+  const secondaryCols = columns.filter(c => !isNameColumn(c) && c !== 'description' && c !== 'tags')
+  const description = note.frontmatter.description as string | undefined
+  const tags = note.tags.length > 0 ? note.tags : null
 
-  if (nestedProperties && hasSecondary) {
+  if (nestedProperties) {
+    const hasSecondary = secondaryCols.some(col => {
+      const val = resolveNoteProperty(note, col)
+      return val !== null && val !== undefined
+    })
+
     return (
-      <li className="base-list-item">
-        <Link href={note.slug} className="text-sm font-medium hover:underline">
-          {note.title}
+      <li className="base-list-entry">
+        <Link href={note.slug} className="base-list-entry-link">
+          <div className="base-list-entry-header">
+            <h3 className="base-list-entry-title">{note.title}</h3>
+            {tags && (
+              <div className="base-list-entry-tags">
+                {tags.slice(0, 3).map(t => (
+                  <span key={t} className="base-card-tag">{t}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          {description && (
+            <p className="base-list-entry-desc">{description}</p>
+          )}
+          {hasSecondary && (
+            <div className="base-list-entry-meta">
+              {secondaryCols.map(col => {
+                const val = resolveNoteProperty(note, col)
+                if (val === null || val === undefined) return null
+                return (
+                  <span key={col} className="base-list-entry-meta-item">
+                    <span className="base-list-entry-meta-label">
+                      {resolveDisplayName(col, properties)}
+                    </span>
+                    {basesCellContent(note, col)}
+                  </span>
+                )
+              })}
+            </div>
+          )}
         </Link>
-        <ul className="base-list-nested">
-          {secondaryCols.map(col => {
-            const val = resolveNoteProperty(note, col)
-            if (val === null || val === undefined) return null
-            return (
-              <li key={col}>
-                <span className="base-list-meta-label">
-                  {resolveDisplayName(col, properties)}:
-                </span>{' '}
-                {basesCellContent(note, col)}
-              </li>
-            )
-          })}
-        </ul>
       </li>
     )
   }
 
   return (
-    <li className="base-list-item">
-      <Link href={note.slug} className="text-sm font-medium hover:underline">
-        {note.title}
+    <li className="base-list-entry">
+      <Link href={note.slug} className="base-list-entry-link">
+        <div className="base-list-entry-header">
+          <h3 className="base-list-entry-title">{note.title}</h3>
+          {tags && (
+            <div className="base-list-entry-tags">
+              {tags.slice(0, 3).map(t => (
+                <span key={t} className="base-card-tag">{t}</span>
+              ))}
+            </div>
+          )}
+        </div>
+        {description && (
+          <p className="base-list-entry-desc">{description}</p>
+        )}
+        {secondaryCols.length > 0 && (
+          <div className="base-list-entry-meta">
+            {secondaryCols.map((col, i) => {
+              const val = resolveNoteProperty(note, col)
+              if (val === null || val === undefined) return null
+              return (
+                <Fragment key={col}>
+                  {i > 0 && <span className="base-list-entry-sep">{separator}</span>}
+                  <span className="base-list-entry-meta-item">
+                    <span className="base-list-entry-meta-label">
+                      {resolveDisplayName(col, properties)}
+                    </span>
+                    {basesCellContent(note, col)}
+                  </span>
+                </Fragment>
+              )
+            })}
+          </div>
+        )}
       </Link>
-      {secondaryCols.map(col => {
-        const val = resolveNoteProperty(note, col)
-        if (val === null || val === undefined) return null
-        return (
-          <Fragment key={col}>
-            <span className="text-fd-muted-foreground text-xs">{separator}</span>
-            <span className="text-xs text-fd-muted-foreground">
-              {basesCellContent(note, col)}
-            </span>
-          </Fragment>
-        )
-      })}
     </li>
   )
 }
@@ -134,7 +170,7 @@ export function BasesViewList({
           </div>
         ))}
         {notes.length === 0 && (
-          <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+          <p className="base-empty">No results.</p>
         )}
       </div>
     )
@@ -157,7 +193,7 @@ export function BasesViewList({
         ))}
       </ul>
       {notes.length === 0 && (
-        <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+        <p className="base-empty">No results.</p>
       )}
       {visibleCount < notes.length && (
         <button

@@ -8,12 +8,15 @@ import { RoughAnnotations } from '@/components/rough-annotations';
 import { SidebarPersist } from '@/components/sidebar-persist';
 import { Sidenotes } from '@/components/sidenotes';
 import { CitationTooltip } from '@/components/citation-tooltip';
+import { SidebarLinks } from '@/components/sidebar-links';
+import { NavMobileLinks } from '@/components/nav-mobile-links';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
       tree={filterPageTree(source.getPageTree())}
       {...baseOptions()}
+      sidebar={{ banner: <SidebarLinks /> }}
     >
       {children}
       <SidebarPersist />
@@ -21,6 +24,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Sidenotes />
       <RoughAnnotations />
       <CitationTooltip />
+      <NavMobileLinks />
     </DocsLayout>
   );
 }

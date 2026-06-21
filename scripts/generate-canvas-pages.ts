@@ -142,7 +142,7 @@ function toPublicSrc(publicPath: string) {
 function buildCanvasMdx(title: string, src: string) {
   return `---
 title: ${JSON.stringify(title)}
-description: Obsidian Canvas
+description: ""
 full: true
 ---
 

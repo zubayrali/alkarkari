@@ -1,5 +1,21 @@
 import type { NoteRecord, PropertyConfig } from './base-types'
 
+const WIKILINK_RE = /^\[\[(.+?)]]$/
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+
+/**
+ * Resolve an image property value to a URL.
+ * Handles `[[file.webp]]` wikilinks (vault attachments) and plain URLs.
+ */
+export function resolveImageUrl(note: NoteRecord, prop: string): string {
+  const raw = note.frontmatter?.[prop]
+  if (!raw || typeof raw !== 'string') return ''
+  const m = raw.match(WIKILINK_RE)
+  if (!m) return raw
+  // ponytail: vault attachment in same folder → public/<folder>/<file>
+  return `${basePath}/${note.folder}/${m[1]}`
+}
+
 /**
  * Resolve a column identifier to its value on a NoteRecord.
  * Handles both `file.*` built-in properties and frontmatter keys.
