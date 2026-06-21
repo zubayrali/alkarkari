@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, type ReactNode } from 'react';
 import { CanvasMdxPreviewContext } from '@/components/canvas-mdx-preview-context';
 import {
   Background,
@@ -53,7 +53,7 @@ function CanvasFlow({ data }: CanvasViewProps) {
 }
 
 function useCanvasFullbleed() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const page = document.getElementById('nd-page');
     if (!page) return;
     document.documentElement.style.overflow = 'hidden';
