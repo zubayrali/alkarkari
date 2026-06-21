@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <DocsLayout
       tree={filterPageTree(source.getPageTree())}
       {...baseOptions()}
-      sidebar={{ banner: <SidebarLinks /> }}
+      sidebar={{ banner: <SidebarLinks key="sidebar-links" /> }}
     >
       {children}
       <SidebarPersist />

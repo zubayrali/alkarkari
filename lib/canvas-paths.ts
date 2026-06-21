@@ -45,7 +45,8 @@ export function isCanvasImagePath(filePath: string) {
 }
 
 export function resolveCanvasAssetUrl(assetPath: string) {
-  return `/${normalizeCanvasPath(assetPath)}`;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+  return `${basePath}/${normalizeCanvasPath(assetPath)}`;
 }
 
 export function getCanvasFileExtensionLabel(filePath: string) {

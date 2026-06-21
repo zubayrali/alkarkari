@@ -129,6 +129,9 @@ const FileFlowNode = memo(function FileFlowNode({
   if (node.type !== 'file') return null;
 
   const href = node.href ?? `/${node.file}`;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+  // ponytail: <Link> auto-prepends basePath, raw src attrs don't
+  const assetSrc = `${basePath}${href}`;
 
   const openNode = (event: MouseEvent<HTMLElement>) => {
     if (isInteractiveTarget(event.target)) return;
@@ -141,21 +144,21 @@ const FileFlowNode = memo(function FileFlowNode({
   if (fileKind === 'image') {
     return (
       <LabeledNodeWrapper label={displayName}>
-        <Link
-          href={href}
+        <a
+          href={assetSrc}
           aria-label={displayName}
           className={`${cardClass} relative block hover:opacity-90 transition-opacity`}
           style={nodeStyle}
         >
           <CanvasSideHandles />
           <Image
-            src={href}
+            src={assetSrc}
             alt=""
             fill
             className="object-cover"
             sizes={`${Math.round(node.width)}px`}
           />
-        </Link>
+        </a>
       </LabeledNodeWrapper>
     );
   }
@@ -166,7 +169,7 @@ const FileFlowNode = memo(function FileFlowNode({
         <div className={cardClass} style={nodeStyle}>
           <CanvasSideHandles />
           <video
-            src={href}
+            src={assetSrc}
             className="h-full w-full object-cover"
             controls
             preload="metadata"
@@ -185,7 +188,7 @@ const FileFlowNode = memo(function FileFlowNode({
           style={nodeStyle}
         >
           <CanvasSideHandles />
-          <audio src={href} controls preload="metadata" className="w-full" />
+          <audio src={assetSrc} controls preload="metadata" className="w-full" />
         </div>
       </LabeledNodeWrapper>
     );
@@ -197,7 +200,7 @@ const FileFlowNode = memo(function FileFlowNode({
         <div className={cardClass} style={nodeStyle}>
           <CanvasSideHandles />
           <iframe
-            src={href}
+            src={assetSrc}
             title={displayName}
             className="h-full w-full border-0 bg-fd-background"
           />
@@ -236,14 +239,14 @@ const FileFlowNode = memo(function FileFlowNode({
 
   return (
     <LabeledNodeWrapper label={displayName}>
-      <Link
-        href={href}
+      <a
+        href={assetSrc}
         className={`${cardClass} flex flex-col justify-center px-3 py-2 text-sm hover:bg-fd-accent/40 transition-colors`}
         style={nodeStyle}
       >
         <CanvasSideHandles />
         <span className="text-xs text-fd-muted-foreground">{typeLabel}</span>
-      </Link>
+      </a>
     </LabeledNodeWrapper>
   );
 });
