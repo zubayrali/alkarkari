@@ -10,6 +10,7 @@ import {
   DocsPage,
   DocsTitle,
   MarkdownCopyButton,
+  PageFooter,
 } from "fumadocs-ui/layouts/docs/page";
 import { Backlinks } from "@/components/backlinks";
 import { CusdisComments } from "@/components/cusdis-comments";
@@ -110,7 +111,9 @@ export default async function Page(props: PageProps<"/[...slug]">) {
         // (see app/global.css) so the graph is never cropped.
         showToc ? { footer: tocExtra } : { enabled: false }
       }
-      footer={chromeless ? { enabled: false } : undefined}
+      // Footer is rendered manually below so comments can sit beneath the
+      // prev/next cards (and stay decoupled if recommended reading is dropped).
+      footer={{ enabled: false }}
     >
       <ViewTransition name="docs-content" share="auto" enter="auto" default="none">
         <div className="flex flex-col gap-4 flex-1">
@@ -170,6 +173,8 @@ export default async function Page(props: PageProps<"/[...slug]">) {
               label={siteLanguage.backlinksLabel}
             />
           )}
+
+          {!chromeless && <PageFooter />}
 
           {!chromeless && (
             <CusdisComments
