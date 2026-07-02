@@ -147,7 +147,7 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `lib/note-embed.ts` — `resolveNoteTarget`: lazy name→page index over `source` (stem/title/alias; titles win), powers transclusion + frontmatter wikilinks; `slugifySection` for `#Section` anchors
 - `components/note-embed.tsx` + `app/note-embed.css` — RSC: renders the target page's MDX body in a collapsible cartridge; depth is threaded through the MDX component map (`makeNoteEmbed(depth)`, `MAX_DEPTH=3`), not React context; registered only at the page render site so the server-only `source` import never reaches client MDX consumers. `#Section` links the header but does **not** slice the body
 - `components/properties-panel.tsx` + `app/properties-panel.css` — RSC: renders passthrough frontmatter (`arabic`, `root`, `category`, `related`, …) as a type-aware, self-hiding Obsidian-style infobox above the body; frontmatter `[[wikilinks]]` resolve via `resolveNoteTarget`
-- `.claude/skills/create-term/` — authoring contract (frontmatter schema + section layout) these two surfaces render; the KM consistency strategy
+- `.claude/skills/vault-authoring/` — authoring contract (frontmatter schema + section layout) these two surfaces render; the KM consistency strategy
 
 **Home page & site theme** (Karkari design system — see `DESIGN.md`)
 - `app/(home)/page.tsx` — shell home page (ADR-0003): hero, intention band, featured "Start here" card (`featured: true` frontmatter, dictionary fallback), context gallery, pathways grid, recent notes, key terms, zāwiya footer
@@ -272,6 +272,13 @@ https://fumadocs.dev/llms-full.txt   # 700KB — search for the section you need
 Per-page Markdown is also available at `https://fumadocs.dev/llms.mdx/docs/<slug>/content.md`.
 
 ## Agent skills
+
+### Project skills (`.claude/skills/`)
+
+`add-locale` (locale scale-out checklist, 4-place sync), `ship` (release
+loop; push is user-side), `vault-authoring` (note/frontmatter/orbit/sidenote
+contract), `local-setup` (fresh-machine onboarding), `visual-qa` (human
+eyeball checklist — the agent has no browser tooling).
 
 ### Issue tracker
 
