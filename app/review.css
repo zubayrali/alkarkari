@@ -93,10 +93,11 @@
   scrollbar-width: thin;
 }
 
-/* Answer area fills the rest; answer text scrolls, progress pins at bottom. */
+/* Answer area fills the rest; answer text scrolls, progress pins at bottom.
+   Floor lowered from the global 160px so image-bearing questions get room. */
 .rv-card-dyn .rv-answer-area {
   flex: 1;
-  min-height: 0;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
 }
@@ -106,6 +107,19 @@
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
+}
+
+/* Inside the fixed-height card, attachment images are capped smaller than
+   the global 200px so question text always stays visible above them —
+   the image shrinks, never the text (quantum.country behavior). Click
+   zooms to full size (ImageZoom), so nothing is lost. */
+.rv-card-dyn .rv-attachment {
+  margin-top: 0.5rem;
+}
+
+.rv-card-dyn .rv-attachment img {
+  max-height: 7.5rem;
+  width: auto;
 }
 
 /* Occluded deck cards: dimmed, inert, marquee frozen. */
