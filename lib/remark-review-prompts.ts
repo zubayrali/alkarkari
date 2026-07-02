@@ -58,7 +58,8 @@ export function parsePrompts(source: string): Prompt[] {
       const question = q.join("\n").trim();
       const answer = a.join("\n").trim();
       if (question && answer) {
-        const prompt: Prompt = { id: hashId(question + "" + answer), question, answer };
+        // \0 separator so ("ab","c") and ("a","bc") don't hash-collide.
+        const prompt: Prompt = { id: hashId(question + "\u0000" + answer), question, answer };
         if (qImg) prompt.questionAttachment = resolveAttachment(qImg);
         if (aImg) prompt.answerAttachment = resolveAttachment(aImg);
         prompts.push(prompt);
@@ -68,11 +69,13 @@ export function parsePrompts(source: string): Prompt[] {
     qImg = aImg = undefined;
   };
 
+  // Fields start with a colon only (`Q:`, not `Q.`) — otherwise enumerated
+  // continuation lines like "A. first option" would be eaten as new fields.
   for (const line of source.split("\n")) {
-    const qm = line.match(/^\s*Q[:.]\s?(.*)$/);
-    const am = line.match(/^\s*A[:.]\s?(.*)$/);
-    const qim = line.match(/^\s*QI[:.]\s?(.*)$/);
-    const aim = line.match(/^\s*AI[:.]\s?(.*)$/);
+    const qm = line.match(/^\s*Q:\s?(.*)$/);
+    const am = line.match(/^\s*A:\s?(.*)$/);
+    const qim = line.match(/^\s*QI:\s?(.*)$/);
+    const aim = line.match(/^\s*AI:\s?(.*)$/);
     if (qm) {
       flush();
       q = [qm[1]];

@@ -39,6 +39,14 @@ function saveStore(store: Store) {
   } catch {}
 }
 
+/** Due prompts, overdue first — matches Orbit's createReviewQueue ordering. */
+function dueQueue(prompts: Prompt[], store: Store, now: number, horizon: number): Prompt[] {
+  const dueAt = (p: Prompt) => (store[p.id] ?? newCard(now)).dueTimestampMillis;
+  return prompts
+    .filter((p) => dueAt(p) <= horizon)
+    .sort((x, y) => dueAt(x) - dueAt(y));
+}
+
 function decode(b64: string): Prompt[] {
   const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
   return JSON.parse(new TextDecoder().decode(bytes));
@@ -228,14 +236,23 @@ export function ReviewBlock({
     setStore(s);
     const now = Date.now();
     const horizon = now + LOOKAHEAD_MS;
-    const due = prompts.filter((p) => {
-      const card = s[p.id] ?? newCard(now);
-      return card.dueTimestampMillis <= horizon;
-    });
+    const due = dueQueue(prompts, s, now, horizon);
     if (due.length > 0) {
       setMode({ kind: "reviewing", queue: due, pos: 0, revealed: false });
     }
   }, [prompts]);
+
+  // Re-sync when another block (or another tab) writes the shared store, so
+  // idle chips / due counts stay accurate across blocks on the same page.
+  useEffect(() => {
+    const sync = () => setStore(loadStore());
+    window.addEventListener("orbit-store-update", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("orbit-store-update", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   useEffect(() => registerPrompts(configBase64, prompts), [configBase64, prompts]);
 
@@ -244,9 +261,13 @@ export function ReviewBlock({
       if (mode.kind !== "reviewing" || !store) return;
       const prompt = mode.queue[mode.pos];
       const now = Date.now();
-      const card = store[prompt.id] ?? newCard(now);
+      // Read-merge-write against the persisted store, not this block's
+      // snapshot — other blocks on the page may have saved since we mounted,
+      // and writing a stale snapshot back would clobber their progress.
+      const fresh = loadStore();
+      const card = fresh[prompt.id] ?? newCard(now);
       const updated = applyOutcome(card, now, outcome);
-      const next = { ...store, [prompt.id]: updated };
+      const next = { ...fresh, [prompt.id]: updated };
       setStore(next);
       saveStore(next);
       window.dispatchEvent(new CustomEvent("orbit-store-update"));
@@ -296,8 +317,7 @@ export function ReviewBlock({
   const cardFor = (p: Prompt) => store[p.id] ?? newCard(now);
 
   const startReview = () => {
-    const horizon = now + LOOKAHEAD_MS;
-    const due = prompts.filter((p) => cardFor(p).dueTimestampMillis <= horizon);
+    const due = dueQueue(prompts, store, now, now + LOOKAHEAD_MS);
     const queue = due.length > 0 ? due : prompts;
     setMode({ kind: "reviewing", queue, pos: 0, revealed: false });
   };

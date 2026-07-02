@@ -124,7 +124,10 @@ function transformOrbitCallouts(content: string): string {
   return content.replace(ORBIT_CALLOUT_RE, (_match, _header: string, meta: string, body: string) => {
     const stripped = body.replace(/^>[ ]?/gm, "");
     const metaPart = meta.trim();
-    return `\`\`\`orbit${metaPart ? " " + metaPart : ""}\n${stripped}\`\`\`\n`;
+    // Callout at EOF without a trailing newline would glue the closing fence
+    // onto the last body line.
+    const bodyPart = stripped.endsWith("\n") || stripped === "" ? stripped : stripped + "\n";
+    return `\`\`\`orbit${metaPart ? " " + metaPart : ""}\n${bodyPart}\`\`\`\n`;
   });
 }
 

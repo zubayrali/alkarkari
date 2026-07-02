@@ -87,6 +87,8 @@ interface SidenoteState {
   label: HTMLElement;
   content: HTMLElement;
   side?: 'left' | 'right';
+  /** Visible clone in the TOC rail, when placed there. */
+  railCard?: HTMLElement;
   controller?: AbortController;
 }
 
@@ -202,14 +204,34 @@ class SidenoteManager {
     });
   }
 
+  /** The TOC-footer rail, if the TOC column is currently visible. */
+  private getRail(): HTMLElement | null {
+    const rail = document.getElementById('sidenote-rail');
+    if (!rail) return null;
+    const toc = rail.closest<HTMLElement>('#nd-toc');
+    if (!toc || toc.getBoundingClientRect().width === 0 || getComputedStyle(toc).display === 'none') {
+      return null;
+    }
+    return rail;
+  }
+
+  private clearRail() {
+    const rail = document.getElementById('sidenote-rail');
+    if (!rail) return;
+    rail.querySelector('[data-rail-list]')?.replaceChildren();
+    rail.hidden = true;
+  }
+
   private reset() {
     this.lastBottomLeft = 0;
     this.lastBottomRight = 0;
+    this.clearRail();
 
     this.sidenotes.forEach((state) => {
       const { label, content } = state;
 
       this.cleanupHandlers(state);
+      state.railCard = undefined;
 
       LABEL_ATTRS.forEach((attr) => label.removeAttribute(attr));
       label.style.cursor = '';
@@ -302,6 +324,63 @@ class SidenoteManager {
     return true;
   }
 
+  /** No margin room but the TOC column is visible: stack the note in the
+   *  rail below the TOC (a styled clone; the in-article original stays
+   *  hidden). Hovering the label highlights the card and vice versa. */
+  private positionInRail(state: SidenoteState, rail: HTMLElement): boolean {
+    const list = rail.querySelector<HTMLElement>('[data-rail-list]');
+    if (!list) return false;
+
+    const { span, label, content } = state;
+    const marker = label.querySelector('.sidenote-number')?.textContent ?? '';
+
+    const card = document.createElement('div');
+    card.className = 'sidenote-rail-card';
+    if (marker) {
+      const num = document.createElement('span');
+      num.className = 'sidenote-rail-number';
+      num.textContent = marker;
+      card.appendChild(num);
+    }
+
+    const clone = content.cloneNode(true) as HTMLElement;
+    clone.removeAttribute('id');
+    clone.removeAttribute('aria-hidden');
+    clone.removeAttribute('style');
+    clone.classList.remove(...CONTENT_CLASSES);
+    clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+    card.appendChild(clone);
+    list.appendChild(card);
+    rail.hidden = false;
+    state.railCard = card;
+
+    state.controller = new AbortController();
+    const { signal } = state.controller;
+    const highlight = (on: boolean) => {
+      card.classList.toggle('sidenote-highlight', on);
+      this.setActiveState(state, on);
+    };
+    span.addEventListener('mouseenter', () => highlight(true), { signal });
+    span.addEventListener('mouseleave', () => highlight(false), { signal });
+    card.addEventListener('mouseenter', () => highlight(true), { signal });
+    card.addEventListener('mouseleave', () => highlight(false), { signal });
+
+    // Clicking the label scrolls its card into view and flashes it.
+    label.style.cursor = 'pointer';
+    label.addEventListener(
+      'click',
+      (e: MouseEvent) => {
+        e.preventDefault();
+        card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        highlight(true);
+        setTimeout(() => highlight(false), 1200);
+      },
+      { signal },
+    );
+
+    return true;
+  }
+
   /** No margin room: the label opens the note as a floating popover instead. */
   private positionPopover(state: SidenoteState) {
     const { label, content } = state;
@@ -357,6 +436,7 @@ class SidenoteManager {
     this.margins = getMarginSpace(mainColumn);
     this.closePopover();
     this.reset();
+    const rail = this.getRail();
 
     // Clear any previous overflow padding.
     if (mainColumn) mainColumn.style.paddingBottom = '';
@@ -378,14 +458,19 @@ class SidenoteManager {
         state.content.setAttribute('aria-hidden', 'true');
         state.controller = new AbortController();
         const { signal } = state.controller;
-        const highlight = (on: boolean) => original.content.classList.toggle('sidenote-highlight', on);
+        // Highlight whatever visibly represents the original — its rail card
+        // when placed in the rail, its margin content otherwise.
+        const target = () => original.railCard ?? original.content;
+        const highlight = (on: boolean) => target().classList.toggle('sidenote-highlight', on);
         state.span.addEventListener('mouseenter', () => highlight(true), { signal });
         state.span.addEventListener('mouseleave', () => highlight(false), { signal });
         return;
       }
 
       if (!sideAvailable || forceInline || !this.positionSideToSide(state)) {
-        this.positionPopover(state);
+        if (forceInline || !rail || !this.positionInRail(state, rail)) {
+          this.positionPopover(state);
+        }
       }
 
       if (marker) placedMarkers.set(marker, state);
@@ -406,6 +491,7 @@ class SidenoteManager {
 
   public destroy() {
     this.closePopover();
+    this.clearRail();
     this.sidenotes.forEach((state) => this.cleanupHandlers(state));
     this.sidenotes = [];
   }

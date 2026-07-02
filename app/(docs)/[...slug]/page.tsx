@@ -92,6 +92,17 @@ export default async function Page(props: PageProps<"/[...slug]">) {
           ? {
               style: "clerk",
               header: tocHeader,
+              // Rail the sidenote engine fills when the margins have no room
+              // (i.e. whenever the TOC column is visible). Hidden until it
+              // receives notes; see components/sidenotes.tsx.
+              footer: (
+                <div id="sidenote-rail" hidden>
+                  <h3 className="inline-flex items-center gap-1.5 text-sm text-fd-muted-foreground">
+                    {siteLanguage.sidenotesLabel}
+                  </h3>
+                  <div data-rail-list className="sidenote-rail-list" />
+                </div>
+              ),
             }
           : { enabled: false }
       }

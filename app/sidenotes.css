@@ -165,3 +165,78 @@
     display: none !important;
   }
 }
+
+/* ── TOC rail ──────────────────────────────────────────────────────────
+   When the margins have no room (the normal docs layout: sidebar + TOC),
+   sidenotes stack in this rail below the TOC instead of hiding behind a
+   click-popover. Filled at runtime by components/sidenotes.tsx. */
+
+#sidenote-rail {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-fd-border);
+}
+
+#sidenote-rail[hidden] {
+  display: none;
+}
+
+#sidenote-rail > h3 {
+  margin-bottom: 0.625rem; /* match #toc-title */
+}
+
+.sidenote-rail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fd-border) transparent;
+  padding-inline-end: 0.25rem;
+}
+
+.sidenote-rail-card {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  font-size: 0.85em;
+  line-height: 1.5;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--sidenote-border);
+  border-radius: var(--radius-lg, 0.5rem);
+  background-color: var(--sidenote-surface);
+  transition: border-color 0.2s ease;
+}
+
+.sidenote-rail-card.sidenote-highlight {
+  border-color: var(--sidenote-accent);
+  border-style: dashed;
+}
+
+.sidenote-rail-number {
+  color: var(--sidenote-accent);
+  font-weight: 600;
+  font-size: 0.75em;
+  flex-shrink: 0;
+}
+
+/* The rail card holds a clone of .sidenote-content — neutralize its
+   absolute/hidden margin-note styling inside the card. */
+.sidenote-rail-card .sidenote-content {
+  display: block !important;
+  position: static;
+  width: auto;
+  min-width: 0;
+  opacity: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: inherit;
+  transition: none;
+}
