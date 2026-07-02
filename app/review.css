@@ -60,11 +60,15 @@
 
 /* ── Card stack ── */
 
-/* Grid-stacked deck: all cards share one cell (equal size), motion applies
-   the quantum.country scale/offset (1/0.95/0.9, 0/20/40px). The bottom
-   margin leaves room for the offset back-card edges to peek out. */
+/* Grid-stacked deck: all cards share one cell, motion applies the
+   quantum.country scale/offset (1/0.95/0.9, 0/20/40px). The deck has a
+   FIXED height (quantum uses fixed-size cards) so it never grows/shrinks
+   as prompts of different lengths cycle through — long content scrolls
+   inside the card instead. The bottom margin leaves room for the offset
+   back-card edges to peek out. */
 .rv-stack {
   display: grid;
+  height: 22rem;
   margin-bottom: 3.25rem;
 }
 
@@ -72,16 +76,36 @@
   grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .rv-card-dyn > .rv-card {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
+/* Long questions scroll within their region rather than resizing the card. */
+.rv-card-dyn .rv-prompt {
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+}
+
+/* Answer area fills the rest; answer text scrolls, progress pins at bottom. */
 .rv-card-dyn .rv-answer-area {
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rv-card-dyn .rv-answer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 /* Occluded deck cards: dimmed, inert, marquee frozen. */
@@ -490,6 +514,10 @@
 
   .rv-prompt {
     padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .rv-stack {
+    height: 20rem;
   }
 
   .rv-prompt p {
