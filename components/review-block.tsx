@@ -79,12 +79,14 @@ function colorStyle(color?: string): React.CSSProperties | undefined {
 
 /* ── Progress timeline milestones ── */
 
+// Quantum.country-style ladder, mapped onto our scheduler's actual interval
+// progression (0 → 5d → 11.5d → 26.5d → 61d → …).
 const MILESTONES = [
-  { label: "New", ms: 0 },
-  { label: "Learning", ms: INITIAL_INTERVAL_MS },
-  { label: "Short-term", ms: 14 * 86_400_000 },
-  { label: "Medium-term", ms: 60 * 86_400_000 },
-  { label: "Long-term", ms: 180 * 86_400_000 },
+  { label: "In-text", ms: 0 },
+  { label: "1 week", ms: INITIAL_INTERVAL_MS },
+  { label: "2 weeks", ms: 11 * 86_400_000 },
+  { label: "1 month", ms: 26 * 86_400_000 },
+  { label: "Long-term", ms: 60 * 86_400_000 },
 ];
 
 function milestoneIndex(intervalMs: number): number {
@@ -153,6 +155,41 @@ function MarqueeCover() {
   );
 }
 
+/* ── Card face (shared by the front card and occluded deck cards) ── */
+
+function CardFace({
+  prompt,
+  revealed,
+  intervalMs,
+}: {
+  prompt: Prompt;
+  revealed: boolean;
+  intervalMs: number;
+}) {
+  return (
+    <div className="rv-card">
+      <div className="rv-prompt">
+        <p>{prompt.question}</p>
+        {prompt.questionAttachment && <Attachment src={prompt.questionAttachment} />}
+      </div>
+      <div className="rv-answer-area">
+        <div className={`rv-answer${revealed ? " visible" : ""}`}>
+          <p>{prompt.answer}</p>
+          {prompt.answerAttachment && <Attachment src={prompt.answerAttachment} />}
+        </div>
+        <div className={`rv-level${revealed ? " visible" : ""}`}>
+          <ProgressTimeline intervalMs={intervalMs} />
+        </div>
+        {!revealed && (
+          <div className="rv-cover">
+            <MarqueeCover />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Attachment image ── */
 
 function Attachment({ src }: { src: string }) {
@@ -188,19 +225,6 @@ function CheckIcon() {
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SkipIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M5 5L19 19M19 5L5 19"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
       />
     </svg>
   );
@@ -327,9 +351,10 @@ export function ReviewBlock({
   /* ── Reviewing ── */
   if (mode.kind === "reviewing") {
     const { queue, pos, revealed } = mode;
-    const prompt = queue[pos];
-    const intervalMs = cardFor(prompt).intervalMillis;
-    const remaining = queue.length - pos;
+    // The quantum.country deck: front card + up to two occluded cards behind,
+    // scaled 0.95/0.9 and offset 20px/40px. Keys are queue indices, so on
+    // grade the card behind animates forward into the front slot.
+    const visible = queue.slice(pos, pos + 3);
 
     return (
       <div
@@ -341,57 +366,42 @@ export function ReviewBlock({
           onClick={!revealed ? reveal : undefined}
           style={{ cursor: !revealed ? "pointer" : undefined }}
         >
-          {/* Card stack */}
+          {/* Card deck */}
           <div className="rv-stack">
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.div
-                key={pos}
-                className="rv-card-wrap"
-                style={{ zIndex: 4 }}
-                initial={reduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={
-                  reduced
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: -30, scale: 0.96 }
-                }
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <div className="rv-card">
-                  <div className="rv-prompt">
-                    <p>{prompt.question}</p>
-                    {prompt.questionAttachment && (
-                      <Attachment src={prompt.questionAttachment} />
-                    )}
-                  </div>
-                  <div className="rv-answer-area">
-                    <div className={`rv-answer${revealed ? " visible" : ""}`}>
-                      <p>{prompt.answer}</p>
-                      {prompt.answerAttachment && (
-                        <Attachment src={prompt.answerAttachment} />
-                      )}
-                    </div>
-                    <div
-                      className={`rv-level${revealed ? " visible" : ""}`}
-                    >
-                      <ProgressTimeline intervalMs={intervalMs} />
-                    </div>
-                    {!revealed && (
-                      <div className="rv-cover">
-                        <MarqueeCover />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
+            <AnimatePresence initial={false}>
+              {visible.map((p, i) => (
+                <motion.div
+                  key={pos + i}
+                  className={`rv-card-dyn${i > 0 ? " rv-occluded" : ""}`}
+                  style={{ zIndex: 4 - i }}
+                  initial={
+                    reduced
+                      ? { opacity: 0 }
+                      : { opacity: 0, y: 20 * (i + 1), scale: 1 - 0.05 * (i + 1) }
+                  }
+                  animate={
+                    reduced
+                      ? { opacity: 1 }
+                      : { opacity: 1, y: 20 * i, scale: 1 - 0.05 * i }
+                  }
+                  exit={
+                    reduced
+                      ? { opacity: 0 }
+                      : { opacity: 0, y: -30, scale: 0.96 }
+                  }
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  <CardFace
+                    prompt={p}
+                    revealed={i === 0 && revealed}
+                    intervalMs={cardFor(p).intervalMillis}
+                  />
+                </motion.div>
+              ))}
             </AnimatePresence>
-
-            {/* Stack edges */}
-            {remaining > 1 && <div className="rv-edge rv-edge-1" />}
-            {remaining > 2 && <div className="rv-edge rv-edge-2" />}
           </div>
 
-          {/* Grade buttons */}
+          {/* Grade buttons — two primary actions, like quantum.country */}
           <div className="rv-buttons">
             <button
               className={`rv-btn rv-forgot${!revealed ? " disabled" : ""}`}
@@ -405,17 +415,6 @@ export function ReviewBlock({
               Didn&#8217;t remember
             </button>
             <button
-              className={`rv-btn rv-skip${!revealed ? " disabled" : ""}`}
-              disabled={!revealed}
-              onClick={(e) => {
-                e.stopPropagation();
-                grade("skipped");
-              }}
-            >
-              <SkipIcon />
-              Skip
-            </button>
-            <button
               className={`rv-btn rv-remembered${!revealed ? " disabled" : ""}`}
               disabled={!revealed}
               onClick={(e) => {
@@ -427,6 +426,16 @@ export function ReviewBlock({
               Remembered
             </button>
           </div>
+          <button
+            className={`rv-skip-link${!revealed ? " disabled" : ""}`}
+            disabled={!revealed}
+            onClick={(e) => {
+              e.stopPropagation();
+              grade("skipped");
+            }}
+          >
+            Skip this card
+          </button>
         </div>
       </div>
     );

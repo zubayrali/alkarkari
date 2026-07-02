@@ -60,29 +60,41 @@
 
 /* ── Card stack ── */
 
+/* Grid-stacked deck: all cards share one cell (equal size), motion applies
+   the quantum.country scale/offset (1/0.95/0.9, 0/20/40px). The bottom
+   margin leaves room for the offset back-card edges to peek out. */
 .rv-stack {
-  position: relative;
-  margin-bottom: 1rem;
+  display: grid;
+  margin-bottom: 3.25rem;
 }
 
-.rv-card-wrap {
-  position: relative;
+.rv-card-dyn {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.rv-edge {
-  height: 10px;
-  border-radius: 0 0 0.75rem 0.75rem;
-  background: var(--color-fd-card);
-  border: 1px solid var(--color-fd-border);
-  border-top: none;
+.rv-card-dyn > .rv-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.rv-edge-1 {
-  margin: 0 6px;
+.rv-card-dyn .rv-answer-area {
+  flex: 1;
 }
 
-.rv-edge-2 {
-  margin: 0 12px;
+/* Occluded deck cards: dimmed, inert, marquee frozen. */
+.rv-occluded {
+  pointer-events: none;
+}
+
+.rv-occluded .rv-card {
+  opacity: 0.85;
+}
+
+.rv-occluded .rv-marquee p {
+  animation-play-state: paused;
 }
 
 .rv-card {
@@ -114,10 +126,6 @@
 .dark .rv-themed .rv-btn {
   background: var(--rv-color-accent);
   color: var(--rv-color-accent-fg);
-}
-
-.rv-card.rv-occluded {
-  opacity: 0.85;
 }
 
 /* ── Prompt (question) ── */
@@ -299,6 +307,9 @@
   gap: 0;
 }
 
+/* Rows glide sideways and ping-pong (alternate); the per-row -13s delay
+   steps set by MarqueeCover put every row at a different phase — the
+   quantum.country shimmer. Keep the drift clearly perceptible (~10px/s). */
 .rv-marquee p {
   margin: 0;
   white-space: nowrap;
@@ -307,7 +318,8 @@
   font-weight: 600;
   color: var(--color-fd-primary);
   opacity: 0.1;
-  animation: rv-scroll 26s linear infinite;
+  animation: rv-scroll 45s linear infinite;
+  will-change: transform;
 }
 
 .rv-marquee span {
@@ -316,7 +328,7 @@
 
 @keyframes rv-scroll {
   from { transform: translateX(0); }
-  to { transform: translateX(-40%); }
+  to { transform: translateX(-50%); }
 }
 
 /* ── Grade buttons (Orbit style) ── */
@@ -357,30 +369,28 @@
   cursor: default;
 }
 
-/* Skip button is narrower — secondary action */
-.rv-skip {
-  flex: 0.6;
-  background: transparent;
-  border: 1px solid var(--color-fd-border);
+/* Skip is a subordinate text action below the two primary buttons
+   (quantum.country shows only two buttons; we keep skip reachable). */
+.rv-skip-link {
+  display: block;
+  margin: 0.5rem auto 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8125rem;
   color: var(--color-fd-muted-foreground);
-  font-weight: 500;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
 }
 
-.rv-skip:hover:not(.disabled) {
-  background: var(--color-fd-accent);
+.rv-skip-link:hover:not(.disabled) {
   color: var(--color-fd-foreground);
-  opacity: 1;
 }
 
-.rv-skip svg {
-  width: 16px;
-  height: 16px;
-}
-
-.rv-themed .rv-skip {
-  background: transparent;
-  border-color: var(--color-fd-border);
-  color: var(--color-fd-muted-foreground);
+.rv-skip-link.disabled {
+  opacity: 0;
+  cursor: default;
+  pointer-events: none;
 }
 
 /* ── Idle state (compact chip) ── */
@@ -511,11 +521,6 @@
   .rv-btn svg {
     width: 18px;
     height: 18px;
-  }
-
-  .rv-skip svg {
-    width: 14px;
-    height: 14px;
   }
 
   .rv-idle-inner {
