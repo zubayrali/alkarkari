@@ -39,8 +39,9 @@ yarn-error.log*
 .vercel
 next-env.d.ts
 
-# agent tooling / skill caches (local-only)
-/.claude/
+# agent tooling / skill caches (local-only) — but project skills are shared
+/.claude/*
+!/.claude/skills/
 /.agents/
 /.superpowers/
 /skills-lock.json
