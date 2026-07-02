@@ -16,6 +16,7 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 | `pnpm lint` | Oxlint |
 | `pnpm generate -- --select` | Re-pick which vault folders/files to include (saves `GENERATE_INCLUDE_<LOCALE>`) |
 | `pnpm locales:migrate` | One-shot move of a pre-i18n `content/`+`public/` into `locales/en/` |
+| `pnpm locales:report` | Warn-only slug-parity diff across `locales/*/content` (which slugs are missing per locale) |
 | `pnpm obsidian` | Open the configured vault in Obsidian |
 
 **Verify changes with:** `pnpm types:check && pnpm lint`

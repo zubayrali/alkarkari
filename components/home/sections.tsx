@@ -25,7 +25,7 @@ export function IntentionBand({ home }: { home: HomeStrings }) {
   return (
     <Reveal className="text-center py-24">
       <RevealItem>
-        <p dir="rtl" lang="ar" className="kk-arabic text-3xl sm:text-4xl mb-3" style={{ color: 'var(--kk-gold)' }}>
+        <p dir="rtl" lang="ar" className="kk-arabic text-3xl sm:text-4xl mb-3" style={{ color: 'var(--kk-gold-ink)' }}>
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </p>
       </RevealItem>
@@ -76,7 +76,7 @@ export function ContextGallery({ home }: { home: HomeStrings }) {
                   sizes="(max-width: 640px) 33vw, 220px"
                 />
               </div>
-              <figcaption className="kk-arabic text-center text-sm mt-2" style={{ color: 'var(--kk-gold)' }}>
+              <figcaption className="kk-arabic text-center text-sm mt-2" style={{ color: 'var(--kk-gold-ink)' }}>
                 {p.label}
               </figcaption>
             </figure>
@@ -101,7 +101,7 @@ export function FeaturedCard({ home, title, href, description }: { home: HomeStr
             ۞
           </span>
           <span className="flex-1">
-            <span className="block kk-label mb-2" style={{ color: 'var(--kk-gold)' }}>
+            <span className="block kk-label mb-2" style={{ color: 'var(--kk-gold-ink)' }}>
               {home.startHereLabel}
             </span>
             <span className="block text-xl font-medium text-fd-foreground mb-1">{title}</span>
@@ -149,7 +149,7 @@ export function PathwaysGrid({ home }: { home: HomeStrings }) {
               <span className="kk-label block mb-3">{p.tag}</span>
               <span className="flex items-baseline gap-2.5 mb-1.5">
                 <span className="text-lg font-medium text-fd-foreground">{p.title}</span>
-                <span className="kk-arabic text-base" style={{ color: 'var(--kk-gold)' }}>
+                <span className="kk-arabic text-base" style={{ color: 'var(--kk-gold-ink)' }}>
                   {p.arabic}
                 </span>
               </span>

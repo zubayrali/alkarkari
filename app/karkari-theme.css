@@ -34,7 +34,8 @@
   --color-fd-ring: #7a2230;
 
   /* — Karkari accents — */
-  --kk-gold: #b9803a;                 /* ochre calligraphy gold */
+  --kk-gold: #b9803a;                 /* ochre calligraphy gold — decorative/on-dark */
+  --kk-gold-ink: #8f5518;             /* AA-safe deep gold for text on ivory (5.1:1) */
   --kk-rose: #c98f88;                 /* dusty rose (Jeeran) */
   --kk-green: #1f5c46;                 /* mihrab green */
   --kk-soft: color-mix(in srgb, var(--kk-gold) 12%, transparent);
@@ -84,6 +85,7 @@
   --color-fd-ring: #d49a52;
 
   --kk-gold: #d49a52;
+  --kk-gold-ink: #d49a52;             /* bright gold already reads AA on dark ground */
   --kk-rose: #d9a9a2;
   --kk-soft: color-mix(in srgb, var(--kk-gold) 18%, transparent);
 }
@@ -150,10 +152,13 @@ h1, h2, h3, h4, h5, h6 {
   animation: kk-spin 90s linear infinite;
 }
 
-/* The light passing through the patchwork (nūr) — a slow brightness breath. */
+/* The light passing through the patchwork (nūr) — a slow breath.
+   ponytail: animate opacity (compositor-only) not filter brightness/saturate,
+   which forced a repaint on all 121 staggered tiles every frame. Tiles rest on
+   the dark oxblood grout, so fading toward it reads as the same glassy shimmer. */
 @keyframes kk-shimmer {
-  0%, 100% { filter: brightness(0.92) saturate(1); }
-  50%      { filter: brightness(1.22) saturate(1.08); }
+  0%, 100% { opacity: 0.78; }
+  50%      { opacity: 1; }
 }
 .kk-shimmer {
   animation: kk-shimmer 4.5s ease-in-out infinite;

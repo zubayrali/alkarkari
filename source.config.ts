@@ -13,6 +13,12 @@ import { rehypeSidenotes } from "./lib/rehype-sidenotes";
 import { rehypeCitations } from "./lib/rehype-citations";
 import { z } from "zod";
 
+// Obsidian text properties emit booleans as strings ('true'/'false'); coerce.
+const looseBoolean = z
+  .union([z.boolean(), z.enum(["true", "false"])])
+  .optional()
+  .transform((v) => v === true || v === "true");
+
 export const docs = defineDocs({
   dir: "content",
   docs: {
@@ -25,14 +31,14 @@ export const docs = defineDocs({
         .union([z.string(), z.array(z.string())])
         .optional()
         .transform(normalizeAliases),
-      base: z.boolean().optional(),
-      slides: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      unlisted: z.boolean().optional(),
-      tagPage: z.boolean().optional(),
+      base: looseBoolean,
+      slides: looseBoolean,
+      draft: looseBoolean,
+      unlisted: looseBoolean,
+      tagPage: looseBoolean,
       tag: z.string().optional(),
       // Marks the home page "Start here" card target (at most one note).
-      featured: z.boolean().optional(),
+      featured: looseBoolean,
       // Emitted by `pnpm generate` from vault file stats (note frontmatter
       // wins). ISO date-time strings; YAML may also parse bare dates to Date.
       created: z.union([z.string(), z.date()]).optional(),

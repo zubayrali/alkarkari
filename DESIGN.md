@@ -99,7 +99,11 @@ pre-size files (`images.unoptimized` = no server resizing).
 ## 6. Accessibility
 
 - **Reduced motion**: every animation degrades (see §3).
-- **Contrast**: oxblood `#7a2230` and gold on ivory pass AA for text/UI; keep
-  body copy on `--color-fd-foreground`. The oxblood panel uses `--kk-oxblood-fg`.
+- **Contrast**: oxblood `#7a2230` passes AA on ivory (8.5:1). The bright brand
+  gold `--kk-gold` (`#b9803a`, 2.9:1 on ivory) is **decorative only** — borders,
+  glyph ornaments, and text on the dark oxblood ground where it reads fine. Any
+  meaningful gold **text on light backgrounds** uses `--kk-gold-ink` (`#8f5518`,
+  5.1:1) which clears AA. Keep body copy on `--color-fd-foreground`. The oxblood
+  panel uses `--kk-oxblood-fg`.
 - **RTL**: Arabic carries `dir="rtl" lang="ar"`.
 - The mosaic and glow are decorative (`aria-hidden`); meaning lives in real text.

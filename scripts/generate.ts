@@ -40,7 +40,8 @@ function isDraft(file: VaultFile): boolean {
   if (typeof file.content !== "string") return false;
   if (!file.path.endsWith(".md") && !file.path.endsWith(".mdx")) return false;
   const { data } = parseFrontmatter(file.content);
-  return data.draft === true || data.private === true;
+  // Obsidian text properties may emit booleans as strings.
+  return data.draft === true || data.draft === "true" || data.private === true || data.private === "true";
 }
 
 function resolveTitle(file: ParsedContentFile, fallback: string) {

@@ -34,6 +34,7 @@
     "stage": "node scripts/stage.ts",
     "build:all": "node scripts/build-all.ts",
     "locales:migrate": "node scripts/migrate-to-locales.ts",
+    "locales:report": "node scripts/locales-report.ts",
     "generate": "node --env-file=.env scripts/generate.ts",
     "generate:all": "node --env-file=.env scripts/generate-all.ts",
     "obsidian": "node --env-file=.env scripts/open-obsidian.ts"

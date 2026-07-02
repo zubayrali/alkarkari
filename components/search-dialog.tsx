@@ -25,6 +25,31 @@ interface FlexIndex {
 
 let cached: { entries: SearchEntry[]; index: FlexIndex } | null = null;
 
+// CJK (Chinese/Japanese/Korean) text has no whitespace word boundaries, so
+// flexsearch's 'forward' tokenizer treats a whole sentence as one token and
+// mid-string queries miss. For the cn build, index latin words plus CJK
+// unigrams + bigrams so any character (or pair) of a term is findable. The same
+// encoder runs for add() and search(), keeping index/query tokenization aligned.
+const CJK_RE = /[㐀-鿿豈-﫿぀-ヿ가-힯]/;
+function cjkEncode(str: string): string[] {
+  const runs = str
+    .toLowerCase()
+    .match(/[a-z0-9]+|[㐀-鿿豈-﫿぀-ヿ가-힯]+/g);
+  if (!runs) return [];
+  const tokens: string[] = [];
+  for (const run of runs) {
+    if (!CJK_RE.test(run[0])) {
+      tokens.push(run);
+      continue;
+    }
+    for (let i = 0; i < run.length; i++) {
+      tokens.push(run[i]); // unigram — single-char queries still match
+      if (i < run.length - 1) tokens.push(run.slice(i, i + 2)); // bigram — precision
+    }
+  }
+  return tokens;
+}
+
 async function loadIndex(): Promise<{
   entries: SearchEntry[];
   index: FlexIndex;
@@ -36,7 +61,10 @@ async function loadIndex(): Promise<{
   const entries: SearchEntry[] = await res.json();
 
   const { Index } = await import('flexsearch');
-  const index = new Index({ tokenize: 'forward' }) as unknown as FlexIndex;
+  const isCJK = (process.env.NEXT_PUBLIC_SITE_LANGUAGE || 'en') === 'cn';
+  const index = new Index(
+    isCJK ? { encode: cjkEncode } : { tokenize: 'forward' },
+  ) as unknown as FlexIndex;
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i];
     index.add(i, `${e.title} ${e.section || ''} ${e.content}`);
