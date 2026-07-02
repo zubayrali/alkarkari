@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- Root locale chooser for the isolated-builds deploy. Hand-written static
+     HTML (not Next) — copied verbatim by scripts/stitch-deploy.ts with
+     {{BASE_PATH}} substituted. Keep the locale list in sync with
+     lib/locales-manifest.ts. Remembers the reader's choice (localStorage
+     "kk-locale") and auto-forwards on revisit; plain links otherwise. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karkari Wiki — الطريقة الكركرية</title>
+  <meta name="description" content="A living knowledge base of the Tariqa Karkariya — choose your language.">
+  <style>
+    :root {
+      --oxblood: #2a0d11; --oxblood-2: #190709; --fg: #f1e6d8;
+      --muted: #b3938a; --gold: #d49a52;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { height: 100%; }
+    body {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2.5rem; padding: 2rem; text-align: center;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: var(--fg);
+      background: radial-gradient(120% 90% at 50% 0%, #3a1218 0%, var(--oxblood) 48%, var(--oxblood-2) 100%);
+    }
+    .hem { display: flex; width: min(420px, 80vw); height: 10px; border-radius: 2px; overflow: hidden; background: var(--oxblood-2); }
+    .hem span { flex: 1; margin-inline: 0.5px; }
+    h1 { font-family: "Amiri", "Times New Roman", serif; color: var(--gold); font-size: clamp(40px, 9vw, 84px); font-weight: 400; line-height: 1.1; }
+    .sub { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-family: ui-monospace, monospace; }
+    nav { display: flex; flex-direction: column; gap: 0.75rem; width: min(320px, 90vw); }
+    nav a {
+      display: block; padding: 0.9rem 1.5rem; border-radius: 10px; text-decoration: none;
+      color: var(--fg); border: 1px solid rgba(241, 230, 216, 0.22); font-size: 1.05rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    nav a:hover { border-color: var(--gold); transform: translateY(-1px); }
+    nav a .code { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-inline-start: 0.6em; }
+  </style>
+</head>
+<body>
+  <div class="hem" aria-hidden="true">
+    <span style="background:#d23b34"></span><span style="background:#e8762b"></span>
+    <span style="background:#f2b22e"></span><span style="background:#9fc13a"></span>
+    <span style="background:#2f9e54"></span><span style="background:#16a3a3"></span>
+    <span style="background:#2f74c9"></span><span style="background:#3b46ad"></span>
+    <span style="background:#7a40ad"></span><span style="background:#c2418a"></span>
+    <span style="background:#b62f44"></span><span style="background:#1f6f4a"></span>
+  </div>
+
+  <div>
+    <h1 dir="rtl" lang="ar">الطريقة الكركرية</h1>
+    <p class="sub">Karkari Wiki · Ṭarīqa Karkariyya</p>
+  </div>
+
+  <nav aria-label="Choose your language">
+    <a href="./en/" hreflang="en" data-locale="en">English<span class="code">en</span></a>
+    <a href="./fr/" hreflang="fr" data-locale="fr">Français<span class="code">fr</span></a>
+    <a href="./cn/" hreflang="zh-CN" data-locale="cn">简体中文<span class="code">cn</span></a>
+  </nav>
+
+  <script>
+    (function () {
+      var KEY = 'kk-locale';
+      var links = document.querySelectorAll('nav a[data-locale]');
+      var codes = Array.prototype.map.call(links, function (a) { return a.dataset.locale; });
+
+      // Remember the choice.
+      links.forEach(function (a) {
+        a.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, a.dataset.locale); } catch (e) {}
+        });
+      });
+
+      // Returning reader with a saved choice → forward straight to their locale.
+      try {
+        var saved = localStorage.getItem(KEY);
+        if (saved && codes.indexOf(saved) !== -1) {
+          location.replace('./' + saved + '/');
+          return;
+        }
+      } catch (e) {}
+
+      // First visit: nudge the browser-language match to the top of the list.
+      try {
+        var nav = (navigator.languages || [navigator.language || '']).map(function (l) {
+          l = l.toLowerCase();
+          if (l.indexOf('zh') === 0) return 'cn';
+          return l.split('-')[0];
+        });
+        for (var i = 0; i < nav.length; i++) {
+          var idx = codes.indexOf(nav[i]);
+          if (idx > 0) {
+            var list = links[idx].parentNode;
+            list.insertBefore(links[idx], list.firstChild);
+            break;
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

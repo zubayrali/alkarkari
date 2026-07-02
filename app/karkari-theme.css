@@ -1,0 +1,183 @@
+/* ============================================================================
+   Karkari design system — site-wide retheme (see DESIGN.md)
+
+   Imported LAST in global.css so these :root / .dark declarations override the
+   Fumadocs neutral preset tokens (same specificity, later source order wins;
+   and these are unlayered so they beat any @layer'd fumadocs tokens too).
+
+   Visual language (from the zāwiya itself, not a generic preset):
+   · Oxblood / deep maroon ground — editorial, like the institute's print work.
+   · Warm ivory paper + ochre calligraphy gold (the Karkariya logo colour).
+   · The Muraqqaʿa — the patched cloak — rendered in its REAL vivid spectrum:
+     crimson, orange, saffron, lime, emerald, teal, cobalt, indigo, violet,
+     magenta. The cloak and the zāwiya wall are both grids of solid colour;
+     that patchwork, lit like stained glass, is the whole identity.
+   ============================================================================ */
+
+:root {
+  /* — Fumadocs token overrides: warm ivory paper + oxblood ink (light) — */
+  --color-fd-background: #f4ece0;
+  --color-fd-foreground: #2a1418;
+  --color-fd-muted: #ebe1d2;
+  --color-fd-muted-foreground: #6f5a52;
+  --color-fd-popover: #faf4ea;
+  --color-fd-popover-foreground: #2a1418;
+  --color-fd-card: #faf4ea;
+  --color-fd-card-foreground: #2a1418;
+  --color-fd-border: #e3d6c4;
+  --color-fd-primary: #7a2230;        /* oxblood — links, primary */
+  --color-fd-primary-foreground: #faf4ea;
+  --color-fd-secondary: #ebe1d2;
+  --color-fd-secondary-foreground: #2a1418;
+  --color-fd-accent: #efe4d2;
+  --color-fd-accent-foreground: #2a1418;
+  --color-fd-ring: #7a2230;
+
+  /* — Karkari accents — */
+  --kk-gold: #b9803a;                 /* ochre calligraphy gold */
+  --kk-rose: #c98f88;                 /* dusty rose (Jeeran) */
+  --kk-green: #1f5c46;                 /* mihrab green */
+  --kk-soft: color-mix(in srgb, var(--kk-gold) 12%, transparent);
+
+  /* Constant oxblood ground for hero + footer in BOTH themes, so the patchwork
+     and gold always read as a dramatic editorial panel regardless of page chrome. */
+  --kk-oxblood: #2a0d11;
+  --kk-oxblood-2: #190709;
+  --kk-oxblood-fg: #f1e6d8;
+  --kk-oxblood-muted: #b3938a;        /* dusty rose, muted, on oxblood */
+  --kk-oxblood-line: rgba(241, 230, 216, 0.06);
+
+  --font-mono: var(--font-mono-plex), ui-monospace, SFMono-Regular, monospace;
+
+  /* The Muraqqaʿa spectrum — the actual cloak / zāwiya-wall colours. Vivid in
+     both themes (the cloak is vivid regardless), so defined once here. */
+  --kk-patch-1: #d23b34;   /* crimson  */
+  --kk-patch-2: #e8762b;   /* orange   */
+  --kk-patch-3: #f2b22e;   /* saffron  */
+  --kk-patch-4: #9fc13a;   /* lime     */
+  --kk-patch-5: #2f9e54;   /* emerald  */
+  --kk-patch-6: #16a3a3;   /* teal     */
+  --kk-patch-7: #2f74c9;   /* cobalt   */
+  --kk-patch-8: #3b46ad;   /* indigo   */
+  --kk-patch-9: #7a40ad;   /* violet   */
+  --kk-patch-10: #c2418a;  /* magenta  */
+  --kk-patch-11: #b62f44;  /* deep rose-red */
+  --kk-patch-12: #1f6f4a;  /* deep green    */
+}
+
+.dark {
+  --color-fd-background: #160a0c;
+  --color-fd-foreground: #efe4d8;
+  --color-fd-muted: #21100f;
+  --color-fd-muted-foreground: #b3938a;
+  --color-fd-popover: #1e0e10;
+  --color-fd-popover-foreground: #efe4d8;
+  --color-fd-card: #1e0e10;
+  --color-fd-card-foreground: #efe4d8;
+  --color-fd-border: #3a1f23;
+  --color-fd-primary: #d49a52;        /* gold reads better than oxblood on dark */
+  --color-fd-primary-foreground: #160a0c;
+  --color-fd-secondary: #21100f;
+  --color-fd-secondary-foreground: #efe4d8;
+  --color-fd-accent: #281417;
+  --color-fd-accent-foreground: #efe4d8;
+  --color-fd-ring: #d49a52;
+
+  --kk-gold: #d49a52;
+  --kk-rose: #d9a9a2;
+  --kk-soft: color-mix(in srgb, var(--kk-gold) 18%, transparent);
+}
+
+/* — Typography (site-wide) — body stays Inter (html className); headings,
+     Arabic, and labels opt into the Karkari faces. — */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-spectral), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.01em;
+}
+
+[lang="ar"], [dir="rtl"], .kk-arabic {
+  font-family: var(--font-amiri), "Times New Roman", serif;
+}
+
+.kk-label {
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* ── Homepage helpers (.kk-home scope) ──────────────────────────────────── */
+
+/* Hero + footer are constant oxblood panels in both themes. */
+.kk-oxblood-panel {
+  position: relative;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #3a1218 0%, var(--kk-oxblood) 48%, var(--kk-oxblood-2) 100%);
+  color: var(--kk-oxblood-fg);
+  overflow: hidden;
+}
+
+/* Thin Moroccan grid lines, very faint, over the oxblood. */
+.kk-gridlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--kk-oxblood-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--kk-oxblood-line) 1px, transparent 1px);
+  background-size: 52px 52px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kk-hero-fade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 160px;
+  background: linear-gradient(to bottom, transparent, var(--color-fd-background));
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Slowly-rotating khatim (eight-point star) outline behind the hero. */
+@keyframes kk-spin {
+  to { transform: rotate(360deg); }
+}
+.kk-spin {
+  animation: kk-spin 90s linear infinite;
+}
+
+/* The light passing through the patchwork (nūr) — a slow brightness breath. */
+@keyframes kk-shimmer {
+  0%, 100% { filter: brightness(0.92) saturate(1); }
+  50%      { filter: brightness(1.22) saturate(1.08); }
+}
+.kk-shimmer {
+  animation: kk-shimmer 4.5s ease-in-out infinite;
+}
+
+/* Backlight glow bloom behind the star mosaic. */
+@keyframes kk-breathe {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.96); }
+  50%      { opacity: 0.9;  transform: translate(-50%, -50%) scale(1.04); }
+}
+.kk-breathe {
+  animation: kk-breathe 6s ease-in-out infinite;
+}
+
+@keyframes kk-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+.kk-scroll-cue {
+  animation: kk-bob 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kk-spin, .kk-shimmer, .kk-breathe, .kk-scroll-cue {
+    animation: none;
+  }
+}

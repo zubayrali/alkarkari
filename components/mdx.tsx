@@ -2,6 +2,7 @@ import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import * as ObsidianComponents from "fumadocs-obsidian/ui";
 import { Mermaid } from "@/components/mermaid";
+import { ReviewBlock } from "@/components/review-block";
 import type { MDXComponents } from "mdx/types";
 import type { ImgHTMLAttributes } from "react";
 
@@ -22,6 +23,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ...defaultMdxComponents,
     img: (props) => <FigureImage {...props} />,
     Mermaid,
+    ReviewBlock,
     ...ObsidianComponents,
     ...components,
   } satisfies MDXComponents;

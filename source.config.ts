@@ -6,6 +6,7 @@ import remarkMath from "remark-math";
 import { remarkWikilinks } from "./lib/remark-wikilinks";
 import { remarkInlineBase } from "./lib/remark-inline-base";
 import { remarkAnnotations } from "./lib/remark-annotations";
+import { remarkReviewPrompts } from "./lib/remark-review-prompts";
 import { normalizeTags } from "./lib/tags";
 import { normalizeAliases } from "./lib/aliases";
 import { rehypeSidenotes } from "./lib/rehype-sidenotes";
@@ -30,6 +31,12 @@ export const docs = defineDocs({
       unlisted: z.boolean().optional(),
       tagPage: z.boolean().optional(),
       tag: z.string().optional(),
+      // Marks the home page "Start here" card target (at most one note).
+      featured: z.boolean().optional(),
+      // Emitted by `pnpm generate` from vault file stats (note frontmatter
+      // wins). ISO date-time strings; YAML may also parse bare dates to Date.
+      created: z.union([z.string(), z.date()]).optional(),
+      modified: z.union([z.string(), z.date()]).optional(),
       // Keep arbitrary vault frontmatter (arabic, root, category, related, …)
       // so the Properties panel can surface it as a terminology infobox.
     }).passthrough(),
@@ -45,7 +52,7 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    remarkPlugins: [remarkInlineBase, remarkWikilinks, remarkAnnotations, remarkMdxMermaid, remarkMath],
+    remarkPlugins: [remarkInlineBase, remarkReviewPrompts, remarkWikilinks, remarkAnnotations, remarkMdxMermaid, remarkMath],
     rehypePlugins: (v) => [rehypeKatex, ...v, ...rehypeCitations(), rehypeSidenotes],
   },
 });

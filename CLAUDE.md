@@ -6,12 +6,16 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 
 | Command | Purpose |
 |---|---|
-| `pnpm generate` | Convert vault → site content (run before dev if `content/` is stale) |
-| `pnpm dev` | Local dev server at http://localhost:3000 |
-| `pnpm build` | Production build (static export to `out/`) |
-| `pnpm types:check` | MDX codegen + Next.js typegen + TypeScript — run after any schema or content change |
+| `pnpm generate --locale=<x>` | Convert that locale's vault → `locales/<x>/{content,public}` (no flag = `SITE_LANGUAGE` or `en`) |
+| `pnpm generate:all` | Regenerate every locale with a configured `OBSIDIAN_VAULT_PATH_<X>` |
+| `pnpm build:all` | Build all locales + stitch the full multi-locale site into `site/` (local mirror of CI; preview with `npx serve site`) |
+| `pnpm stage <x>` | Copy `locales/<x>/` into the live (gitignored) `content/` + `public/` |
+| `pnpm dev` | Stages `$SITE_LANGUAGE` (default `en`), then dev server at http://localhost:3000 |
+| `pnpm build` | Stages, then production build (static export to `out/`) |
+| `pnpm types:check` | Stage + MDX codegen + Next.js typegen + TypeScript — run after any schema or content change |
 | `pnpm lint` | Oxlint |
-| `pnpm generate -- --select` | Re-pick which vault folders/files to include |
+| `pnpm generate -- --select` | Re-pick which vault folders/files to include (saves `GENERATE_INCLUDE_<LOCALE>`) |
+| `pnpm locales:migrate` | One-shot move of a pre-i18n `content/`+`public/` into `locales/en/` |
 | `pnpm obsidian` | Open the configured vault in Obsidian |
 
 **Verify changes with:** `pnpm types:check && pnpm lint`
@@ -20,8 +24,9 @@ VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js +
 
 | Path | Contents |
 |---|---|
-| `content/` | **Generated** MDX. Fully deleted and rebuilt on every `pnpm generate` run. Only `index.mdx` and `graph.mdx` are hand-maintained and preserved. |
-| `public/` | **Generated** static assets. Fully deleted and rebuilt on every `pnpm generate` run. No hand-maintained files. |
+| `locales/<locale>/content\|public` | **Committed** per-locale trees, written by `pnpm generate --locale=<x>`. Each locale is a fully isolated build (see `docs/superpowers/specs/2026-07-02-i18n-design.md`); `lib/locales-manifest.ts` is the locale list (keep `deploy.yml`'s matrix in sync). Hand-maintained per locale: `content/graph.mdx` and `content/start-here.mdx` (the notebook's index page at `/start-here` — the per-language "start here" giving cultural context; the shell home page is only a welcome mat). **Never route a page at `/index`** — static servers special-case a trailing bare `index` segment (`serve` normalizes `/cn/index` → `/cn/`), and a top-level `index.mdx` maps to `/`. The root `404.html` auto-redirects missed locale URLs (e.g. language switches to untranslated pages) to that locale's `/start-here`. Generation emits `created`/`modified` frontmatter from vault file stats (note frontmatter wins). |
+| `content/`, `public/` | **Gitignored staging** — copies of one locale produced by `pnpm stage` (`.staged-locale` records which). Never edit here; edit `locales/<locale>/` or the vault. |
+| `deploy/root/` | Hand-written root locale chooser + `404.html`, copied by the stitch step ({{BASE_PATH}} substituted). Keep locale lists in sync with the manifest. |
 | `app/` | Next.js routes. `(home)/page.tsx` is the home page. `(docs)/[...slug]/` is the catch-all docs route. `api/search-index/` exports the static search index. |
 | `components/` | React components. `canvas-*.tsx` for canvas rendering; `graph-*.tsx` for graph view. |
 | `lib/` | Domain logic — no React. |
@@ -126,6 +131,16 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `lib/remark-annotations.ts` — rough-notation syntax (`==highlight==`, `!!underline!!`, `^^box^^`, `((circle))`, `||bracket||`, ` ```highlight ` fences) → `.rough-ann` JSX spans; see ADR-0012
 - `components/rough-annotations.tsx` — client runtime: draws rough-notation SVGs over `#nd-page .rough-ann`; colors from `--ann-*` vars in `app/global.css`
 
+**Spaced repetition** (self-contained, no backend — Orbit's scheduler vendored, not its cloud service)
+- Authoring: two syntaxes supported in vault notes — a fenced ` ```orbit ` block and an Obsidian `> [!orbit]` callout. Both hold `Q:`/`A:` pairs (blank-line separated; either field may span multiple lines). `QI:`/`AI:` lines attach an image to the preceding question or answer. An optional `color=<name>` in the fence meta or callout header selects from 10 color palettes (red, orange, yellow, green, turquoise, cyan, blue, violet, purple, pink). Becomes an inline review widget.
+- `scripts/generate.ts` `transformOrbitCallouts()` — runs at generation time (before MDX parsing) to convert `> [!orbit]- color=green` callout syntax into ` ```orbit color=green ` fences. Mirrors the `transformSidenoteSyntax()` pattern: raw text → standard syntax the remark plugin handles. Must run before MDX sees the `>` blockquote.
+- `lib/remark-review-prompts.ts` — remark plugin: parses ` ```orbit ` fences and `> [!orbit]` blockquotes into prompts (stable content-hash ids via djb2→base36) and emits `<ReviewBlock configBase64="…" color="…">`. Supports `QI:`/`AI:` attachment fields. Also handles blockquote-based `[!orbit]` callouts that survive past the generation transform (e.g. in hand-maintained content). Runs early in the chain so wikilink/annotation passes never see the prompt text.
+- `lib/spaced-repetition.ts` — interval scheduler vendored & trimmed from Orbit's `@withorbit/core` `spacedRepetitionScheduler.ts` (Apache-2.0). Line-for-line faithful port: growth factor 2.3, initial interval 5 days, forgotten retry 10 min, ±10 min jitter, early-review guard. Three outcomes: remembered, forgotten, skipped (skipped = keep interval unchanged, same as Orbit). Pure; has a `demo()` self-check (`npx tsx`).
+- `components/review-block.tsx` — client widget: per-reader schedule in `localStorage` (`orbit-review-v1`), so no accounts and no external service. 16-hour lookahead shows cards becoming due today (matches Orbit's `getReviewQueueFuzzyDueTimestampThreshold`). Three grade buttons: forgot, skip, remembered. Keyboard shortcuts: Space (reveal/remember), 1 (forgot), 2 (remembered), 3 (skip). Idle state shows a compact chip with mastered count and next due time. Supports `questionAttachment`/`answerAttachment` images. Color theming via `--rv-color-*` CSS custom properties (10 oklch palettes). Registered in `components/mdx.tsx`.
+- `lib/review-store.ts` — module-level pub/sub: `registerPrompts` / `getPromptSnapshot` / `subscribePrompts` for cross-block coordination. Ready for a `/review` aggregator page.
+- `app/review.css` — themed with `--fd-*` vars and per-block `--rv-color-*` overrides. Dark mode support for themed blocks. Imported via `app/global.css`.
+- Not used: Orbit's hosted backend/sync/email, event sourcing, cloze deletions, markdown/KaTeX rendering inside prompt text. There is no cross-device sync or away-from-site reminder (a static export can't push).
+
 **Terminology layer** (note transclusion + properties infobox — see ADR-0013)
 - `lib/remark-wikilinks.ts` — also detects a **standalone** `![[Note]]`/`![[Note#Section]]`/`![[Note|Label]]` paragraph (non-`.base`) and emits a block-level `<NoteEmbed>`; mid-sentence embeds fall through to the wikilink pass as links
 - `lib/note-embed.ts` — `resolveNoteTarget`: lazy name→page index over `source` (stem/title/alias; titles win), powers transclusion + frontmatter wikilinks; `slugifySection` for `#Section` anchors
@@ -133,10 +148,23 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/properties-panel.tsx` + `app/properties-panel.css` — RSC: renders passthrough frontmatter (`arabic`, `root`, `category`, `related`, …) as a type-aware, self-hiding Obsidian-style infobox above the body; frontmatter `[[wikilinks]]` resolve via `resolveNoteTarget`
 - `.claude/skills/create-term/` — authoring contract (frontmatter schema + section layout) these two surfaces render; the KM consistency strategy
 
+**Home page & site theme** (Karkari design system — see `DESIGN.md`)
+- `app/(home)/page.tsx` — shell home page (ADR-0003): hero, intention band, featured "Start here" card (`featured: true` frontmatter, dictionary fallback), context gallery, pathways grid, recent notes, key terms, zāwiya footer
+- `lib/home-data.ts` — React-free page data: dictionary pills, recent notes (sorted by `modified`/`created` frontmatter emitted at generation; ISO strings, formatted client-side by `components/home/relative-time.tsx` — a build-time "3d ago" would freeze in a static export), featured lookup
+- `components/home/` — `hero.tsx`, `sections.tsx`, `zawiya-footer.tsx` (server; ALL copy comes from `lib/locale.ts` `home` strings — never hardcode homepage prose), `muraqqaa.tsx` + `reveal.tsx` (client animation primitives), static-imported images (never `public/`, which generate wipes)
+- `app/karkari-theme.css` — site-wide Fumadocs token overrides (oxblood/ivory/gold + the 12-colour muraqqaʿa spectrum); imported last in `global.css`
+
+**Comments & slides**
+- `components/cusdis-comments.tsx` — lazy-loaded Cusdis thread below docs pages; nothing fetched until the reader clicks "Load comments" or a `#comments` deep link; instance config in `lib/shared.ts` (`cusdisConfig`)
+- `slides: true` frontmatter adds a `<page>/slides` route (`SlideViewer`); extra static params emitted in the catch-all route's `generateStaticParams`
+
 **Content schema**
-- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `aliases` (string or array → normalized), `draft` (bool), `unlisted` (bool); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, citations, sidenotes)
+- `source.config.ts` — Fumadocs schema: `tags` (string or array → normalized), `aliases` (string or array → normalized), `draft` (bool), `unlisted` (bool), `slides` (bool), `featured` (bool, home "Start here" target), `created`/`modified` (emitted by generation from vault file stats); `.passthrough()` keeps arbitrary vault frontmatter for the Properties panel; MDX plugins (inline-base, wikilinks, Mermaid, math/KaTeX, citations, sidenotes)
 - `lib/source.ts` — `source` loader; `resolvePage` (handles encoded/decoded slugs); `resolveReference` (extracted-reference href → page; relative hrefs resolve by slugs, not file path); `getLLMText`
-- `lib/shared.ts` — app-wide constants: `appName`, `docsRoute`, `gitConfig`
+- `lib/shared.ts` — app-wide constants: `appName`, `docsRoute`, `gitConfig`, `cusdisConfig`
+- `lib/locale.ts` — `SITE_LANGUAGE`-keyed UI strings incl. the `home` block (`en`, `fr`, `cn`)
+- `lib/locales-manifest.ts` — the locale list (code, native label, text direction) for the isolated-builds i18n; consumed by the layout (`<html dir>`), `components/locale-switcher.tsx`, and mirrored by `deploy.yml`'s matrix + `deploy/root/*.html`
+- `components/locale-switcher.tsx` — fumadocs-tabs-styled `<details>` dropdown of cross-build language links (plain `<a>`, never `next/link` — it would prepend this build's basePath). Mounted as the docs sidebar banner (above `SidebarLinks`) and as a custom nav item in `baseOptions()`. In dev (`NEXT_PUBLIC_BASE_PATH` doesn't end with `/<locale>`) sibling builds don't exist, so other locales render disabled with a hint; real switching is only live on stitched deploys (`pnpm build:all` preview or production)
 
 **View transitions**
 - Native Next 16 `experimental.viewTransition` (`next.config.mjs`) + React's `<ViewTransition>` component crossfade page content. Both `app/(docs)/[...slug]/page.tsx` and `app/(home)/page.tsx` wrap their content in `<ViewTransition name="docs-content" share="auto" enter="auto" default="none">` so home↔docs navigation pairs as a shared transition. See ADR-0007.
@@ -148,22 +176,22 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 
 ## Deployment (GitHub Pages)
 
-The site is deployed as a **static export** via GitHub Actions (`.github/workflows/deploy.yml`).
+The site is deployed as **one isolated static build per locale**, stitched into a single GitHub Pages site (`.github/workflows/deploy.yml`; see `docs/superpowers/specs/2026-07-02-i18n-design.md`).
 
 **How it works:**
 1. Push to `main` triggers the workflow.
-2. CI runs `pnpm install` → `pnpm build` (which produces `out/`).
-3. `out/` is uploaded as a GitHub Pages artifact and deployed.
+2. A matrix job builds each locale: stage `locales/<x>/` → quality gates → `pnpm build` with `SITE_LANGUAGE=<x>` and `PAGES_BASE_PATH=/<repo>/<x>` → `out-<x>` artifact.
+3. The stitch job (`scripts/stitch-deploy.ts`) assembles `site/`: `deploy/root/` (locale chooser, 404) at the root, each build under `/<x>/`, legacy redirect stubs (old unprefixed URLs → `/en/…`), and a sitemap index. One Pages deploy.
 
 **Setup (one-time):**
 - Go to repo **Settings → Pages → Source** and select **GitHub Actions**.
-- `content/` and `public/` are committed to the repo — CI does not run `pnpm generate` (no vault access in CI). Run `pnpm generate` locally before committing content changes.
+- `locales/<locale>/{content,public}` are committed to the repo — CI does not run `pnpm generate` (no vault access in CI). Run `pnpm generate --locale=<x>` locally before committing content changes.
+- Keep `deploy.yml`'s matrix and `deploy/root/*.html` locale lists in sync with `lib/locales-manifest.ts`.
 
 **`basePath` for subpath hosting:**
-- GitHub Pages serves project sites at `/<repo-name>/` (e.g. `/alkarkari/`).
-- `next.config.mjs` reads `PAGES_BASE_PATH` env var. The workflow sets it to `/${{ github.event.repository.name }}` automatically.
-- For local dev, `PAGES_BASE_PATH` is empty (or unset), so the site runs at `/`.
-- If you move to a custom domain (root path), remove the `PAGES_BASE_PATH` env from the workflow.
+- Each locale build serves at `/<repo-name>/<locale>/`; the workflow sets `PAGES_BASE_PATH` per matrix leg.
+- For local dev, `PAGES_BASE_PATH` is empty (or unset), so the staged locale runs at `/` (the locale switcher hides itself — sibling builds don't exist locally).
+- On a custom domain, change `BASE_PATH`/`PAGES_BASE_PATH` in the workflow (locale subpaths remain).
 
 **Static export constraints:**
 - No API routes at runtime — `app/api/search-index/route.ts` exports a pre-built JSON search index as a static file.
@@ -182,10 +210,10 @@ The site is deployed as a **static export** via GitHub Actions (`.github/workflo
 
 | Variable | Purpose |
 |---|---|
-| `OBSIDIAN_VAULT_PATH` | Absolute path to the vault. Required for `pnpm generate` and `pnpm obsidian`. Not read at runtime. |
-| `SITE_LANGUAGE` | UI locale: `en` (default) or `cn`. Restart dev server after changing. |
-| `GENERATE_INCLUDE` | Comma-separated top-level vault folders/files to include. Saved by `--select`. |
-| `PAGES_BASE_PATH` | URL base path for GitHub Pages subpath hosting (e.g. `/alkarkari`). Set automatically in CI. Leave empty for local dev or custom domain. |
+| `OBSIDIAN_VAULT_PATH_<LOCALE>` | Absolute path to that locale's vault (e.g. `OBSIDIAN_VAULT_PATH_FR`). Unsuffixed `OBSIDIAN_VAULT_PATH` is a fallback for `en` only. Required for `pnpm generate`/`pnpm obsidian`; not read at runtime. |
+| `SITE_LANGUAGE` | Which locale to stage/build/generate by default: `en`, `fr`, or `cn` (see `lib/locales-manifest.ts`). Set per matrix leg in CI. Restart dev server after changing. |
+| `GENERATE_INCLUDE_<LOCALE>` | Comma-separated top-level vault folders/files to include for that locale. Saved by `--select`. Unsuffixed fallback for `en`. |
+| `PAGES_BASE_PATH` | URL base path; CI sets `/<repo>/<locale>` per leg. Leave empty for local dev. Also inlined as `NEXT_PUBLIC_BASE_PATH` and (via `SITE_LANGUAGE`) `NEXT_PUBLIC_SITE_LANGUAGE`. |
 
 ## Footguns
 
@@ -211,6 +239,7 @@ The site is deployed as a **static export** via GitHub Actions (`.github/workflo
 - An alias that matches an existing page slug is silently ignored (real pages always win); see `lib/alias-index.ts`.
 - Remark plugins must emit `mdxJsxTextElement`/`mdxJsxFlowElement` nodes, never raw `html` nodes — html nodes make the whole MDX module unparsable (`MODULE_UNPARSABLE`).
 - Annotation delimiters (`==`, `!!`, `^^`, `((`, `||`) are reserved in note prose — `((text))` in particular annotates any double-parenthesized text. See ADR-0012.
+- `> [!orbit]` callout syntax is transformed at generation time by `transformOrbitCallouts()` into ` ```orbit ` fences, similar to the sidenote transform. The remark plugin also handles `[!orbit]` blockquotes directly in the AST as a fallback for hand-maintained content files. Empty blockquote lines (`>` with no text) must be matched by the regex — the `>[ ]?` pattern handles this.
 - `{{sidenotes[label]: content}}` syntax is transformed at generation time, not at MDX compile time. MDX's acorn parser treats `{{` as a JSX expression and crashes if the syntax reaches it. The `transformSidenoteSyntax()` in `scripts/generate.ts` must run before any MDX processing. Hand-maintained `content/` files cannot use this syntax — use standard GFM footnotes (`[^n]`) instead.
 - `rehype-citation` ships with browser and Node conditional exports. Turbopack resolves to the browser build (which can't read local `.bib` files). `lib/rehype-citations.ts` uses `createRequire(import.meta.url)` to force Node resolution. Do not replace with a static `import` — it will break with "Cannot read non valid bibliography URL in node env."
 - `rehype-citation` joins `options.path` and `options.bibliography` with `path.join()`. Passing an absolute `bibliography` path doubles the directory (e.g. `/cwd/abs/path/ref.bib`). Always pass the relative filename and let `path: process.cwd()` resolve it.

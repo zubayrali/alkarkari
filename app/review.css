@@ -1,0 +1,545 @@
+/* Orbit-style spaced-repetition review widget.
+   Faithful to Orbit's card-stack + marquee-cover + timeline pattern,
+   themed with Karkari tokens. Supports per-block color theming via
+   --rv-color-* custom properties. */
+
+/* ── Container ── */
+
+.rv-block {
+  margin: 2rem auto;
+  max-width: 540px;
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--rv-color-accent, var(--color-fd-primary)) 5%, var(--color-fd-background));
+  overflow: hidden;
+}
+
+.rv-active .rv-area {
+  padding: 1.5rem 1.25rem;
+}
+
+/* ── Color theming ── */
+
+.rv-themed {
+  background: color-mix(in oklab, var(--rv-color-accent) 8%, var(--color-fd-background));
+}
+
+.rv-themed .rv-btn {
+  background: var(--rv-color-accent);
+  color: var(--rv-color-accent-fg);
+}
+
+.rv-themed .rv-timeline-fill {
+  background: var(--rv-color-accent);
+}
+
+.rv-themed .rv-timeline-item.current .rv-timeline-dot,
+.rv-themed .rv-timeline-item.past .rv-timeline-dot {
+  background: var(--rv-color-accent);
+}
+
+.rv-themed .rv-timeline-item.current .rv-timeline-label,
+.rv-themed .rv-timeline-item.past .rv-timeline-label {
+  color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-timeline-ring {
+  border-color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-marquee p {
+  color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-done {
+  color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-idle-chip svg {
+  color: var(--rv-color-accent);
+}
+
+/* ── Card stack ── */
+
+.rv-stack {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.rv-card-wrap {
+  position: relative;
+}
+
+.rv-edge {
+  height: 10px;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-fd-card);
+  border: 1px solid var(--color-fd-border);
+  border-top: none;
+}
+
+.rv-edge-1 {
+  margin: 0 6px;
+}
+
+.rv-edge-2 {
+  margin: 0 12px;
+}
+
+.rv-card {
+  border-radius: 0.75rem;
+  background: var(--color-fd-card);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.dark .rv-block {
+  background: color-mix(in oklab, var(--color-fd-card) 60%, var(--color-fd-background));
+}
+
+.dark .rv-themed {
+  background: color-mix(in oklab, var(--rv-color-accent) 10%, var(--color-fd-background));
+}
+
+.dark .rv-card {
+  border: 1px solid var(--color-fd-border);
+}
+
+.dark .rv-btn {
+  background: #7a2230;
+  color: #faf4ea;
+}
+
+.dark .rv-themed .rv-btn {
+  background: var(--rv-color-accent);
+  color: var(--rv-color-accent-fg);
+}
+
+.rv-card.rv-occluded {
+  opacity: 0.85;
+}
+
+/* ── Prompt (question) ── */
+
+.rv-prompt {
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.rv-prompt p {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.55;
+  font-family: var(--font-spectral), Georgia, serif;
+  color: var(--color-fd-foreground);
+}
+
+/* ── Attachments (images in Q/A) ── */
+
+.rv-attachment {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.rv-attachment img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 0.5rem;
+  object-fit: contain;
+}
+
+/* ── Answer area ── */
+
+.rv-answer-area {
+  position: relative;
+  min-height: 160px;
+  border-top: 1px solid var(--color-fd-border);
+}
+
+.rv-answer {
+  padding: 1.25rem 1.5rem 0.5rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rv-answer.visible {
+  opacity: 1;
+}
+
+.rv-answer p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-fd-foreground);
+}
+
+/* ── Progress timeline ── */
+
+.rv-level {
+  padding: 0.75rem 1.5rem 1.25rem;
+  opacity: 0;
+  transition: opacity 0.25s ease 0.1s;
+}
+
+.rv-level.visible {
+  opacity: 1;
+}
+
+.rv-timeline {
+  position: relative;
+}
+
+.rv-timeline-track {
+  position: relative;
+  height: 2px;
+  background: var(--color-fd-border);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.rv-timeline-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--color-fd-primary);
+  transition: width 0.3s ease;
+}
+
+.rv-timeline-arrow {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-fd-border);
+}
+
+.rv-timeline-items {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rv-timeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rv-timeline-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-fd-muted-foreground);
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.rv-timeline-item.current .rv-timeline-label {
+  color: var(--color-fd-primary);
+  font-weight: 600;
+}
+
+.rv-timeline-item.past .rv-timeline-label {
+  color: var(--color-fd-primary);
+}
+
+.rv-timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-fd-border);
+  position: relative;
+  transition: background 0.2s;
+}
+
+.rv-timeline-item.current .rv-timeline-dot,
+.rv-timeline-item.past .rv-timeline-dot {
+  background: var(--color-fd-primary);
+}
+
+.rv-timeline-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px dashed var(--color-fd-primary);
+  opacity: 0.5;
+  animation: rv-ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes rv-ring-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* ── Marquee cover ("Click anywhere to reveal") ── */
+
+.rv-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0 0 0.75rem 0.75rem;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+}
+
+.rv-marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rv-marquee p {
+  margin: 0;
+  white-space: nowrap;
+  line-height: 2;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-fd-primary);
+  opacity: 0.1;
+  animation: rv-scroll 26s linear infinite;
+}
+
+.rv-marquee span {
+  padding: 0 1.5rem;
+}
+
+@keyframes rv-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-40%); }
+}
+
+/* ── Grade buttons (Orbit style) ── */
+
+.rv-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.rv-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.75rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
+  transition: opacity 0.15s, transform 0.1s;
+  touch-action: manipulation;
+}
+
+.rv-btn:hover:not(.disabled) {
+  opacity: 0.9;
+}
+
+.rv-btn:active:not(.disabled) {
+  transform: scale(0.98);
+}
+
+.rv-btn.disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Skip button is narrower — secondary action */
+.rv-skip {
+  flex: 0.6;
+  background: transparent;
+  border: 1px solid var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+  font-weight: 500;
+}
+
+.rv-skip:hover:not(.disabled) {
+  background: var(--color-fd-accent);
+  color: var(--color-fd-foreground);
+  opacity: 1;
+}
+
+.rv-skip svg {
+  width: 16px;
+  height: 16px;
+}
+
+.rv-themed .rv-skip {
+  background: transparent;
+  border-color: var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+}
+
+/* ── Idle state (compact chip) ── */
+
+.rv-idle {
+  padding: 0.75rem 1.25rem;
+}
+
+.rv-idle-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.rv-idle-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+.rv-idle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 600;
+  color: var(--color-fd-foreground);
+}
+
+.rv-idle-chip svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-fd-primary);
+}
+
+.rv-idle-due {
+  font-size: 0.75rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* ── Done state ── */
+
+.rv-done-block {
+  padding: 2rem 1.25rem;
+}
+
+.rv-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  color: var(--color-fd-primary);
+}
+
+.rv-done p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* ── Shared restart / review-again button ── */
+
+.rv-restart {
+  cursor: pointer;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: transparent;
+  color: var(--color-fd-muted-foreground);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.rv-restart:hover {
+  background: var(--color-fd-accent);
+  color: var(--color-fd-foreground);
+}
+
+
+/* ── Mobile ── */
+
+@media (max-width: 480px) {
+  .rv-block {
+    max-width: 100%;
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .rv-active .rv-area {
+    padding: 1rem 0.75rem;
+  }
+
+  .rv-prompt {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .rv-prompt p {
+    font-size: 1rem;
+  }
+
+  .rv-answer {
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  .rv-answer-area {
+    min-height: 130px;
+  }
+
+  .rv-level {
+    padding: 0.5rem 1rem 1rem;
+  }
+
+  .rv-timeline-label {
+    font-size: 0.5625rem;
+  }
+
+  .rv-btn {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
+
+  .rv-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .rv-skip svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .rv-idle-inner {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .rv-attachment img {
+    max-height: 150px;
+  }
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .rv-marquee p {
+    animation: none;
+  }
+  .rv-timeline-ring {
+    animation: none;
+    opacity: 0.5;
+  }
+  .rv-dot-pulse {
+    animation: none;
+    opacity: 0.5;
+  }
+}

@@ -1,6 +1,7 @@
 {
   "name": "vaultpress",
   "version": "0.1.0",
+  "type": "module",
   "description": "Publish an Obsidian vault as a documentation site with Next.js and Fumadocs",
   "license": "MIT",
   "author": "Qiyang",
@@ -23,14 +24,18 @@
     "knowledge-graph"
   ],
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "build": "node scripts/stage.ts && next build",
+    "dev": "node scripts/stage.ts && next dev",
     "start": "next start",
     "test": "vitest run",
-    "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
+    "types:check": "node scripts/stage.ts && fumadocs-mdx && next typegen && tsc --noEmit",
     "postinstall": "fumadocs-mdx",
     "lint": "oxlint",
+    "stage": "node scripts/stage.ts",
+    "build:all": "node scripts/build-all.ts",
+    "locales:migrate": "node scripts/migrate-to-locales.ts",
     "generate": "node --env-file=.env scripts/generate.ts",
+    "generate:all": "node --env-file=.env scripts/generate-all.ts",
     "obsidian": "node --env-file=.env scripts/open-obsidian.ts"
   },
   "dependencies": {
@@ -49,6 +54,7 @@
     "katex": "^0.17.0",
     "lucide-react": "^1.17.0",
     "lz-string": "^1.5.0",
+    "motion": "^12.40.0",
     "next": "16.2.7",
     "perfect-freehand": "^1.2.3",
     "react": "^19.2.7",

@@ -12,7 +12,7 @@ export const siteLanguages = {
     heroSecondaryCta: "Explore all pages",
     dictionaryLabel: "Dictionary — key terms",
     exploreLabel: "Explore",
-    backlinksLabel: "Pages that reference this page",
+    backlinksLabel: "Backlinks",
     localGraphLabel: "Connections",
     openGlobalGraphLabel: "Full graph",
     graphLegendPage: "Page",
@@ -24,7 +24,193 @@ export const siteLanguages = {
     recentNotesLabel: "Recently Updated",
     readerModeLabel: "Reader mode",
     readerExitLabel: "Exit reader mode",
+    navStartHere: "Start here",
+    navDictionary: "Dictionary",
+    navBooks: "Books",
+    navPodcasts: "Podcasts",
+    home: {
+      instituteLabel: "Al-Karkari Institute",
+      country: "Morocco",
+      translit: "Ṭarīqa Karkariyya",
+      enter: "Enter",
+      bismillahGloss: "In the name of God, the Most Gracious, the Most Merciful",
+      intentionLead:
+        "A living library of the Ṭarīqa Karkariyya — its terms, its teachings, and its remembrance.",
+      intentionSub:
+        "Kept for the seeker and the companion, in the company of those who remember.",
+      galleryLabel: "From the zāwiya",
+      startHereLabel: "Start here",
+      featuredFallbackTitle: "The Dictionary",
+      featuredFallbackDescription:
+        "Begin with the core terms and concepts of the Tariqa Karkariya.",
+      waysInLabel: "Ways in",
+      waysInHint: "— each seeker knows their own watering place",
+      recentLabel: "Recently inscribed",
+      keyTermsLabel: "Key terms",
+      moreLabel: "+ more →",
+      footerLine: "Al-Zāwiya al-Karkariyya · Morocco",
+      pathways: {
+        dictionary: {
+          title: "Dictionary",
+          tag: "Threshold",
+          description: "Core terms and concepts of the Tariqa — read first, return often.",
+        },
+        foundations: {
+          title: "Foundations",
+          tag: "Practice",
+          description:
+            "The pillars of the path: Wird, Ḥaḍra, Muraqqaʿa, Ism al-Mufrad, and more.",
+        },
+        articles: {
+          title: "Articles & Teachings",
+          tag: "Study",
+          description: "Q&A excerpts, durūs, and essay-length writings on the path.",
+        },
+        books: {
+          title: "Books",
+          tag: "Study",
+          description: "Published works by Shaykh Mohamed Faouzi al-Karkari.",
+        },
+        podcasts: {
+          title: "Podcasts & Transcripts",
+          tag: "Listen",
+          description: "Episodes with full, searchable transcripts.",
+        },
+        history: {
+          title: "History",
+          tag: "Lineage",
+          description: "Origins and the initiatic chain — from the Prophet ﷺ to al-Karkari.",
+        },
+      },
+      footerLinks: {
+        dictionary: "Dictionary",
+        foundations: "Foundations",
+        graph: "Graph",
+        tags: "Tags",
+      },
+    },
     translations: defineTranslations().extend(uiTranslations()),
+  },
+  fr: {
+    label: "Français",
+    htmlLang: "fr",
+    searchLanguage: "french",
+    openInObsidian: "Ouvrir dans Obsidian",
+    heroTagline: "Une base de connaissances vivante de la Tariqa Karkariya",
+    heroPrimaryCta: "Parcourir le dictionnaire →",
+    heroSecondaryCta: "Explorer toutes les pages",
+    dictionaryLabel: "Dictionnaire — termes clés",
+    exploreLabel: "Explorer",
+    backlinksLabel: "Pages qui référencent cette page",
+    localGraphLabel: "Connexions",
+    openGlobalGraphLabel: "Graphe complet",
+    graphLegendPage: "Page",
+    graphLegendTag: "Étiquette",
+    graphStatPages: "pages",
+    graphStatTags: "étiquettes",
+    graphStatLinks: "liens",
+    readingTimeUnit: "min de lecture",
+    recentNotesLabel: "Mises à jour récentes",
+    readerModeLabel: "Mode lecture",
+    readerExitLabel: "Quitter le mode lecture",
+    navStartHere: "Commencer ici",
+    navDictionary: "Dictionnaire",
+    navBooks: "Livres",
+    navPodcasts: "Podcasts",
+    home: {
+      instituteLabel: "Institut Al-Karkari",
+      country: "Maroc",
+      translit: "Ṭarīqa Karkariyya",
+      enter: "Entrer",
+      bismillahGloss: "Au nom de Dieu, le Tout Miséricordieux, le Très Miséricordieux",
+      intentionLead:
+        "Une bibliothèque vivante de la Ṭarīqa Karkariyya — ses termes, ses enseignements et son invocation.",
+      intentionSub:
+        "Tenue pour le chercheur et le compagnon, en la compagnie de ceux qui invoquent.",
+      galleryLabel: "Depuis la zāwiya",
+      startHereLabel: "Commencer ici",
+      featuredFallbackTitle: "Le Dictionnaire",
+      featuredFallbackDescription:
+        "Commencez par les termes et concepts fondamentaux de la Tariqa Karkariya.",
+      waysInLabel: "Voies d'entrée",
+      waysInHint: "— chaque chercheur connaît son propre abreuvoir",
+      recentLabel: "Récemment inscrit",
+      keyTermsLabel: "Termes clés",
+      moreLabel: "+ plus →",
+      footerLine: "Al-Zāwiya al-Karkariyya · Maroc",
+      pathways: {
+        dictionary: {
+          title: "Dictionnaire",
+          tag: "Seuil",
+          description:
+            "Termes et concepts fondamentaux de la Tariqa — à lire d'abord, à retrouver souvent.",
+        },
+        foundations: {
+          title: "Fondements",
+          tag: "Pratique",
+          description:
+            "Les piliers de la voie : Wird, Ḥaḍra, Muraqqaʿa, Ism al-Mufrad, et plus.",
+        },
+        articles: {
+          title: "Articles & Enseignements",
+          tag: "Étude",
+          description: "Extraits de questions-réponses, durūs et écrits approfondis sur la voie.",
+        },
+        books: {
+          title: "Livres",
+          tag: "Étude",
+          description: "Œuvres publiées du Shaykh Mohamed Faouzi al-Karkari.",
+        },
+        podcasts: {
+          title: "Podcasts & Transcriptions",
+          tag: "Écoute",
+          description: "Épisodes avec transcriptions complètes et consultables.",
+        },
+        history: {
+          title: "Histoire",
+          tag: "Lignée",
+          description: "Les origines et la chaîne initiatique — du Prophète ﷺ à al-Karkari.",
+        },
+      },
+      footerLinks: {
+        dictionary: "Dictionnaire",
+        foundations: "Fondements",
+        graph: "Graphe",
+        tags: "Étiquettes",
+      },
+    },
+    translations: defineTranslations()
+      .extend(uiTranslations())
+      .add("ui", {
+        search: "Rechercher",
+        searchNoResult: "Aucun résultat",
+        searchOpen: "Rechercher",
+        searchClose: "Fermer la recherche",
+        toc: "Sommaire",
+        tocNoHeadings: "Aucun titre",
+        tocInline: "Sur cette page",
+        lastUpdate: "Dernière mise à jour le",
+        nextPage: "Page suivante",
+        previousPage: "Page précédente",
+        chooseTheme: "Thème",
+        editOnGithub: "Modifier sur GitHub",
+        themeToggle: "Changer de thème",
+        themeLight: "Clair",
+        themeDark: "Sombre",
+        themeSystem: "Système",
+        codeBlockCopy: "Copier le code",
+        codeBlockCopied: "Copié",
+        menuToggle: "Menu",
+        pageActionsCopyMarkdown: "Copier le Markdown",
+        pageActionsOpen: "Ouvrir",
+        pageActionsOpenGitHub: "Ouvrir sur GitHub",
+        pageActionsViewMarkdown: "Voir le Markdown",
+        sidebarOpen: "Ouvrir la barre latérale",
+        sidebarCollapse: "Replier la barre latérale",
+        notFoundTitle: "Page introuvable",
+        notFoundDescription: "Vérifiez que l'adresse est correcte",
+        notFoundLink: "Retour à l'accueil",
+      }),
   },
   cn: {
     label: "简体中文",
@@ -48,6 +234,67 @@ export const siteLanguages = {
     recentNotesLabel: "最近更新",
     readerModeLabel: "阅读模式",
     readerExitLabel: "退出阅读模式",
+    navStartHere: "从这里开始",
+    navDictionary: "词典",
+    navBooks: "书籍",
+    navPodcasts: "播客",
+    home: {
+      instituteLabel: "卡尔卡里研究院",
+      country: "摩洛哥",
+      translit: "Ṭarīqa Karkariyya",
+      enter: "进入",
+      bismillahGloss: "奉至仁至慈的真主之名",
+      intentionLead: "卡尔卡里亚道团的活图书馆——其术语、教导与记念。",
+      intentionSub: "为求道者与同行者而存，与记念者为伴。",
+      galleryLabel: "来自道堂",
+      startHereLabel: "从这里开始",
+      featuredFallbackTitle: "词典",
+      featuredFallbackDescription: "从卡尔卡里亚道团的核心术语与概念开始。",
+      waysInLabel: "入门之径",
+      waysInHint: "——每位求道者都知道自己的饮水之处",
+      recentLabel: "最近更新",
+      keyTermsLabel: "关键术语",
+      moreLabel: "+ 更多 →",
+      footerLine: "Al-Zāwiya al-Karkariyya · 摩洛哥",
+      pathways: {
+        dictionary: {
+          title: "词典",
+          tag: "入门",
+          description: "道团的核心术语与概念——先读于此，常来回顾。",
+        },
+        foundations: {
+          title: "根基",
+          tag: "功修",
+          description: "道路的支柱：Wird、Ḥaḍra、Muraqqaʿa、Ism al-Mufrad 等。",
+        },
+        articles: {
+          title: "文章与教导",
+          tag: "研习",
+          description: "问答选编、课程讲义与长篇论述。",
+        },
+        books: {
+          title: "书籍",
+          tag: "研习",
+          description: "谢赫穆罕默德·法乌齐·卡尔卡里的著作。",
+        },
+        podcasts: {
+          title: "播客与文字稿",
+          tag: "聆听",
+          description: "附完整可检索文字稿的节目。",
+        },
+        history: {
+          title: "历史",
+          tag: "传承",
+          description: "起源与传承链——自先知 ﷺ 至卡尔卡里。",
+        },
+      },
+      footerLinks: {
+        dictionary: "词典",
+        foundations: "根基",
+        graph: "图谱",
+        tags: "标签",
+      },
+    },
     translations: defineTranslations()
       .extend(uiTranslations())
       .add("ui", {
@@ -84,6 +331,7 @@ export const siteLanguages = {
 } as const;
 
 export type SiteLanguage = keyof typeof siteLanguages;
+export type HomeStrings = (typeof siteLanguages)[SiteLanguage]["home"];
 
 function resolveSiteLanguage(): SiteLanguage {
   const language = process.env.SITE_LANGUAGE;

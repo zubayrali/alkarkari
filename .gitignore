@@ -4,12 +4,23 @@
 # generated content
 .source
 
+# staged locale (copies of locales/<locale>/ produced by `pnpm stage`;
+# the committed trees live under /locales)
+/content
+/public
+/.staged-locale
+
 # test & build
 /coverage
 /.next/
 /out
 /build
 *.tsbuildinfo
+
+# build:all local mirror of the CI matrix+stitch (scripts/build-all.ts,
+# scripts/stitch-deploy.ts) — per-locale builds + stitched site
+/artifacts
+/site
 
 # misc
 .DS_Store
@@ -33,3 +44,4 @@ next-env.d.ts
 /.agents/
 /.superpowers/
 /skills-lock.json
+/.recall/

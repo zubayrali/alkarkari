@@ -94,7 +94,7 @@ the vault.
 _Avoid_: footnote (after the transform has run), margin note, annotation
 
 **Graph**:
-The interactive knowledge graph showing pages as nodes and their internal links as edges. Accessible at `/graph`. Protected pages are excluded unless the visitor has unlocked access.
+The interactive knowledge graph showing pages as nodes and their internal links as edges. Accessible at `/graph`. Unlisted pages are excluded.
 _Avoid_: knowledge graph, link graph, site map
 
 **Local graph**:
@@ -103,9 +103,13 @@ table of contents. The visitor can widen it (depth 1–3) or jump to the full
 graph. Hidden on orphan pages.
 _Avoid_: mini graph, page graph, context graph
 
-**Protected page**:
-A page whose body is withheld from visitors until they supply the correct shared password. Marked with `protected: true` in frontmatter. Title, description, and tags remain visible before unlock.
-_Avoid_: gated page, private page, locked page
+**Unlisted page**:
+A page generated normally and reachable by direct URL, but hidden from the
+sidebar, search, graph, RSS, sitemap, tags index, and home page listings.
+Marked with `unlisted: true` in frontmatter. (Password-protected pages were
+planned in ADR-0001 but are unimplementable on a static export — that ADR is
+superseded.)
+_Avoid_: hidden page, private page, protected page
 
 **Tag page**:
 The generated page at `/tags/<tag>` for a tag: the tag note's content (if any)

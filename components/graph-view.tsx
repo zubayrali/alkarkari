@@ -54,7 +54,10 @@ const ForceGraph2D = lazy(
   () => import('react-force-graph-2d'),
 ) as typeof import('react-force-graph-2d').default;
 
-const VISITED_KEY = 'graph-visited';
+// Locale-prefixed: all locale builds share one origin, and node URLs are
+// basePath-less, so an unprefixed key would tint pages "visited" across
+// languages (see the i18n spec's per-locale details table).
+const VISITED_KEY = `graph-visited:${process.env.NEXT_PUBLIC_SITE_LANGUAGE || 'en'}`;
 /** How quickly labels appear as you zoom in; higher = appear later. */
 const LABEL_OPACITY_SCALE = 0.6;
 const LABEL_FONT_PX = 11;

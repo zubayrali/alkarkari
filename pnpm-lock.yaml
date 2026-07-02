@@ -53,6 +53,9 @@ importers:
       lz-string:
         specifier: ^1.5.0
         version: 1.5.0
+      motion:
+        specifier: ^12.40.0
+        version: 12.40.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: 16.2.7
         version: 16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

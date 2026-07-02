@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle } from "lucide-react";
+import { cusdisConfig } from "@/lib/shared";
 
-const HOST = "https://cusdis-snowy.vercel.app";
-const APP_ID = "cc926483-bd57-4858-a94f-4401afb9cd7c";
+const HOST = cusdisConfig.host;
+const APP_ID = cusdisConfig.appId;
 const SCRIPT_SRC = `${HOST}/js/cusdis.umd.js`;
 
 declare global {

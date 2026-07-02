@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- GitHub Pages serves this for any missing path. Keep the locale list in
+     sync with lib/locales-manifest.ts. {{BASE_PATH}} substituted by
+     scripts/stitch-deploy.ts. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found — Karkari Wiki</title>
+  <style>
+    body {
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 1.5rem; margin: 0; padding: 2rem; text-align: center;
+      font-family: ui-sans-serif, system-ui, sans-serif; color: #f1e6d8;
+      background: radial-gradient(120% 90% at 50% 0%, #3a1218 0%, #2a0d11 48%, #190709 100%);
+    }
+    h1 { font-weight: 400; color: #d49a52; }
+    p { color: #b3938a; }
+    nav { display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+    a { color: #f1e6d8; }
+  </style>
+</head>
+<body>
+  <h1>Page not found</h1>
+  <p id="msg">The page may have moved, or it lives in another language.</p>
+  <nav>
+    <a href="{{BASE_PATH}}/en/">English</a>
+    <a href="{{BASE_PATH}}/fr/">Français</a>
+    <a href="{{BASE_PATH}}/cn/">简体中文</a>
+    <a href="{{BASE_PATH}}/">Choose language</a>
+  </nav>
+  <script>
+    // If the missed URL starts with a known locale (typically a language
+    // switch to a page that vault hasn't translated yet), send the reader to
+    // that locale's Index page — the per-language "start here". Brief message
+    // first so the redirect isn't disorienting. Keep the locale list in sync
+    // with lib/locales-manifest.ts.
+    (function () {
+      var labels = { en: 'English', fr: 'Français', cn: '简体中文' };
+      var rest = location.pathname.slice(('{{BASE_PATH}}' + '/').length);
+      var seg = rest.split('/')[0];
+      if (!labels[seg]) return;
+      var target = '{{BASE_PATH}}/' + seg + '/start-here';
+      // Never loop if the Start-here page itself is what 404'd.
+      if (location.pathname.replace(/\/$/, '') === target) return;
+      document.getElementById('msg').innerHTML =
+        'This page isn’t available in ' + labels[seg] + ' yet — taking you to ' +
+        '<a href="' + target + '">' + labels[seg] + ': Start here</a>…';
+      setTimeout(function () { location.replace(target); }, 1800);
+    })();
+  </script>
+</body>
+</html>

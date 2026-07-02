@@ -8,7 +8,10 @@
 @import "./properties-panel.css";
 @import "./citations.css";
 @import "./search.css";
+@import "./review.css";
 @import "./tags.css";
+/* Karkari retheme — imported last so its token overrides win the cascade */
+@import "./karkari-theme.css";
 
 /* Sidebar banner links (Tags, Graph) */
 .sidebar-links {
@@ -91,6 +94,12 @@ html[data-sidebar-collapsed="true"] #nd-sidebar {
   margin-bottom: 0.625rem;
 }
 
+/* Give TOC items right padding so the progress curve overlay has room */
+#nd-toc > *:not(:last-child) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Mobile TOC popover: its content panel is `max-h-[50vh]` inside a Radix
    CollapsibleContent that clips with overflow:hidden, and fumadocs sets no
    scroll — so a long TOC + the Connections local graph (footer) gets cropped.
@@ -101,6 +110,11 @@ html[data-sidebar-collapsed="true"] #nd-sidebar {
 }
 [data-toc-popover-content] > div > *:last-child {
   flex-shrink: 0;
+}
+@media (max-width: 767px) {
+  [data-toc-popover-content] .h-44 {
+    height: 140px;
+  }
 }
 
 /* Rough-notation annotation colors (lib/remark-annotations.ts syntax) */
@@ -239,8 +253,17 @@ html[data-reader-mode="on"] article#nd-page {
 
 html[data-reader-mode="on"] .page-actions,
 html[data-reader-mode="on"] .properties-panel,
-html[data-reader-mode="on"] article#nd-page > .\@container {
+html[data-reader-mode="on"] article#nd-page > .\@container,
+html[data-reader-mode="on"] [data-backlinks],
+html[data-reader-mode="on"] #comments,
+html[data-reader-mode="on"] [data-page-footer] {
   display: none !important;
+}
+
+/* Backlinks: scrollable list with thin scrollbar */
+.backlinks-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fd-border) transparent;
 }
 
 /* Floating exit bar — shown in reader mode at the bottom of the viewport */

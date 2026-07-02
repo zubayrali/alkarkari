@@ -20,11 +20,19 @@ import {
 } from "./progress.ts";
 import { frontmatter as parseFrontmatter } from "fumadocs-core/content/md/frontmatter";
 import fs from "node:fs/promises";
+import { statSync } from "node:fs";
 import path from "node:path";
-
-const contentDir = "content";
-const publicDir = "public";
-const preservedFiles = new Set(["index.mdx", "graph.mdx"]);
+import {
+  contentDir,
+  publicDir,
+  generateLocale,
+  localeEnv,
+  localeEnvName,
+} from "./locales.ts";
+// Hand-maintained pages that survive the clean step. If a vault note shares
+// a stem (e.g. start-here.md), generation overwrites the hand file — the
+// vault wins.
+const preservedFiles = new Set(["index.mdx", "graph.mdx", "start-here.mdx"]);
 const hiddenEntries = new Set([".obsidian", "templates"]);
 const defaultExcludePatterns = ["!.obsidian/**", "!templates/**"];
 
@@ -51,6 +59,23 @@ function resolveTitle(file: ParsedContentFile, fallback: string) {
 function resolveDescription(value: unknown) {
   if (typeof value === "string" && value.trim()) return value.trim();
   return undefined;
+}
+
+// File-system dates for a vault note, used when the note's own frontmatter
+// doesn't declare created/modified. birthtime is unreliable on some
+// filesystems (epoch 0), so fall back to mtime.
+function resolveFileDates(rawPath: string): { created?: string; modified?: string } {
+  try {
+    const stats = statSync(rawPath);
+    const modified = stats.mtime;
+    const created =
+      stats.birthtime.getTime() > 0 && stats.birthtime <= modified
+        ? stats.birthtime
+        : modified;
+    return { created: created.toISOString(), modified: modified.toISOString() };
+  } catch {
+    return {};
+  }
 }
 
 async function listCleanTargets(dir: string, preserved = new Set<string>()) {
@@ -85,6 +110,21 @@ async function cleanGeneratedDirs(step: ReturnType<typeof createStepProgress>) {
     step.advance(target.label);
   }
   step.complete(`Removed ${targets.length} item${targets.length === 1 ? "" : "s"}`);
+}
+
+// Convert > [!orbit] callout blocks to ```orbit fences before MDX parsing.
+// Mirrors the sidenote transform: raw text → standard syntax the remark plugin handles.
+const ORBIT_CALLOUT_RE = /^(> \[!orbit\][-+]?\s*(.*)\n)((?:>[ ]?.*\n?)*)/gm;
+
+function transformOrbitCallouts(content: string): string {
+  ORBIT_CALLOUT_RE.lastIndex = 0;
+  if (!ORBIT_CALLOUT_RE.test(content)) return content;
+  ORBIT_CALLOUT_RE.lastIndex = 0;
+  return content.replace(ORBIT_CALLOUT_RE, (_match, _header: string, meta: string, body: string) => {
+    const stripped = body.replace(/^>[ ]?/gm, "");
+    const metaPart = meta.trim();
+    return `\`\`\`orbit${metaPart ? " " + metaPart : ""}\n${stripped}\`\`\`\n`;
+  });
 }
 
 const SIDENOTE_SYNTAX_RE = /\{\{sidenotes\[([^\]]+)\]:\s*([\s\S]*?)\}\}/g;
@@ -176,7 +216,8 @@ function buildIncludePatterns(selected: string[], entries: VaultEntry[]) {
 
 async function saveGenerateInclude(names: string[]) {
   const envPath = path.join(process.cwd(), ".env");
-  const line = `GENERATE_INCLUDE=${names.join(",")}`;
+  const key = localeEnvName("GENERATE_INCLUDE");
+  const line = `${key}=${names.join(",")}`;
   let content = "";
 
   try {
@@ -185,8 +226,9 @@ async function saveGenerateInclude(names: string[]) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
 
-  if (/^GENERATE_INCLUDE=/m.test(content)) {
-    content = content.replace(/^GENERATE_INCLUDE=.*$/m, line);
+  const pattern = new RegExp(`^${key}=.*$`, "m");
+  if (pattern.test(content)) {
+    content = content.replace(pattern, line);
   } else {
     content = content.trimEnd();
     content = content ? `${content}\n${line}\n` : `${line}\n`;
@@ -197,13 +239,13 @@ async function saveGenerateInclude(names: string[]) {
 
 async function resolveInclude(vaultDir: string) {
   const forceSelect = process.argv.includes("--select");
-  const saved = parseSavedInclude(process.env.GENERATE_INCLUDE);
+  const saved = parseSavedInclude(localeEnv("GENERATE_INCLUDE"));
   const entries = await listVaultEntries(vaultDir);
 
   if (!forceSelect && saved.length > 0) {
     const patterns = buildIncludePatterns(saved, entries);
     if (patterns.length > defaultExcludePatterns.length) {
-      console.log(`Using GENERATE_INCLUDE: ${saved.join(", ")}`);
+      console.log(`Using ${localeEnvName("GENERATE_INCLUDE")}: ${saved.join(", ")}`);
       return patterns;
     }
   }
@@ -226,18 +268,25 @@ async function resolveInclude(vaultDir: string) {
   const selected = await promptIncludeSelection(vaultDir, entries, saved);
 
   await saveGenerateInclude(selected);
-  console.log(`\nSaved selection to .env as GENERATE_INCLUDE=${selected.join(",")}`);
+  console.log(
+    `\nSaved selection to .env as ${localeEnvName("GENERATE_INCLUDE")}=${selected.join(",")}`,
+  );
 
   return buildIncludePatterns(selected, entries);
 }
 
 async function main() {
-  const vaultDir = process.env.OBSIDIAN_VAULT_PATH;
+  const vaultDir = localeEnv("OBSIDIAN_VAULT_PATH");
 
   if (!vaultDir) {
-    console.error("OBSIDIAN_VAULT_PATH is not set. Add it to .env.");
+    console.error(
+      `${localeEnvName("OBSIDIAN_VAULT_PATH")} is not set. Add it to .env` +
+        (generateLocale === "en" ? " (or set OBSIDIAN_VAULT_PATH)." : "."),
+    );
     process.exit(1);
   }
+
+  console.log(`Generating locale: ${generateLocale} → locales/${generateLocale}/`);
 
   try {
     await fs.access(vaultDir);
@@ -283,6 +332,18 @@ async function main() {
       `Found ${rawFiles.length} file${rawFiles.length === 1 ? "" : "s"}. Converting...`,
     );
 
+    // Transform [!orbit] callouts to ```orbit fences BEFORE fumadocs-obsidian
+    // converts them to <ObsidianCallout> components.
+    // Transform [!orbit] callouts to ```orbit fences BEFORE fumadocs-obsidian
+    // converts them to <ObsidianCallout> components. VaultFile.content may be
+    // a Buffer for .md files, so coerce to string first.
+    for (const f of rawFiles) {
+      const raw = typeof f.content === "string" ? f.content : Buffer.isBuffer(f.content) ? f.content.toString("utf8") : null;
+      if (raw && raw.includes("[!orbit]")) {
+        f.content = transformOrbitCallouts(raw);
+      }
+    }
+
     const baseRawFiles = rawFiles.filter((f: VaultFile) => f.path.endsWith('.base'));
     const nonBaseRawFiles = rawFiles.filter((f: VaultFile) => !f.path.endsWith('.base'));
 
@@ -296,6 +357,13 @@ async function main() {
 
         if (description) result.description = description;
         else delete result.description;
+
+        // Emit created/modified so the site can sort by recency (home page
+        // "recent notes", RSS). Frontmatter declared in the note wins; file
+        // stats are the fallback.
+        const dates = resolveFileDates(file._raw.path);
+        if (!result.created && dates.created) result.created = dates.created;
+        if (!result.modified && dates.modified) result.modified = dates.modified;
 
         return result;
       },

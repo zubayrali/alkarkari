@@ -15,8 +15,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # One isolated build per locale (see docs/superpowers/specs/2026-07-02-i18n-design.md).
+  # Keep the matrix in sync with lib/locales-manifest.ts.
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        locale: [en, fr, cn]
+    env:
+      SITE_LANGUAGE: ${{ matrix.locale }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,16 +38,50 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Quality gates — a type error, lint error, or failing test blocks deploy.
+      # types:check and build stage locales/${SITE_LANGUAGE}/ into content/+public/.
+      - run: pnpm types:check
+
+      - run: pnpm lint
+
+      - run: pnpm test
+
       - run: pnpm build
         env:
-          PAGES_BASE_PATH: /${{ github.event.repository.name }}
+          PAGES_BASE_PATH: /${{ github.event.repository.name }}/${{ matrix.locale }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: out-${{ matrix.locale }}
+          path: out
+
+  stitch:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 22+ needed to run the .ts stitch script directly (type stripping).
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: out-*
+          path: artifacts
+
+      - run: node scripts/stitch-deploy.ts
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+          SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: site
 
   deploy:
-    needs: build
+    needs: stitch
     runs-on: ubuntu-latest
     environment:
       name: github-pages

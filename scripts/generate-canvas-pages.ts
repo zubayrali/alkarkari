@@ -5,9 +5,7 @@ import { getCanvasFileKind, normalizeCanvasPath } from '../lib/canvas-paths.ts';
 import { parseCanvasData } from '../lib/load-canvas.ts';
 import type { CanvasData } from '../lib/canvas-types.ts';
 import type { StepProgress } from './progress.ts';
-
-const contentDir = 'content';
-const publicDir = 'public';
+import { contentDir, publicDir } from './locales.ts';
 
 function collectCanvasAssetPaths(data: CanvasData) {
   const paths = new Set<string>();

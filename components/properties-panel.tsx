@@ -15,6 +15,14 @@ const HIDDEN_KEYS = new Set([
   "tag",
   "full",
   "icon",
+  "draft",
+  "unlisted",
+  "slides",
+  "featured",
+  // pipeline-emitted file dates (pnpm generate) — recency metadata, not
+  // note properties
+  "created",
+  "modified",
   // fumadocs / source-loader internals that ride along on page.data
   "body",
   "toc",

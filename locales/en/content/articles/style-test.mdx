@@ -1,0 +1,43 @@
+---
+aliases:
+  - Annotation Demo
+title: Style Test
+description: >-
+  Test page for rough-notation annotations, sidenotes, and aliases — delete when
+  done.
+created: '2026-06-16T21:18:01.282Z'
+modified: '2026-06-16T21:18:01.282Z'
+---
+This page exercises the reading affordances. Delete it when everything checks out.
+
+## Inline annotations
+
+Here is a ==highlighted phrase== inside a sentence. This one is !!underlined by hand!!, and this is ^^boxed in orange^^. The engine can also draw a ((circle)) around words, or put ||brackets around a phrase|| like an editor's note.
+
+Two in one line: ==first mark== and then ((second mark)) right after.
+
+An unclosed ==delimiter should render as plain text without breaking anything.
+
+## Annotations in headings are ==ignored==
+
+The heading above must render its `==` literally — annotations are skipped inside headings.
+
+## Block annotation
+
+```highlight
+This entire sentence gets one continuous multiline highlight drawn over it.
+```
+
+## Sidenotes
+
+Standard footnotes become margin sidenotes[^1] on wide screens, and collapse to click-to-expand inline notes on narrow ones. A second reference[^long] tests multi-paragraph footnote content, and the same note can even be referenced twice[^1].
+
+The \[\[Wird]] is recited daily.[^wikilink]
+
+[^1]: A short sidenote. It should appear in the margin next to its reference number.
+
+[^long]: A longer footnote with two paragraphs.
+
+    The second paragraph should render as a separate block inside the sidenote, not break the page layout.
+
+[^wikilink]: Sidenotes can contain *formatting* and `code` too.

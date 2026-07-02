@@ -3,9 +3,8 @@ import path from "node:path";
 import { readVaultFiles } from "fumadocs-obsidian";
 import { parseExcalidraw } from "../lib/excalidraw-parser.ts";
 import type { StepProgress } from "./progress.ts";
+import { contentDir, publicDir } from "./locales.ts";
 
-const contentDir = "content";
-const publicDir = "public";
 const excalidrawPublicDir = path.join(publicDir, "excalidraw");
 
 function humanizeTitle(name: string): string {

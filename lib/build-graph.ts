@@ -4,7 +4,19 @@ import type { Graph } from '../components/graph-view';
 
 import { getTagPrefixes, tagUrl } from '@/lib/tags';
 
+// The graph is identical for every page, but the docs route builds it once per
+// page at export time — O(pages²) without a cache. Content is immutable within
+// a production build, so cache module-level; skip in dev so edits show up.
+let cached: Graph | null = null;
+
 export function buildGraph(): Graph {
+  if (process.env.NODE_ENV === 'production' && cached) return cached;
+  const graph = computeGraph();
+  if (process.env.NODE_ENV === 'production') cached = graph;
+  return graph;
+}
+
+function computeGraph(): Graph {
   const pages = source.getPages().filter(
     (page) => !page.data.unlisted,
   );

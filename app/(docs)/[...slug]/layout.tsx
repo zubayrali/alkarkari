@@ -10,13 +10,21 @@ import { Sidenotes } from '@/components/sidenotes';
 import { CitationTooltip } from '@/components/citation-tooltip';
 import { SidebarLinks } from '@/components/sidebar-links';
 import { NavMobileLinks } from '@/components/nav-mobile-links';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
       tree={filterPageTree(source.getPageTree())}
       {...baseOptions()}
-      sidebar={{ banner: <SidebarLinks key="sidebar-links" /> }}
+      sidebar={{
+        banner: (
+          <>
+            <LocaleSwitcher variant="sidebar" />
+            <SidebarLinks key="sidebar-links" />
+          </>
+        ),
+      }}
     >
       {children}
       <SidebarPersist />

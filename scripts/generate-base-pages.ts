@@ -17,9 +17,7 @@ import type {
 } from '../lib/base-types.ts';
 import type { ProgramIR } from '../lib/base-compiler/index.ts';
 import type { StepProgress } from './progress.ts';
-
-const publicDir = 'public';
-const contentDir = 'content';
+import { contentDir, publicDir } from './locales.ts';
 
 function bytecodeToBase64(bytecode: ProgramIR): string {
   return Buffer.from(JSON.stringify(bytecode)).toString('base64');

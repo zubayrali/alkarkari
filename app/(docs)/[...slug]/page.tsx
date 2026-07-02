@@ -31,6 +31,7 @@ import { PropertiesPanel } from "@/components/properties-panel";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getSiteLanguage } from "@/lib/locale";
+import { currentLocale } from "@/lib/locales-manifest";
 import { getObsidianUrl } from "@/lib/obsidian";
 import { gitConfig } from "@/lib/shared";
 import { Presentation } from "lucide-react";
@@ -75,23 +76,12 @@ export default async function Page(props: PageProps<"/[...slug]">) {
   const chromeless = Boolean(page.data.base || page.data.full);
   const showToc = !chromeless;
   const structuredData = showToc ? page.data.structuredData : null;
-  const tocExtra = showToc ? (
-    <>
-      {structuredData && (
-        <ReadingTime
-          structuredData={structuredData}
-          label={siteLanguage.readingTimeUnit}
-        />
-      )}
-      <LocalGraph
-        graph={buildGraph()}
-        currentUrl={page.url}
-        label={siteLanguage.localGraphLabel}
-        globalGraphLabel={siteLanguage.openGlobalGraphLabel}
-      />
-    </>
+  const tocHeader = showToc && structuredData ? (
+    <ReadingTime
+      structuredData={structuredData}
+      label={siteLanguage.readingTimeUnit}
+    />
   ) : null;
-
   return (
     <DocsPage
       toc={showToc ? page.data.toc : undefined}
@@ -101,15 +91,14 @@ export default async function Page(props: PageProps<"/[...slug]">) {
         showToc
           ? {
               style: "clerk",
-              // Connections sits above the table of contents on desktop.
-              header: tocExtra,
+              header: tocHeader,
             }
           : { enabled: false }
       }
       tableOfContentPopover={
-        // Mobile: keep it below the TOC list; the popover content scrolls
-        // (see app/global.css) so the graph is never cropped.
-        showToc ? { footer: tocExtra } : { enabled: false }
+        showToc
+          ? { header: tocHeader }
+          : { enabled: false }
       }
       // Footer is rendered manually below so comments can sit beneath the
       // prev/next cards (and stay decoupled if recommended reading is dropped).
@@ -126,20 +115,22 @@ export default async function Page(props: PageProps<"/[...slug]">) {
                 {page.data.slides && (
                   <Link
                     href={`${page.url}/slides`}
-                    className="inline-flex items-center gap-1.5 rounded-md border bg-fd-background px-2.5 py-1.5 text-xs font-medium text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+                    className="hidden md:inline-flex items-center gap-1.5 rounded-md border bg-fd-background px-2.5 py-1.5 text-xs font-medium text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
                   >
                     <Presentation className="size-3.5" />
                     Slides
                   </Link>
                 )}
                 <ReaderToggle label={siteLanguage.readerModeLabel} exitLabel={siteLanguage.readerExitLabel} />
-                <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
-                <ViewOptionsPopover
-                  markdownUrl={getPageMarkdownUrl(page).url}
-                  obsidianUrl={getObsidianUrl(page.path)}
-                  obsidianLabel={siteLanguage.openInObsidian}
-                  githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/${page.path}`}
-                />
+                <span className="hidden md:contents">
+                  <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
+                  <ViewOptionsPopover
+                    markdownUrl={getPageMarkdownUrl(page).url}
+                    obsidianUrl={getObsidianUrl(page.path)}
+                    obsidianLabel={siteLanguage.openInObsidian}
+                    githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/${page.path}`}
+                  />
+                </span>
               </div>
             )}
           </div>
@@ -171,14 +162,24 @@ export default async function Page(props: PageProps<"/[...slug]">) {
             <Backlinks
               links={getBacklinks(page)}
               label={siteLanguage.backlinksLabel}
+              graph={
+                <LocalGraph
+                  graph={buildGraph()}
+                  currentUrl={page.url}
+                  label={siteLanguage.localGraphLabel}
+                  globalGraphLabel={siteLanguage.openGlobalGraphLabel}
+                />
+              }
             />
           )}
 
-          {!chromeless && <PageFooter />}
+          {!chromeless && <div data-page-footer><PageFooter /></div>}
 
           {!chromeless && (
             <CusdisComments
-              pageId={page.slugs.join("/") || "index"}
+              // Locale-prefixed: all locale builds share one Cusdis app, so the
+              // prefix keeps each language's comment threads separate.
+              pageId={`${currentLocale()}:${page.slugs.join("/") || "index"}`}
               pageUrl={page.url}
               pageTitle={page.data.title}
             />
