@@ -96,37 +96,40 @@ function milestoneIndex(intervalMs: number): number {
   return 0;
 }
 
+/* Quantum.country stepper: label above marker, a line threading the marker
+   centers, an arrowhead flowing into a bullseye for the final stop, and a
+   dashed pending-circle on the current stop. */
 function ProgressTimeline({ intervalMs }: { intervalMs: number }) {
   const idx = milestoneIndex(intervalMs);
-  const pct = (idx / (MILESTONES.length - 1)) * 100;
+  const last = MILESTONES.length - 1;
 
   return (
     <div className="rv-timeline">
-      <div className="rv-timeline-track">
-        <div className="rv-timeline-fill" style={{ width: `${pct}%` }} />
-        <svg
-          className="rv-timeline-arrow"
-          width="7"
-          height="10"
-          viewBox="0 0 7 10"
+      {MILESTONES.map((m, i) => (
+        <div
+          key={i}
+          className={[
+            "rv-tl-item",
+            i === idx ? "current" : i < idx ? "past" : "",
+            i === last ? "final" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
-          <path d="M0 10V0L7 5Z" fill="currentColor" />
-        </svg>
-      </div>
-      <div className="rv-timeline-items">
-        {MILESTONES.map((m, i) => (
-          <div
-            key={i}
-            className={`rv-timeline-item${i === idx ? " current" : i < idx ? " past" : ""}`}
-          >
-            <span className="rv-timeline-label">{m.label}</span>
-            <div className="rv-timeline-dot">
-              {i === idx && <div className="rv-timeline-ring" />}
-            </div>
-          </div>
-        ))}
-      </div>
+          <span className="rv-tl-label">{m.label}</span>
+          <span className="rv-tl-marker">{i === last && <BullseyeIcon />}</span>
+        </div>
+      ))}
     </div>
+  );
+}
+
+function BullseyeIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="9" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="9" cy="9" r="2.75" fill="currentColor" />
+    </svg>
   );
 }
 
@@ -387,9 +390,19 @@ export function ReviewBlock({
                   exit={
                     reduced
                       ? { opacity: 0 }
-                      : { opacity: 0, y: -30, scale: 0.96 }
+                      : {
+                          opacity: 0,
+                          y: -56,
+                          rotate: -3,
+                          scale: 0.97,
+                          transition: { duration: 0.3, ease: [0.4, 0, 1, 1] },
+                        }
                   }
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  transition={
+                    reduced
+                      ? { duration: 0.2 }
+                      : { type: "spring", stiffness: 320, damping: 30, mass: 0.9 }
+                  }
                 >
                   <CardFace
                     prompt={p}
