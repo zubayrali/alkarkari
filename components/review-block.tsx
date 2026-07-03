@@ -167,7 +167,7 @@ function CardFace({
   intervalMs: number;
 }) {
   return (
-    <div className="rv-card">
+    <div className={`rv-card${revealed ? " rv-revealed" : ""}`}>
       <div className="rv-prompt">
         <p>{prompt.question}</p>
         {prompt.questionAttachment && <Attachment src={prompt.questionAttachment} />}
