@@ -28,7 +28,7 @@
     "dev": "node scripts/stage.ts && next dev",
     "start": "next start",
     "test": "vitest run",
-    "types:check": "node scripts/stage.ts && fumadocs-mdx && next typegen && tsc --noEmit",
+    "types:check": "rm -rf .source && node scripts/stage.ts && fumadocs-mdx && next typegen && tsc --noEmit",
     "postinstall": "fumadocs-mdx",
     "lint": "oxlint",
     "stage": "node scripts/stage.ts",
