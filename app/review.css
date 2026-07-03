@@ -47,6 +47,31 @@
   color: var(--rv-color-accent);
 }
 
+.rv-themed .rv-tl-item.preview-gain .rv-tl-marker::after,
+.rv-themed .rv-tl-item.preview-target:not(.final):not(.current) .rv-tl-marker::after {
+  background: var(--rv-color-accent);
+}
+
+.rv-themed .rv-tl-item.preview-gain .rv-tl-label {
+  color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-tl-item.preview-gain::before {
+  background: var(--rv-color-accent);
+}
+
+.rv-themed .rv-tl-item.preview-target:not(.final) .rv-tl-marker::after {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--rv-color-accent) 18%, transparent);
+}
+
+.rv-themed .rv-tl-item.final.preview-gain .rv-tl-marker {
+  color: var(--rv-color-accent);
+}
+
+.rv-themed .rv-tl-item.final.preview-gain::after {
+  border-left-color: var(--rv-color-accent);
+}
+
 .rv-themed .rv-marquee p {
   color: var(--rv-color-accent);
 }
@@ -242,8 +267,9 @@
 
 /* ── Progress timeline ── */
 
+/* Slim strip — whitespace belongs to the content, not the tracker. */
 .rv-level {
-  padding: 1rem 2rem 1.5rem;
+  padding: 0.5rem 1.5rem 0.875rem;
   opacity: 0;
   transition: opacity 0.25s ease 0.1s;
 }
@@ -263,7 +289,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.25rem;
   position: relative;
 }
 
@@ -271,25 +297,27 @@
 .rv-tl-item:not(:first-child)::before {
   content: "";
   position: absolute;
-  bottom: 8px;
-  left: calc(-50% + 14px);
-  right: calc(50% + 14px);
+  bottom: 6px;
+  left: calc(-50% + 11px);
+  right: calc(50% + 11px);
   height: 2px;
   background: var(--color-fd-border);
+  transition: background 0.2s;
 }
 
 /* Arrowhead at the end of the last segment, pointing into the bullseye. */
 .rv-tl-item.final::after {
   content: "";
   position: absolute;
-  bottom: 5px;
-  right: calc(50% + 12px);
+  bottom: 3px;
+  right: calc(50% + 9px);
   border: 4px solid transparent;
-  border-left: 7px solid var(--color-fd-border);
+  border-left: 6px solid var(--color-fd-border);
+  transition: border-left-color 0.2s;
 }
 
 .rv-tl-label {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   color: var(--color-fd-muted-foreground);
   white-space: nowrap;
@@ -307,19 +335,20 @@
 
 .rv-tl-marker {
   position: relative;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-fd-border);
+  transition: color 0.2s, transform 0.2s;
 }
 
 /* Plain stops render as dots. */
 .rv-tl-item:not(.final) .rv-tl-marker::after {
   content: "";
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--color-fd-border);
   transition: all 0.2s;
@@ -331,16 +360,64 @@
 
 /* Current stop: dashed pending circle. */
 .rv-tl-item.current:not(.final) .rv-tl-marker::after {
-  width: 17px;
-  height: 17px;
+  width: 13px;
+  height: 13px;
   box-sizing: border-box;
-  border: 2px dashed var(--color-fd-primary);
+  border: 1.5px dashed var(--color-fd-primary);
   background: color-mix(in oklab, var(--color-fd-primary) 12%, transparent);
 }
 
 .rv-tl-item.final.past .rv-tl-marker,
 .rv-tl-item.final.current .rv-tl-marker {
   color: var(--color-fd-primary);
+}
+
+/* ── Ladder outcome previews (hovering a grade button) ──
+   gain: the path to the projected stop lights up and the target swells.
+   loss: the stops that would be forfeited turn ember (LostProgress). */
+
+.rv-tl-item.preview-gain .rv-tl-marker::after,
+.rv-tl-item.preview-target:not(.final):not(.current) .rv-tl-marker::after {
+  background: var(--color-fd-primary);
+  transform: scale(1.2);
+}
+
+.rv-tl-item.preview-gain .rv-tl-label {
+  color: var(--color-fd-primary);
+}
+
+.rv-tl-item.preview-gain::before {
+  background: var(--color-fd-primary);
+}
+
+.rv-tl-item.preview-target:not(.final) .rv-tl-marker::after {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-fd-primary) 18%, transparent);
+}
+
+.rv-tl-item.final.preview-gain .rv-tl-marker {
+  color: var(--color-fd-primary);
+  transform: scale(1.15);
+}
+
+.rv-tl-item.final.preview-gain::after {
+  border-left-color: var(--color-fd-primary);
+}
+
+.rv-tl-item.preview-lost .rv-tl-marker::after {
+  background: var(--rv-lost, #c2410c);
+}
+
+.rv-tl-item.current.preview-lost .rv-tl-marker::after {
+  border-color: var(--rv-lost, #c2410c);
+  background: color-mix(in oklab, var(--rv-lost, #c2410c) 15%, transparent);
+}
+
+.rv-tl-item.preview-lost .rv-tl-label {
+  color: var(--rv-lost, #c2410c);
+}
+
+.rv-tl-item.preview-lost::before {
+  background: color-mix(in oklab, var(--rv-lost, #c2410c) 50%, var(--color-fd-border));
 }
 
 /* ── Marquee cover ("Click anywhere to reveal") ── */
@@ -402,29 +479,46 @@
 }
 
 .rv-btn {
-  flex: 0 1 15rem;
+  flex: 0 1 13rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
   border: none;
-  border-radius: 0.875rem;
-  padding: 0.875rem 1.25rem;
-  font-size: 0.9375rem;
+  border-radius: 0.75rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.875rem;
   font-weight: 700;
   background: var(--color-fd-primary);
   color: var(--color-fd-primary-foreground);
-  transition: opacity 0.15s, transform 0.1s;
+  transition: opacity 0.15s, transform 0.15s ease, box-shadow 0.15s ease;
   touch-action: manipulation;
 }
 
+.rv-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease;
+}
+
 .rv-btn:hover:not(.disabled) {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.35);
+}
+
+/* Icon micro-interactions: the retry arrow winds back, the check swells. */
+.rv-forgot:hover:not(.disabled) svg {
+  transform: rotate(-50deg);
+}
+
+.rv-remembered:hover:not(.disabled) svg {
+  transform: scale(1.2);
 }
 
 .rv-btn:active:not(.disabled) {
-  transform: scale(0.98);
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
 }
 
 .rv-btn.disabled {

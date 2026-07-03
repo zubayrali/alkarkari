@@ -98,35 +98,55 @@ function milestoneIndex(intervalMs: number): number {
 
 /* Quantum.country stepper: label above marker, a line threading the marker
    centers, an arrowhead flowing into a bullseye for the final stop, and a
-   dashed pending-circle on the current stop. */
-function ProgressTimeline({ intervalMs }: { intervalMs: number }) {
+   dashed pending-circle on the current stop. While hovering a grade button,
+   previewIdx/previewKind paint the projected outcome onto the ladder:
+   'gain' lights the path forward, 'loss' marks the stops that would be
+   forfeited (quantum's LostProgress). */
+function ProgressTimeline({
+  intervalMs,
+  previewIdx = null,
+  previewKind = null,
+}: {
+  intervalMs: number;
+  previewIdx?: number | null;
+  previewKind?: "gain" | "loss" | null;
+}) {
   const idx = milestoneIndex(intervalMs);
   const last = MILESTONES.length - 1;
 
   return (
     <div className="rv-timeline">
-      {MILESTONES.map((m, i) => (
-        <div
-          key={i}
-          className={[
-            "rv-tl-item",
-            i === idx ? "current" : i < idx ? "past" : "",
-            i === last ? "final" : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          <span className="rv-tl-label">{m.label}</span>
-          <span className="rv-tl-marker">{i === last && <BullseyeIcon />}</span>
-        </div>
-      ))}
+      {MILESTONES.map((m, i) => {
+        const gain =
+          previewKind === "gain" && previewIdx !== null && i > idx && i <= previewIdx;
+        const lost =
+          previewKind === "loss" && previewIdx !== null && i > previewIdx && i <= idx;
+        return (
+          <div
+            key={i}
+            className={[
+              "rv-tl-item",
+              i === idx ? "current" : i < idx ? "past" : "",
+              i === last ? "final" : "",
+              gain ? "preview-gain" : "",
+              lost ? "preview-lost" : "",
+              previewIdx === i ? "preview-target" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <span className="rv-tl-label">{m.label}</span>
+            <span className="rv-tl-marker">{i === last && <BullseyeIcon />}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
 function BullseyeIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
       <circle cx="9" cy="9" r="7.25" stroke="currentColor" strokeWidth="1.5" />
       <circle cx="9" cy="9" r="2.75" fill="currentColor" />
     </svg>
@@ -164,10 +184,14 @@ function CardFace({
   prompt,
   revealed,
   intervalMs,
+  previewIdx = null,
+  previewKind = null,
 }: {
   prompt: Prompt;
   revealed: boolean;
   intervalMs: number;
+  previewIdx?: number | null;
+  previewKind?: "gain" | "loss" | null;
 }) {
   return (
     <div className={`rv-card${revealed ? " rv-revealed" : ""}`}>
@@ -181,7 +205,11 @@ function CardFace({
           {prompt.answerAttachment && <Attachment src={prompt.answerAttachment} />}
         </div>
         <div className={`rv-level${revealed ? " visible" : ""}`}>
-          <ProgressTimeline intervalMs={intervalMs} />
+          <ProgressTimeline
+            intervalMs={intervalMs}
+            previewIdx={previewIdx}
+            previewKind={previewKind}
+          />
         </div>
         {!revealed && (
           <div className="rv-cover">
@@ -256,6 +284,8 @@ export function ReviewBlock({
   });
   const [store, setStore] = useState<Store | null>(null);
   const [mode, setMode] = useState<Mode>({ kind: "idle" });
+  // Grade button being hovered/focused — drives the ladder outcome preview.
+  const [hoverOutcome, setHoverOutcome] = useState<Outcome | null>(null);
   const reduced = useReducedMotion() ?? false;
 
   useEffect(() => {
@@ -359,6 +389,24 @@ export function ReviewBlock({
     // grade the card behind animates forward into the front slot.
     const visible = queue.slice(pos, pos + 3);
 
+    // Hovering a grade button previews the real scheduler outcome on the
+    // ladder — simulate the grade and see which milestone it would land on.
+    const previewIdx =
+      revealed && hoverOutcome
+        ? milestoneIndex(
+            applyOutcome(cardFor(queue[pos]), now, hoverOutcome).intervalMillis,
+          )
+        : null;
+    const previewKind =
+      previewIdx === null ? null : hoverOutcome === "forgotten" ? "loss" as const : "gain" as const;
+
+    const hoverProps = (outcome: Outcome) => ({
+      onMouseEnter: () => setHoverOutcome(outcome),
+      onMouseLeave: () => setHoverOutcome(null),
+      onFocus: () => setHoverOutcome(outcome),
+      onBlur: () => setHoverOutcome(null),
+    });
+
     return (
       <div
         className={`rv-block rv-active ${themed}`}
@@ -408,6 +456,8 @@ export function ReviewBlock({
                     prompt={p}
                     revealed={i === 0 && revealed}
                     intervalMs={cardFor(p).intervalMillis}
+                    previewIdx={i === 0 ? previewIdx : null}
+                    previewKind={i === 0 ? previewKind : null}
                   />
                 </motion.div>
               ))}
@@ -419,6 +469,7 @@ export function ReviewBlock({
             <button
               className={`rv-btn rv-forgot${!revealed ? " disabled" : ""}`}
               disabled={!revealed}
+              {...hoverProps("forgotten")}
               onClick={(e) => {
                 e.stopPropagation();
                 grade("forgotten");
@@ -430,6 +481,7 @@ export function ReviewBlock({
             <button
               className={`rv-btn rv-remembered${!revealed ? " disabled" : ""}`}
               disabled={!revealed}
+              {...hoverProps("remembered")}
               onClick={(e) => {
                 e.stopPropagation();
                 grade("remembered");
