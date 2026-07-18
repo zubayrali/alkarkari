@@ -14,12 +14,12 @@
 |---|---|---|
 | `lib/home-principles.ts` | Create | Canonical principle IDs, order, transliterations, presentation kinds, and verified destination state |
 | `tests/home-principles.test.ts` | Create | Locks the canonical order and the Muraqqaʿa/Murāqaba distinction |
-| `components/home/hero.tsx` | Replace implementation | Static asymmetric image-and-text threshold |
+| `components/home/threshold-hero.tsx` | Create | Static asymmetric image-and-text threshold |
 | `components/home/principles-journey.tsx` | Create | Prelude, seven full sections, and continue-studying index behind one interface |
-| `components/home/footer.tsx` | Simplify | Static night footer with a narrow patched hem |
+| `components/home/quiet-footer.tsx` | Create | Static night footer with a narrow patched hem |
 | `app/(home)/page.tsx` | Simplify | Locale resolution, principle-model construction, ViewTransition wrapper, and assembly only |
 
-The existing story, WebGL, patchwork, reveal, and `/design` modules remain in place.
+The existing hero, footer, story, WebGL, patchwork, reveal, and `/design` modules remain in place.
 
 ---
 
@@ -42,15 +42,16 @@ The existing story, WebGL, patchwork, reveal, and `/design` modules remain in pl
 
 **Files:**
 
-- Modify `components/home/hero.tsx`
-- Modify `components/home/footer.tsx`
+- Create `components/home/threshold-hero.tsx`
+- Create `components/home/quiet-footer.tsx`
 
-- [ ] Replace the client/WebGL hero with a server-rendered split composition using the existing `wandering-olive.jpg` static import.
+- [ ] Add a server-rendered split composition using the existing `wandering-olive.jpg` static import.
 - [ ] Keep the Arabic Tariqa wordmark, transliteration, location label, one-line knowledge-base promise, and a fragment link into the prelude.
 - [ ] Remove hero pinning, shader progress, parallax, particles, imperative animation, and the isolated Divine Name treatment.
 - [ ] Make the image and text stack cleanly on narrow screens and remain asymmetric on wide screens.
-- [ ] Replace the footer's scroll reveals and WebGL cloth with a static twelve-color patch hem.
+- [ ] Add a quiet footer with a static twelve-color patch hem.
 - [ ] Keep the footer's Arabic identity, verified navigation links, and night ground.
+- [ ] Preserve the existing animated `Hero` and `Footer` because `/design` imports them as workshop references.
 
 ## Task 3: Build the home-story module
 
@@ -81,7 +82,7 @@ The existing story, WebGL, patchwork, reveal, and `/design` modules remain in pl
 
 - [ ] Remove testimony-file loading and the recent-note/dictionary utility data dependency.
 - [ ] Remove the scroll spine, sticky story, chronology, Silsila, Light carousel, foundation accordion, testimony grid, CTA card, and utility-grid assembly.
-- [ ] Resolve the locale, build the canonical principle model, and render `Hero`, `PrinciplesJourney`, and `Footer` inside the existing single-child `ViewTransition` wrapper.
+- [ ] Resolve the locale, build the canonical principle model, and render `ThresholdHero`, `PrinciplesJourney`, and `QuietFooter` inside the existing single-child `ViewTransition` wrapper.
 - [ ] Preserve the `docs-content` transition name required by ADR-0007.
 - [ ] Keep the shell page server-rendered and free of client-only effects.
 
