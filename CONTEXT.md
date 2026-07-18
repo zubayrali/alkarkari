@@ -119,6 +119,18 @@ _Avoid_: tag index (except for `/tags` itself), tag listing
 
 ### Karkari Wiki — content sections
 
+**Founding principles**:
+The seven practices that form the canonical spine of the Karkariya introduction, in this order: Subha, Siyaha, Hadra, Muraqqaʿa, Ism, Khalwa, and Sirr. Wird and commitment may provide context, but do not replace a principle in this sequence.
+_Avoid_: pillars (when it changes the canonical list), foundations (when it includes placeholder topics)
+
+**Muraqqaʿa**:
+The patched garment worn in the Tariqa and the fourth founding principle. It is distinct from Murāqaba.
+_Avoid_: Muraqqa, Muraqaba, spiritual watchfulness
+
+**Murāqaba**:
+Spiritual watchfulness or contemplative vigilance. It is not the patched garment and is not one of the canonical seven founding principles.
+_Avoid_: Muraqqaʿa, patched cloak, patched garment
+
 **Dictionary**:
 The primary content section. A collection of pages defining terms specific to the Tariqa Karkariya and Sufi tradition (Wird, Dhikr, Hadra, etc.).
 _Avoid_: glossary, lexicon
