@@ -1,0 +1,352 @@
+{
+  "locale": "fr",
+  "openInObsidian": "Ouvrir dans Obsidian",
+  "heroTagline": "Une base de connaissances vivante de la Tariqa Karkariya",
+  "heroPrimaryCta": "Parcourir le dictionnaire →",
+  "heroSecondaryCta": "Explorer toutes les pages",
+  "dictionaryLabel": "Dictionnaire — termes clés",
+  "exploreLabel": "Explorer",
+  "backlinksLabel": "Pages qui référencent cette page",
+  "sidenotesLabel": "Notes",
+  "localGraphLabel": "Connexions",
+  "openGlobalGraphLabel": "Graphe complet",
+  "graphLegendPage": "Page",
+  "graphLegendTag": "Étiquette",
+  "graphStatPages": "pages",
+  "graphStatTags": "étiquettes",
+  "graphStatLinks": "liens",
+  "readingTimeUnit": "min de lecture",
+  "recentNotesLabel": "Mises à jour récentes",
+  "readerModeLabel": "Mode lecture",
+  "readerExitLabel": "Quitter le mode lecture",
+  "contentsLabel": "Sommaire",
+  "wordsUnit": "mots",
+  "aliasesLabel": "Aussi appelé",
+  "tagsAriaLabel": "Étiquettes",
+  "sectionFallback": "Entrée",
+  "sectionTagsIndex": "Index des sujets",
+  "sectionTag": "Étiquette",
+  "untitledLabel": "Sans titre",
+  "tagsFilterLabel": "Filtrer l’index",
+  "tagsFilterPlaceholder": "Filtrer les étiquettes…",
+  "tagsFilterEmpty": "Aucune étiquette correspondante.",
+  "pageSingular": "page",
+  "pagePlural": "pages",
+  "countOfLabel": "sur",
+  "navStartHere": "Commencer ici",
+  "navDictionary": "Dictionnaire",
+  "navBooks": "Livres",
+  "navPodcasts": "Podcasts",
+  "home": {
+    "instituteLabel": "Institut Al-Karkari",
+    "country": "Maroc",
+    "translit": "Ṭarīqa Karkariyya",
+    "enter": "Entrer",
+    "bismillahGloss": "Au nom de Dieu, le Tout Miséricordieux, le Très Miséricordieux",
+    "intentionLead": "Une bibliothèque vivante de la Ṭarīqa Karkariyya — ses termes, ses enseignements et son invocation.",
+    "intentionSub": "Tenue pour le chercheur et le compagnon, en la compagnie de ceux qui invoquent.",
+    "galleryLabel": "Depuis la zāwiya",
+    "startHereLabel": "Commencer ici",
+    "featuredFallbackTitle": "Le Dictionnaire",
+    "featuredFallbackDescription": "Commencez par les termes et concepts fondamentaux de la Tariqa Karkariya.",
+    "waysInLabel": "Voies d'entrée",
+    "waysInHint": "— chaque chercheur connaît son propre abreuvoir",
+    "recentLabel": "Récemment inscrit",
+    "keyTermsLabel": "Termes clés",
+    "moreLabel": "+ plus →",
+    "footerLine": "Al-Zāwiya al-Karkariyya · Maroc",
+    "lightVerseGloss": "Dieu est la Lumière des cieux et de la terre",
+    "lightVerseCitation": "Coran 24:35 — le Verset de la Lumière",
+    "prismCaption": "Une lumière — douze couleurs",
+    "journeyLine": "Des ténèbres vers la lumière",
+    "journeyGloss": "min aẓ-ẓulumāt ilā n-nūr",
+    "guideLabel": "Le guide vivant",
+    "guideName": "Shaykh Mohamed Faouzi al-Karkari",
+    "guideLine": "La lumière vient de Dieu ; le guide est la porte par laquelle elle devient proche.",
+    "wallLabel": "Al-Jidār",
+    "wallAlt": "Le mur peint en patchwork de la zāwiya",
+    "cloakAlt": "Le manteau rapiécé",
+    "hadraAlt": "Le rassemblement de la ḥaḍra",
+    "zawiyaAlt": "La zāwiya au Maroc",
+    "shaykhAlt": "Shaykh Mohamed Faouzi al-Karkari assis dans la zāwiya",
+    "lightUponLight": "Lumière sur lumière",
+    "cloakLine1": "Tant de couleurs. Un seul manteau.",
+    "cloakLine2": "Tant de fragments. Une seule voie.",
+    "pathways": {
+      "dictionary": {
+        "title": "Dictionnaire",
+        "tag": "Seuil",
+        "description": "Termes et concepts fondamentaux de la Tariqa — à lire d'abord, à retrouver souvent."
+      },
+      "foundations": {
+        "title": "Fondements",
+        "tag": "Pratique",
+        "description": "Les piliers de la voie : Wird, Ḥaḍra, Muraqqaʿa, Ism al-Mufrad, et plus."
+      },
+      "articles": {
+        "title": "Articles & Enseignements",
+        "tag": "Étude",
+        "description": "Extraits de questions-réponses, durūs et écrits approfondis sur la voie."
+      },
+      "books": {
+        "title": "Livres",
+        "tag": "Étude",
+        "description": "Œuvres publiées du Shaykh Mohamed Faouzi al-Karkari."
+      },
+      "podcasts": {
+        "title": "Podcasts & Transcriptions",
+        "tag": "Écoute",
+        "description": "Épisodes avec transcriptions complètes et consultables."
+      },
+      "history": {
+        "title": "Histoire",
+        "tag": "Lignée",
+        "description": "Les origines et la chaîne initiatique — du Prophète ﷺ à al-Karkari."
+      }
+    },
+    "footerLinks": {
+      "dictionary": "Dictionnaire",
+      "foundations": "Fondements",
+      "graph": "Graphe",
+      "tags": "Étiquettes"
+    },
+    "story": {
+      "wayKicker": "La Voie",
+      "wayTitle": "Qu'est-ce que la Karkariya ?",
+      "wayReveal": "La science soufie est l'esprit de notre religion et son degré le plus élevé. La voie est claire — aplanie par le Bien-Aimé ﷺ, qui l'a résumée en une seule phrase.",
+      "wayHadith": "Adore Dieu comme si tu Le voyais.",
+      "wayHadithSource": "Le Messager de Dieu ﷺ",
+      "wayMaxim": "Rabaisse-toi, et donne de l'importance à ton prochain.",
+      "wayMaximGloss": "Tous les enseignements, résumés en une ligne.",
+      "wayLink": "Commencer par le commencement",
+      "shaykhKicker": "Le Guide",
+      "shaykhTitle": "Le shaykh est la voie",
+      "shaykhPoem1": "Est-ce moi ou mon ombre que tu vois ?",
+      "shaykhPoem2": "Seul peut le saisir celui qui est devenu comme moi.",
+      "shaykhLine": "Shaykh Mohamed Faouzi al-Karkari — de noble descendance prophétique, idrisside et hassanide. À dix-neuf ans, il quitta tout ce qu'il possédait, et marcha.",
+      "wanderTitle": "Dix années d'errance",
+      "wanderKicker1": "Le départ",
+      "wanderKicker2": "La confiance",
+      "wanderKicker3": "La réponse",
+      "wanderQuote1": "J'ai pris la terre pour couche, et le ciel étoilé pour couverture.",
+      "wanderQuote2": "J'ai traversé les montagnes, mais j'ai confié mon bagage à Dieu.",
+      "wanderQuote3": "Chaque fois que j'invoquais Dieu, Il répondait à mon invocation.",
+      "khalwaLead": "Puis, dans une chambre obscure de la zāwiya de son oncle — la khalwa — son repentir fut exaucé.",
+      "khalwaScript": "Je t'ai pardonné.",
+      "khalwaGloss": "Il le vit écrit devant lui, en lettres de lumière.",
+      "shaykhLink": "La vie du Shaykh",
+      "silsilaKicker": "La Chaîne",
+      "silsilaTitle": "Un fil ininterrompu",
+      "silsilaLead": "De main en main, de cœur en cœur — la permission de cette voie descend par une chaîne de maîtres, remontant jusqu'au Messager de Dieu ﷺ.",
+      "silsilaMore": "vingt et un maillons encore",
+      "silsilaSeal": "…jusqu'au Messager de Dieu ﷺ",
+      "silsilaLink": "Suivre la chaîne complète",
+      "nurKicker": "La Lumière",
+      "nurLead": "La voie est la quête de cette lumière — jusqu'à la voir, non pas en métaphore, mais de l'œil.",
+      "nurHadith": "Ô Jābir, la première chose que Dieu créa fut la lumière de ton Prophète, de Sa lumière.",
+      "nurHadithSource": "ḥadīth de Jābir — al-Bayhaqī",
+      "nurLink": "Commencer ici : la vision de la lumière",
+      "wayMercy": "Dans notre voie, nous ne rabaissons jamais quiconque témoigne de l'unicité de Dieu — le Vrai a placé dans nos cœurs une miséricorde pour toute Sa création, jusqu'à la plus petite fourmi.",
+      "wayHidden": "Cette science vient de Lui, et nous ne la cachons pas. Nous ne la retenons qu'à ceux qui se moquent de Lui ; à tout chercheur sincère, la porte est ouverte.",
+      "shaykhReturn": "À son retour, il brûla tout ce qu'il possédait, emprunta le vêtement d'un frère, et marcha pieds nus, en larmes, jusqu'à son shaykh à Temsemen.",
+      "shaykhDatesLabel": "Une vie, en quatre tournants",
+      "shaykhDates": [
+        {
+          "year": "1973",
+          "label": "Né dans le Rif, dans une maison de rappel"
+        },
+        {
+          "year": "1992",
+          "label": "À dix-neuf ans, il quitte tout — dix années d'errance"
+        },
+        {
+          "year": "2004",
+          "label": "La khalwa — la plus grande Ouverture, le Nom caché"
+        },
+        {
+          "year": "2007",
+          "label": "Après la mort de son shaykh, le Sceau — la mashyakha"
+        }
+      ],
+      "silsilaGather": "replier la chaîne",
+      "nurDoor": "Marche vers Dieu par la porte du Messager ﷺ — et quiconque refuse restera voilé, exclu de la voie.",
+      "nurWhat": "Le Nūr Muḥammadī est la réalité lumineuse derrière la forme visible du Prophète ﷺ — la première chose que Dieu créa, prise de Sa propre lumière.",
+      "nurSeen": "Elle se voit de l'œil, non en métaphore — et ne s'atteint qu'en la compagnie de ceux qui la portent : les gens de la lumière.",
+      "mishkatKicker": "Les preuves de la lumière",
+      "mishkatLead": "La preuve n'est pas rare — elle emplit le Livre, le ḥadīth, et les paroles des connaissants. Feuilletez-la.",
+      "mishkatQuran": "Dans le Coran",
+      "mishkatHadith": "Dans le Hadith",
+      "mishkatKhabar": "Dans les paroles",
+      "mishkatHint": "touchez pour tourner",
+      "nurCouplet1": "Un esprit de lumière dans un corps comme la lune,",
+      "nurCouplet2": "un manteau brodé d'étoiles éclatantes.",
+      "nurCoupletSource": "Ḥassān ibn Thābit — sur le Messager ﷺ",
+      "foundationsKicker": "La Pratique",
+      "foundationsTitle": "Sept principes fondateurs",
+      "foundationsLead": "Par la grâce de Dieu, notre voie est claire et simple.",
+      "foundationsReadOn": "Lire la suite",
+      "foundations": {
+        "subha": {
+          "arabic": "السُّبْحَة",
+          "title": "Le Rosaire",
+          "line": "Le rappel compté — la litanie gardée près de soi, matin et soir."
+        },
+        "siyaha": {
+          "arabic": "السِّيَاحَة",
+          "title": "L'Errance",
+          "line": "Parcourir la terre pour l'adoration — en ne s'appuyant que sur Dieu."
+        },
+        "hadra": {
+          "arabic": "الحَضْرَة",
+          "title": "La Danse sacrée",
+          "line": "L'assemblée du rappel — présence, proximité, le Nom en mouvement."
+        },
+        "muraqqaa": {
+          "arabic": "المُرَقَّعَة",
+          "title": "Le Manteau rapiécé",
+          "line": "Mille fragments, un seul vêtement — l'humilité portée sur le corps."
+        },
+        "ism": {
+          "arabic": "الاِسْم",
+          "title": "Le Nom",
+          "line": "Le dhikr du Nom de Majesté — Allāh — fondement de tous les Noms."
+        },
+        "khalwa": {
+          "arabic": "الخَلْوَة",
+          "title": "La Retraite",
+          "line": "La solitude dans l'obscurité, en quête de la Lumière — la grotte du chercheur."
+        },
+        "sirr": {
+          "arabic": "السِّرّ",
+          "title": "Le Secret",
+          "line": "Ce qui est caché entre le serviteur et son Seigneur — porté, non dit."
+        }
+      },
+      "voicesKicker": "Les Témoins",
+      "voicesTitle": "Les voix de la voie",
+      "voicesLead": "Des chercheurs de tous les horizons racontent ce qu'ils ont vu.",
+      "voicesLink": "Tous les témoignages",
+      "beginKicker": "Commencer",
+      "beginTitle": "Le wird est libre de pratique",
+      "beginLead": "La litanie de la Karkariya est ouverte à tous, sans restriction — récitée le matin et le soir.",
+      "beginPrimary": "Lire le wird",
+      "beginSecondary": "Commencer ici",
+      "mishkatFacetsLabel": "Facettes de la lumière",
+      "mishkatPreviousLabel": "Citation précédente",
+      "mishkatNextLabel": "Citation suivante",
+      "mishkatCitations": {
+        "quran": [
+          {
+            "text": "God is the Light of the heavens and the earth.",
+            "source": "an-Nūr 35 — the Verse of Light"
+          },
+          {
+            "text": "And he to whom God has not granted light — for him there is no light.",
+            "source": "an-Nūr 40"
+          },
+          {
+            "text": "God brings the believers out from the darknesses into the light.",
+            "source": "al-Baqara 257"
+          },
+          {
+            "text": "There has come to you from God a light and a clear Book.",
+            "source": "al-Māʾida 15"
+          },
+          {
+            "text": "So believe in God and His Messenger, and the Light which We have sent down.",
+            "source": "at-Taghābun 8"
+          }
+        ],
+        "hadith": [
+          {
+            "text": "O God, place light in my heart, and light in my tongue; light in my hearing, and light in my sight… and make me light.",
+            "source": "the Prophet ﷺ — Bukhārī"
+          },
+          {
+            "text": "The first thing God created was the light of your Prophet, from His own light.",
+            "source": "ḥadīth of Jābir — al-Bayhaqī"
+          },
+          {
+            "text": "Fear the perception of the believer, for he sees with the light of God.",
+            "source": "the Prophet ﷺ — Tirmidhī"
+          },
+          {
+            "text": "God created His creation in darkness, then cast His light upon them; whoever it touched was guided.",
+            "source": "the Prophet ﷺ — Tirmidhī"
+          },
+          {
+            "text": "His veil is light; were He to lift it, the glories of His Face would burn all creation His sight reaches.",
+            "source": "the Prophet ﷺ — Muslim"
+          }
+        ],
+        "khabar": [
+          {
+            "text": "Knowledge is a light God places in the heart.",
+            "source": "Imām Mālik"
+          },
+          {
+            "text": "When the attributes of darkness lift, light takes their place — and the one with the eye of the soul sees.",
+            "source": "ʿAbd al-Qādir al-Jīlānī"
+          },
+          {
+            "text": "Sufism is a lightning that burns everything.",
+            "source": "al-Shiblī"
+          },
+          {
+            "text": "The knowers are the lamps of their age; by them the people are guided.",
+            "source": "al-Ḥasan al-Baṣrī"
+          },
+          {
+            "text": "God created the Muhammadan Light so that intellects, hearts and souls would be illumined.",
+            "source": "Shaykh Ṣāliḥ al-Jaʿfarī"
+          }
+        ]
+      }
+    }
+  },
+  "fumadocs": {
+    "displayName": "English",
+    "search": "Rechercher",
+    "searchNoResult": "Aucun résultat",
+    "toc": "Sommaire",
+    "tocNoHeadings": "Aucun titre",
+    "lastUpdate": "Dernière mise à jour le",
+    "chooseLanguage": "Choose a language",
+    "nextPage": "Page suivante",
+    "previousPage": "Page précédente",
+    "chooseTheme": "Thème",
+    "editOnGithub": "Modifier sur GitHub",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Système",
+    "codeBlockCopy": "Copier le code",
+    "codeBlockCopied": "Copié",
+    "accordionCopyAnchor": "Copy Link",
+    "headingCopyAnchor": "Copy Anchor Link",
+    "pageActionsCopyMarkdown": "Copier le Markdown",
+    "pageActionsOpen": "Ouvrir",
+    "pageActionsOpenGitHub": "Ouvrir sur GitHub",
+    "pageActionsViewMarkdown": "Voir le Markdown",
+    "pageActionsOpenScira": "Open in Scira AI",
+    "pageActionsOpenChatGPT": "Open in ChatGPT",
+    "pageActionsOpenClaude": "Open in Claude",
+    "pageActionsOpenCursor": "Open in Cursor",
+    "pageActionsOpenInLLMPrompt": "Read {url}, I want to ask questions about it.",
+    "bannerClose": "Close Banner",
+    "searchOpen": "Rechercher",
+    "searchClose": "Fermer la recherche",
+    "menuToggle": "Menu",
+    "themeToggle": "Changer de thème",
+    "sidebarOpen": "Ouvrir la barre latérale",
+    "sidebarCollapse": "Replier la barre latérale",
+    "tocInline": "Sur cette page",
+    "typeTableProp": "Prop",
+    "typeTableType": "Type",
+    "typeTableDefault": "Default",
+    "typeTableParameters": "Parameters",
+    "typeTableReturns": "Returns",
+    "notFoundTitle": "Page introuvable",
+    "notFoundDescription": "Vérifiez que l'adresse est correcte",
+    "notFoundLink": "Retour à l'accueil"
+  }
+}

@@ -4,7 +4,8 @@ import * as ObsidianComponents from "fumadocs-obsidian/ui";
 import { Mermaid } from "@/components/mermaid";
 import { ReviewBlock } from "@/components/review-block";
 import type { MDXComponents } from "mdx/types";
-import type { ImgHTMLAttributes } from "react";
+import type { ComponentProps, ImgHTMLAttributes } from "react";
+import { cn } from "@/lib/cn";
 
 function FigureImage(props: ImgHTMLAttributes<HTMLImageElement>) {
   const { alt, ...rest } = props;
@@ -18,6 +19,33 @@ function FigureImage(props: ImgHTMLAttributes<HTMLImageElement>) {
   );
 }
 
+// Obsidian callouts, painted in the reader-shell idiom: the raw type lands as
+// data-callout so app/reader-shell.css can remap --callout-color per type.
+function KarkariCallout({
+  className,
+  ...props
+}: ComponentProps<typeof ObsidianComponents.ObsidianCallout>) {
+  return (
+    <ObsidianComponents.ObsidianCallout
+      data-callout={props.type ?? "info"}
+      {...props}
+      className={cn("kk-callout", className)}
+    />
+  );
+}
+
+function KarkariCalloutTitle({
+  className,
+  ...props
+}: ComponentProps<typeof ObsidianComponents.ObsidianCalloutTitle>) {
+  return (
+    <ObsidianComponents.ObsidianCalloutTitle
+      {...props}
+      className={cn("kk-callout-title", className)}
+    />
+  );
+}
+
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
@@ -25,6 +53,8 @@ export function getMDXComponents(components?: MDXComponents) {
     Mermaid,
     ReviewBlock,
     ...ObsidianComponents,
+    ObsidianCallout: KarkariCallout,
+    ObsidianCalloutTitle: KarkariCalloutTitle,
     ...components,
   } satisfies MDXComponents;
 }

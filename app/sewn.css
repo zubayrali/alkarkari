@@ -1,0 +1,297 @@
+/* ============================================================================
+   The sewn system — "living stitch" animation vocabulary (see /design).
+
+   Motion layer over the Primordial Light motif primitives in
+   karkari-theme.css (.kk-stitch-t/-b, .kk-stitch-border, .kk-swatch, …).
+   Everything here is compositor/paint-cheap — background-position, transform,
+   opacity, stroke-* — and every technique degrades to its FINISHED static
+   state under prefers-reduced-motion (see the block at the bottom).
+
+   Imported in global.css BEFORE karkari-theme.css (the theme file must stay
+   last so its token overrides win the cascade). Rules here that restyle theme
+   utilities therefore win by higher specificity (descendant selectors), never
+   by source order.
+
+   Colours are never hardcoded: everything is currentColor-based so a
+   technique adapts to its ground (white thread on night, ink thread on
+   white), exactly like the static seams it animates.
+   ============================================================================ */
+
+/* ── The thread being pulled through ─────────────────────────────────────
+   A horizontal running-stitch line whose dashes slide slowly to the right.
+   Production target: section dividers, active-state underlines on chrome.
+   The gradient tile is 12px (6px thread + 6px gap — same rhythm as
+   .kk-stitch-t/-b); the loop travels 48px (a whole number of tiles) so the
+   cycle is seamless. */
+@keyframes kk-thread-run {
+  from { background-position: 0 0; }
+  to   { background-position: 48px 0; }
+}
+.kk-thread-run {
+  height: 1px;
+  border: none; /* usable on <hr> */
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, currentColor 45%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+  animation: kk-thread-run 6s linear infinite;
+}
+
+/* ── The stitched link ───────────────────────────────────────────────────
+   Anchor treatment: a dashed underline that, on hover/focus, is sewn solid
+   by a left-to-right draw. Two background layers: a solid layer on top
+   (width 0% → 100%) over the ever-present dashed layer.
+   Production target: wikilinks / internal links in notebook prose. */
+.kk-link-stitch {
+  text-decoration: none;
+  background-image:
+    /* solid thread, drawn on hover */
+    linear-gradient(currentColor, currentColor),
+    /* resting dashed stitch */
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, currentColor 45%, transparent) 0 4px,
+      transparent 4px 8px
+    );
+  background-repeat: no-repeat, repeat-x;
+  background-size: 0% 1px, 8px 1px;
+  background-position: 0 100%, 0 100%;
+  padding-bottom: 1px;
+  transition: background-size 0.35s ease;
+}
+.kk-link-stitch:hover,
+.kk-link-stitch:focus-visible {
+  background-size: 100% 1px, 8px 1px;
+}
+
+/* ── The stitch tightens ─────────────────────────────────────────────────
+   Hand-cut tilt that pulls straight (and lifts 1px) on hover/focus, as if
+   the thread were tightened. Pair with an inline tilt, e.g.
+   style={{ '--kk-tilt': '0.4deg' }} — tilts are ASSIGNED per element
+   (deterministic, e.g. from patchOf parity), never randomized.
+   Production target: cards, gallery tiles, patch chips. */
+.kk-tighten {
+  transform: rotate(var(--kk-tilt, 0deg));
+  transition: transform 0.3s ease;
+}
+.kk-tighten:hover,
+.kk-tighten:focus-visible,
+.kk-tighten:focus-within {
+  transform: rotate(0deg) translateY(-1px);
+}
+
+/* ── The swatch ignites ──────────────────────────────────────────────────
+   Scale-in pop with the site's spring-overshoot feel, for .kk-swatch (or any
+   small chip) appearing. Stagger via inline animation-delay.
+   Production target: swatch rows igniting on section entry. */
+@keyframes kk-swatch-pop {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.kk-swatch-pop {
+  animation: kk-swatch-pop 0.5s cubic-bezier(0.34, 1.4, 0.5, 1) both;
+}
+
+/* ── The seam wakes under the hand ───────────────────────────────────────
+   Parent utility: any .kk-stitch-t/-b seam or .kk-stitch-border inside
+   brightens and visually tightens (denser dashes) while the parent is
+   hovered or focused. Chrome only — stitches never live in prose.
+   Production target: nav bands, card headers, footer seams. */
+.kk-seam-hover .kk-stitch-t::before,
+.kk-seam-hover .kk-stitch-b::after {
+  transition: background-image 0.3s ease, opacity 0.3s ease;
+}
+.kk-seam-hover:hover .kk-stitch-t::before,
+.kk-seam-hover:focus-within .kk-stitch-t::before,
+.kk-seam-hover:hover .kk-stitch-b::after,
+.kk-seam-hover:focus-within .kk-stitch-b::after {
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, currentColor 60%, transparent) 0 7px,
+    transparent 7px 11px
+  );
+}
+.kk-seam-hover .kk-stitch-border,
+.kk-seam-hover.kk-stitch-border {
+  transition: border-color 0.3s ease;
+}
+.kk-seam-hover:hover .kk-stitch-border,
+.kk-seam-hover:hover.kk-stitch-border,
+.kk-seam-hover:focus-within .kk-stitch-border {
+  border-color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+/* ── StitchFrame plumbing (components/sewn/stitch-frame.tsx) ─────────────
+   The SVG overlay sits over the whole wrapper; the stitch rect tightens
+   (brightens + denser dashes) on wrapper hover. Dash values are in
+   pathLength units (the rects carry pathLength="100"). */
+.kk-stitch-frame {
+  position: relative;
+}
+.kk-stitch-frame-svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.kk-stitch-frame .kk-frame-stitch {
+  stroke-opacity: 0.55;
+  transition: stroke-opacity 0.3s ease, stroke-dasharray 0.3s ease;
+}
+.kk-stitch-frame:hover .kk-frame-stitch,
+.kk-stitch-frame:focus-within .kk-frame-stitch {
+  stroke-opacity: 0.95;
+  stroke-dasharray: 2.9 1.3;
+}
+
+/* ── Garment patch pop — each patch of the generative coat arrives with the
+   swatch-pop overshoot; delays are assigned per patch by the component. ── */
+@keyframes kk-garment-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+.kk-garment-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: kk-garment-pop 0.5s cubic-bezier(0.34, 1.4, 0.5, 1) both;
+}
+
+/* Idle sway — the robe hangs and breathes, pivoting from the shoulders. */
+@keyframes kk-garment-sway {
+  from {
+    transform: rotate(-0.6deg);
+  }
+  to {
+    transform: rotate(0.6deg);
+  }
+}
+.kk-garment-sway {
+  transform-box: fill-box;
+  transform-origin: 50% 10%;
+  animation: kk-garment-sway 6.5s ease-in-out infinite alternate;
+}
+
+/* Hovering a patch lifts it off the cloth; its stitch brightens. */
+.kk-garment-patch {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+.kk-garment-patch:hover {
+  transform: scale(1.08);
+  filter: brightness(1.12);
+}
+.kk-garment-stitch {
+  stroke-opacity: 0.18;
+  transition: stroke-opacity 0.25s ease;
+}
+.kk-garment-patch:hover .kk-garment-stitch {
+  stroke-opacity: 0.55;
+}
+
+/* ── Light rays — lines born at a white point, shooting outward in 3D.
+   ONE shared keyframe for all rays; each ray carries its own rotation trio
+   (--rx/--ry/--rz), duration, and negative delay as inline styles. ── */
+@keyframes kk-ray-emerge {
+  0% {
+    transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz)) scaleX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz)) scaleX(2.3);
+    opacity: 0;
+  }
+}
+.kk-ray-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz)) scaleX(0);
+  animation: kk-ray-emerge 2s linear infinite;
+}
+
+/* ── Tile breathe — portrait tiles pulsing between their assigned opacity
+   band. One shared keyframe; each tile carries --tmin/--tmax/--tdur.
+   Hover pulls that tile fully into light. ── */
+@keyframes kk-tile-breathe {
+  from {
+    opacity: var(--tmin, 0.3);
+  }
+  to {
+    opacity: var(--tmax, 1);
+  }
+}
+.kk-tile-breathe {
+  opacity: var(--tmax, 1);
+  animation: kk-tile-breathe var(--tdur, 3s) ease-in-out infinite alternate;
+  transition: opacity 0.4s ease;
+}
+.kk-tile-breathe:hover {
+  animation: none;
+  opacity: 1;
+}
+
+/* ── Reduced motion: every technique lands on its finished state ─────────
+   Thread rests, swatches sit at full scale (fill-mode released), links and
+   seams still respond to hover but snap instead of easing. The StitchFrame
+   draw is handled in the component (useReducedMotion → static rect). */
+@media (prefers-reduced-motion: reduce) {
+  .kk-thread-run,
+  .kk-swatch-pop,
+  .kk-garment-pop,
+  .kk-garment-sway {
+    animation: none;
+  }
+  .kk-garment-patch {
+    transition: none;
+  }
+  .kk-garment-patch:hover {
+    transform: none;
+  }
+  /* the burst rests as a finished static fan */
+  .kk-ray-line {
+    animation: none;
+    opacity: 0.7;
+    transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz)) scaleX(1.35);
+  }
+  /* the portrait rests at its full vignette */
+  .kk-tile-breathe {
+    animation: none;
+    opacity: var(--tmax, 1);
+    transition: none;
+  }
+  .kk-link-stitch,
+  .kk-tighten,
+  .kk-stitch-frame .kk-frame-stitch,
+  .kk-seam-hover .kk-stitch-t::before,
+  .kk-seam-hover .kk-stitch-b::after,
+  .kk-seam-hover .kk-stitch-border,
+  .kk-seam-hover.kk-stitch-border {
+    transition: none;
+  }
+  .kk-tighten {
+    transform: rotate(var(--kk-tilt, 0deg));
+  }
+  .kk-tighten:hover,
+  .kk-tighten:focus-visible,
+  .kk-tighten:focus-within {
+    transform: rotate(var(--kk-tilt, 0deg));
+  }
+}

@@ -17,18 +17,26 @@ function countWords(data: StructuredData): number {
 export function ReadingTime({
   structuredData,
   label,
+  wordsLabel = "words",
+  className,
 }: {
   structuredData: StructuredData;
   label: string;
+  wordsLabel?: string;
+  className?: string;
 }) {
   const words = countWords(structuredData);
   const minutes = Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
 
   return (
-    <div className="flex items-center gap-1.5 text-xs text-fd-muted-foreground pb-3">
+    <div
+      className={
+        className ?? "flex items-center gap-1.5 text-xs text-fd-muted-foreground pb-3"
+      }
+    >
       <Clock className="size-3.5" />
       <span>
-        {minutes} {label} · {words.toLocaleString()} words
+        {minutes} {label} · {words.toLocaleString()} {wordsLabel}
       </span>
     </div>
   );

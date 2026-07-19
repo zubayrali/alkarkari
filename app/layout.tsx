@@ -3,11 +3,13 @@ import { i18nProvider } from "fumadocs-ui/i18n";
 import { getSiteLanguage } from "@/lib/locale";
 import { currentLocale, getLocaleEntry } from "@/lib/locales-manifest";
 import { NavProgress } from "@/components/nav-progress";
+import { ScrollbarReveal } from "@/components/scrollbar-reveal";
 import "./global.css";
 import "./canvas-flow.css";
 import "./excalidraw.css";
 import "katex/dist/katex.css";
-import { Inter, Amiri, Spectral, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Spectral, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,9 +18,14 @@ const inter = Inter({
 // Karkari typography (see DESIGN.md): Spectral headings, Amiri for Arabic/RTL,
 // IBM Plex Mono for labels. Exposed as CSS vars; bound to elements in
 // app/karkari-theme.css. Inter stays the body family via inter.className.
-const amiri = Amiri({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
+// Amiri is self-hosted UNSUBSETTED (aliftype/amiri 1.002): the Google-served
+// subset ships broken GPOS mark anchoring, so harakat render detached from
+// their letters — glaring at display sizes.
+const amiri = localFont({
+  src: [
+    { path: "./fonts/Amiri-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Amiri-Bold.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-amiri",
 });
 
@@ -56,6 +63,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
           i18n={i18nProvider(siteLanguage.translations)}
         >
           <NavProgress />
+          <ScrollbarReveal />
           {children}
         </RootProvider>
       </body>

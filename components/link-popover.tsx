@@ -39,9 +39,20 @@ function createPopoverElement(): {
 /** Strip chrome that makes no sense inside a preview. */
 function cleanPreviewElement(element: HTMLElement): HTMLElement {
   const removable = element.querySelectorAll<HTMLElement>(
-    'section[data-footnotes], [data-backlinks], [data-skip-preview], script, style, button, .sidenote-content',
+    'section[data-footnotes], [data-backlinks], [data-skip-preview], script, style, button, .sidenote-content, .night-threshold-utility, .night-threshold-arabic, .night-threshold-meta, .night-threshold-description, [data-page-footer], .properties-panel, #comments, #popover-comments',
   );
   removable.forEach((node) => node.remove());
+  // Night Threshold classes carry the full-bleed black header styling (dark
+  // token remaps, giant title, 56px reading-field insets); stripping them
+  // lets previews fall back to plain article styling.
+  for (const node of [
+    element,
+    ...element.querySelectorAll<HTMLElement>('[class*="night-"]'),
+  ]) {
+    node.classList.remove(
+      ...Array.from(node.classList).filter((name) => name.startsWith('night-')),
+    );
+  }
   return element;
 }
 

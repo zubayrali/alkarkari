@@ -121,14 +121,12 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-width: thin;
   transition: flex-grow 0.35s ease;
 }
 
 .rv-card-dyn .rv-revealed .rv-prompt {
   flex-grow: 0;
   overflow-y: auto;
-  scrollbar-width: thin;
 }
 
 /* Cover strip pre-reveal; grows into the main region once revealed. */
@@ -148,7 +146,6 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-width: thin;
 }
 
 /* Question image: large while recalling, thumbnail once answered. */
@@ -197,8 +194,8 @@
 }
 
 .dark .rv-btn {
-  background: #7a2230;
-  color: #faf4ea;
+  background: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
 }
 
 .dark .rv-themed .rv-btn {

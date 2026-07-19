@@ -12,8 +12,9 @@
   <meta name="description" content="A living knowledge base of the Tariqa Karkariya — choose your language.">
   <style>
     :root {
-      --oxblood: #2a0d11; --oxblood-2: #190709; --fg: #f1e6d8;
-      --muted: #b3938a; --gold: #d49a52;
+      /* keep in sync with karkari-theme.css night/white/lamp tokens */
+      --night: #000000; --night-2: #0a0a0a; --fg: #ffffff;
+      --muted: rgba(255, 255, 255, 0.55); --gold: #d7a83f;
     }
     * { box-sizing: border-box; margin: 0; }
     html, body { height: 100%; }
@@ -22,16 +23,16 @@
       gap: 2.5rem; padding: 2rem; text-align: center;
       font-family: ui-sans-serif, system-ui, sans-serif;
       color: var(--fg);
-      background: radial-gradient(120% 90% at 50% 0%, #3a1218 0%, var(--oxblood) 48%, var(--oxblood-2) 100%);
+      background: radial-gradient(120% 90% at 50% 0%, #111111 0%, #070707 55%, var(--night) 100%);
     }
-    .hem { display: flex; width: min(420px, 80vw); height: 10px; border-radius: 2px; overflow: hidden; background: var(--oxblood-2); }
+    .hem { display: flex; width: min(420px, 80vw); height: 10px; border-radius: 2px; overflow: hidden; background: var(--night-2); }
     .hem span { flex: 1; margin-inline: 0.5px; }
     h1 { font-family: "Amiri", "Times New Roman", serif; color: var(--gold); font-size: clamp(40px, 9vw, 84px); font-weight: 400; line-height: 1.1; }
     .sub { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-family: ui-monospace, monospace; }
     nav { display: flex; flex-direction: column; gap: 0.75rem; width: min(320px, 90vw); }
     nav a {
       display: block; padding: 0.9rem 1.5rem; border-radius: 10px; text-decoration: none;
-      color: var(--fg); border: 1px solid rgba(241, 230, 216, 0.22); font-size: 1.05rem;
+      color: var(--fg); border: 1px solid rgba(255, 255, 255, 0.22); font-size: 1.05rem;
       transition: border-color 0.2s, transform 0.2s;
     }
     nav a:hover { border-color: var(--gold); transform: translateY(-1px); }
@@ -43,9 +44,9 @@
     <span style="background:#d23b34"></span><span style="background:#e8762b"></span>
     <span style="background:#f2b22e"></span><span style="background:#9fc13a"></span>
     <span style="background:#2f9e54"></span><span style="background:#16a3a3"></span>
-    <span style="background:#2f74c9"></span><span style="background:#3b46ad"></span>
+    <span style="background:#2f74c9"></span><span style="background:#4653c4"></span>
     <span style="background:#7a40ad"></span><span style="background:#c2418a"></span>
-    <span style="background:#b62f44"></span><span style="background:#1f6f4a"></span>
+    <span style="background:#c43a50"></span><span style="background:#237c54"></span>
   </div>
 
   <div>

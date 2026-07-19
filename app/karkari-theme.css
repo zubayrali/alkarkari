@@ -1,57 +1,85 @@
 /* ============================================================================
-   Karkari design system — site-wide retheme (see DESIGN.md)
+   Karkari design system — "Primordial Light" (see DESIGN.md)
 
    Imported LAST in global.css so these :root / .dark declarations override the
    Fumadocs neutral preset tokens (same specificity, later source order wins;
    and these are unlayered so they beat any @layer'd fumadocs tokens too).
 
-   Visual language (from the zāwiya itself, not a generic preset):
-   · Oxblood / deep maroon ground — editorial, like the institute's print work.
-   · Warm ivory paper + ochre calligraphy gold (the Karkariya logo colour).
-   · The Muraqqaʿa — the patched cloak — rendered in its REAL vivid spectrum:
-     crimson, orange, saffron, lime, emerald, teal, cobalt, indigo, violet,
-     magenta. The cloak and the zāwiya wall are both grids of solid colour;
-     that patchwork, lit like stained glass, is the whole identity.
+   Visual language (Qur'anic nūr, from the order's own teaching):
+   · Primordial darkness — pure black, the veil, the field before creation.
+   · White light — the lamp's undivided light, guidance, the reading ground.
+   · Lamp gold — restrained, like old Moroccan brass and olive-oil flame.
+   · The Muraqqaʿa spectrum — the one Light refracted through the glass into
+     twelve colours ("the divine names as the colors of a noble rainbow").
+   Light mode = White (reading, the arrival in light).
+   Dark mode  = Primordial Darkness (near-black ink ground; pure black #000000
+   is reserved for the ceremonial hero/footer panels, constant in BOTH modes).
+   The palette is literal black and white: every gray is neutral (R = G = B,
+   zero colour cast). Only the golds and the twelve patches carry colour.
    ============================================================================ */
 
 :root {
-  /* — Fumadocs token overrides: warm ivory paper + oxblood ink (light) — */
-  --color-fd-background: #f4ece0;
-  --color-fd-foreground: #2a1418;
-  --color-fd-muted: #ebe1d2;
-  --color-fd-muted-foreground: #6f5a52;
-  --color-fd-popover: #faf4ea;
-  --color-fd-popover-foreground: #2a1418;
-  --color-fd-card: #faf4ea;
-  --color-fd-card-foreground: #2a1418;
-  --color-fd-border: #e3d6c4;
-  --color-fd-primary: #7a2230;        /* oxblood — links, primary */
-  --color-fd-primary-foreground: #faf4ea;
-  --color-fd-secondary: #ebe1d2;
-  --color-fd-secondary-foreground: #2a1418;
-  --color-fd-accent: #efe4d2;
-  --color-fd-accent-foreground: #2a1418;
-  --color-fd-ring: #7a2230;
+  /* — Fumadocs token overrides: pure white paper + ink (light / "White" mode) — */
+  --color-fd-background: #ffffff;
+  --color-fd-foreground: #0a0a0a;
+  --color-fd-muted: #f5f5f5;
+  --color-fd-muted-foreground: #595959; /* 7.0:1 on white */
+  --color-fd-popover: #ffffff;
+  --color-fd-popover-foreground: #0a0a0a;
+  --color-fd-card: #fafafa;
+  --color-fd-card-foreground: #0a0a0a;
+  --color-fd-border: #e5e5e5;
+  --color-fd-primary: #8a6a24;        /* gold-ink — links, AA on white (5.0:1) */
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-secondary: #f5f5f5;
+  --color-fd-secondary-foreground: #0a0a0a;
+  --color-fd-accent: #ededed;
+  --color-fd-accent-foreground: #0a0a0a;
+  --color-fd-ring: #b08a3e;
 
-  /* — Karkari accents — */
-  --kk-gold: #b9803a;                 /* ochre calligraphy gold — decorative/on-dark */
-  --kk-gold-ink: #8f5518;             /* AA-safe deep gold for text on ivory (5.1:1) */
-  --kk-rose: #c98f88;                 /* dusty rose (Jeeran) */
-  --kk-green: #1f5c46;                 /* mihrab green */
+  /* — Darks (constant in both modes; all pure neutrals) — */
+  --kk-night: #000000;                /* primordial black — ceremonial panels */
+  --kk-night-2: #0a0a0a;              /* ink — grout, dark-mode page ground */
+  --kk-veil-c: #161616;               /* charcoal veil */
+  --kk-smoke: #262626;
+  --kk-midnight: #111111;             /* gradient tint only — neutral, no blue */
+  --kk-night-fg: #ffffff;             /* white on night (21:1) */
+  --kk-night-muted: rgba(255, 255, 255, 0.55);
+  --kk-night-line: rgba(255, 255, 255, 0.06);
+
+  /* — Lights (legacy warm names re-pointed at pure neutrals) — */
+  --kk-white: #ffffff;
+  --kk-pearl: #ffffff;                /* = --kk-white (name kept for consumers) */
+  --kk-moon: #ededed;
+  --kk-milk: #ffffff;
+  --kk-glass: #f5f5f5;
+  --kk-mist: #d4d4d4;
+  --kk-parchment: #ededed;
+
+  /* — Golds (lamp-fire, not luxury) — */
+  --kk-lamp: #d7a83f;
+  --kk-oil: #c7a24a;
+  --kk-ember: #e8c766;
+  --kk-brass: #9d7b35;
+  --kk-halo-c: #f3e6b0;
+
+  /* — Veil / glass alpha helpers (pure black / white alphas) — */
+  --kk-veil-70: rgba(0, 0, 0, 0.7);
+  --kk-veil-40: rgba(0, 0, 0, 0.4);
+  --kk-glass-line: rgba(255, 255, 255, 0.14);
+
+  /* — Karkari accents (mode-varying values, stable names) —
+     Gold TEXT in light mode must use --kk-gold-ink; --kk-gold is decorative
+     (borders, fills) — #b08a3e on white is not AA for body text. */
+  --kk-gold: #b08a3e;
+  --kk-gold-ink: #8a6a24;
   --kk-soft: color-mix(in srgb, var(--kk-gold) 12%, transparent);
-
-  /* Constant oxblood ground for hero + footer in BOTH themes, so the patchwork
-     and gold always read as a dramatic editorial panel regardless of page chrome. */
-  --kk-oxblood: #2a0d11;
-  --kk-oxblood-2: #190709;
-  --kk-oxblood-fg: #f1e6d8;
-  --kk-oxblood-muted: #b3938a;        /* dusty rose, muted, on oxblood */
-  --kk-oxblood-line: rgba(241, 230, 216, 0.06);
 
   --font-mono: var(--font-mono-plex), ui-monospace, SFMono-Regular, monospace;
 
   /* The Muraqqaʿa spectrum — the actual cloak / zāwiya-wall colours. Vivid in
-     both themes (the cloak is vivid regardless), so defined once here. */
+     both themes (the cloak is vivid regardless), so defined once here.
+     8/11/12 are lifted slightly so they don't go muddy on the night panels. */
   --kk-patch-1: #d23b34;   /* crimson  */
   --kk-patch-2: #e8762b;   /* orange   */
   --kk-patch-3: #f2b22e;   /* saffron  */
@@ -59,34 +87,50 @@
   --kk-patch-5: #2f9e54;   /* emerald  */
   --kk-patch-6: #16a3a3;   /* teal     */
   --kk-patch-7: #2f74c9;   /* cobalt   */
-  --kk-patch-8: #3b46ad;   /* indigo   */
+  --kk-patch-8: #4653c4;   /* indigo   */
   --kk-patch-9: #7a40ad;   /* violet   */
   --kk-patch-10: #c2418a;  /* magenta  */
-  --kk-patch-11: #b62f44;  /* deep rose-red */
-  --kk-patch-12: #1f6f4a;  /* deep green    */
+  --kk-patch-11: #c43a50;  /* deep rose-red */
+  --kk-patch-12: #237c54;  /* deep green    */
+
+  /* Rays — luminous variants for thin strokes / beams on black. Fills use
+     --kk-patch-N; anything under ~3px on a night ground uses --kk-ray-N. */
+  --kk-ray-1: color-mix(in oklch, var(--kk-patch-1) 80%, white);
+  --kk-ray-2: color-mix(in oklch, var(--kk-patch-2) 80%, white);
+  --kk-ray-3: color-mix(in oklch, var(--kk-patch-3) 80%, white);
+  --kk-ray-4: color-mix(in oklch, var(--kk-patch-4) 80%, white);
+  --kk-ray-5: color-mix(in oklch, var(--kk-patch-5) 80%, white);
+  --kk-ray-6: color-mix(in oklch, var(--kk-patch-6) 80%, white);
+  --kk-ray-7: color-mix(in oklch, var(--kk-patch-7) 80%, white);
+  --kk-ray-8: color-mix(in oklch, var(--kk-patch-8) 80%, white);
+  --kk-ray-9: color-mix(in oklch, var(--kk-patch-9) 80%, white);
+  --kk-ray-10: color-mix(in oklch, var(--kk-patch-10) 80%, white);
+  --kk-ray-11: color-mix(in oklch, var(--kk-patch-11) 80%, white);
+  --kk-ray-12: color-mix(in oklch, var(--kk-patch-12) 80%, white);
 }
 
 .dark {
-  --color-fd-background: #160a0c;
-  --color-fd-foreground: #efe4d8;
-  --color-fd-muted: #21100f;
-  --color-fd-muted-foreground: #b3938a;
-  --color-fd-popover: #1e0e10;
-  --color-fd-popover-foreground: #efe4d8;
-  --color-fd-card: #1e0e10;
-  --color-fd-card-foreground: #efe4d8;
-  --color-fd-border: #3a1f23;
-  --color-fd-primary: #d49a52;        /* gold reads better than oxblood on dark */
-  --color-fd-primary-foreground: #160a0c;
-  --color-fd-secondary: #21100f;
-  --color-fd-secondary-foreground: #efe4d8;
-  --color-fd-accent: #281417;
-  --color-fd-accent-foreground: #efe4d8;
-  --color-fd-ring: #d49a52;
+  /* — Primordial Darkness mode: ink ground (a hair above pure black for
+       long-form reading), near-white foreground, lamp-gold primary — */
+  --color-fd-background: #0a0a0a;
+  --color-fd-foreground: #ededed;    /* 16.9:1 on ink */
+  --color-fd-muted: #161616;
+  --color-fd-muted-foreground: #a3a3a3; /* 7.9:1 on ink */
+  --color-fd-popover: #121212;
+  --color-fd-popover-foreground: #ededed;
+  --color-fd-card: #121212;
+  --color-fd-card-foreground: #ededed;
+  --color-fd-border: #262626;
+  --color-fd-primary: #d7a83f;        /* lamp gold — 9:1 on ink */
+  --color-fd-primary-foreground: #000000;
+  --color-fd-secondary: #161616;
+  --color-fd-secondary-foreground: #ededed;
+  --color-fd-accent: #1b1b1b;
+  --color-fd-accent-foreground: #ededed;
+  --color-fd-ring: #e8c766;
 
-  --kk-gold: #d49a52;
-  --kk-gold-ink: #d49a52;             /* bright gold already reads AA on dark ground */
-  --kk-rose: #d9a9a2;
+  --kk-gold: var(--kk-lamp);
+  --kk-gold-ink: var(--kk-ember);     /* bright gold reads AA on ink ground */
   --kk-soft: color-mix(in srgb, var(--kk-gold) 18%, transparent);
 }
 
@@ -111,57 +155,52 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Homepage helpers (.kk-home scope) ──────────────────────────────────── */
 
-/* Hero + footer are constant oxblood panels in both themes. */
-.kk-oxblood-panel {
+/* Hero + footer are constant night panels in both themes — the primordial
+   field. The faint #111111 top stop is a neutral lift: night sky, not
+   dead black — but pure black-family, no blue tint. */
+.kk-night-panel {
   position: relative;
   background:
-    radial-gradient(120% 90% at 50% 0%, #3a1218 0%, var(--kk-oxblood) 48%, var(--kk-oxblood-2) 100%);
-  color: var(--kk-oxblood-fg);
+    radial-gradient(120% 90% at 50% 0%, var(--kk-midnight) 0%, #070707 55%, var(--kk-night) 100%);
+  color: var(--kk-night-fg);
   overflow: hidden;
 }
 
-/* Thin Moroccan grid lines, very faint, over the oxblood. */
+/* Thin Moroccan grid lines, very faint, over the night field. */
 .kk-gridlines::before {
   content: "";
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(var(--kk-oxblood-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--kk-oxblood-line) 1px, transparent 1px);
+    linear-gradient(var(--kk-night-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--kk-night-line) 1px, transparent 1px);
   background-size: 52px 52px;
   background-position: center;
   pointer-events: none;
   z-index: 0;
 }
 
-.kk-hero-fade {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 160px;
-  background: linear-gradient(to bottom, transparent, var(--color-fd-background));
-  pointer-events: none;
-  z-index: 3;
+/* The journey's dark zone — the descent continues out of the hero. Locally
+   remaps the fd tokens to their night values so every section component reads
+   correctly here in BOTH modes (this zone is constant night, like the hero). */
+.kk-journey-dark {
+  background: linear-gradient(to bottom, var(--kk-night), var(--kk-veil-c) 62%, var(--kk-smoke));
+  color: var(--kk-night-fg);
+  --color-fd-foreground: var(--kk-night-fg);
+  --color-fd-muted-foreground: #a3a3a3;
+  --color-fd-card: rgba(255, 255, 255, 0.04);
+  --color-fd-border: rgba(255, 255, 255, 0.14);
+  --color-fd-primary: var(--kk-lamp);
+  --kk-gold: var(--kk-lamp);
+  --kk-gold-ink: var(--kk-ember);
+  --kk-soft: color-mix(in srgb, var(--kk-lamp) 14%, transparent);
 }
 
-/* Slowly-rotating khatim (eight-point star) outline behind the hero. */
-@keyframes kk-spin {
-  to { transform: rotate(360deg); }
-}
-.kk-spin {
-  animation: kk-spin 90s linear infinite;
-}
-
-/* The light passing through the patchwork (nūr) — a slow breath.
-   ponytail: animate opacity (compositor-only) not filter brightness/saturate,
-   which forced a repaint on all 121 staggered tiles every frame. Tiles rest on
-   the dark oxblood grout, so fading toward it reads as the same glassy shimmer. */
-@keyframes kk-shimmer {
-  0%, 100% { opacity: 0.78; }
-  50%      { opacity: 1; }
-}
-.kk-shimmer {
-  animation: kk-shimmer 4.5s ease-in-out infinite;
+/* The dawn — smoke dissolving into the page ground (white in light mode,
+   ink in dark mode, where the arrival is carried by gold instead). */
+.kk-journey-dawn {
+  height: 220px;
+  background: linear-gradient(to bottom, var(--kk-smoke), var(--color-fd-background));
 }
 
 /* Backlight glow bloom behind the star mosaic. */
@@ -181,8 +220,97 @@ h1, h2, h3, h4, h5, h6 {
   animation: kk-bob 2.4s ease-in-out infinite;
 }
 
+/* ── Motif primitives ───────────────────────────────────────────────────── */
+
+/* Thread seams — hand-stitched edges. currentColor-based so the thread adapts
+   to its ground (white thread on night, ink thread on white). */
+.kk-stitch-t, .kk-stitch-b {
+  position: relative;
+}
+.kk-stitch-t::before, .kk-stitch-b::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, currentColor 30%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+  pointer-events: none;
+}
+.kk-stitch-t::before { top: 0; }
+.kk-stitch-b::after { bottom: 0; }
+
+/* Full hand-stitch border — the canonical thread wrapping a whole patch.
+   Same rhythm family as the seams; currentColor-mixed so the thread adapts
+   to its ground (white thread on night, ink thread on white). */
+.kk-stitch-border {
+  border: 1.2px dashed color-mix(in srgb, currentColor 40%, transparent);
+}
+
+/* Swatch — the atom of the sewn language: one small square patch with an
+   inset stitch. Consumers set the colour via --kk-swatch-color, always from
+   patchOf(key) (lib/patch.ts): colours are assigned, never arrayed.
+   e.g. style={{ '--kk-swatch-color': `var(--kk-patch-${patchOf(slug)})` }} */
+.kk-swatch {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 2px;
+  vertical-align: -0.08em;
+  background: var(--kk-swatch-color, var(--kk-gold));
+  outline: 1.2px dashed color-mix(in srgb, currentColor 40%, transparent);
+  outline-offset: -3px;
+}
+
+/* Mishkāt niche — the arched frame. Put fixed aspect + overflow content inside. */
+.kk-niche {
+  border-radius: 50% 50% 14px 14px / 38% 38% 14px 14px;
+  border: 1px solid var(--kk-glass-line);
+  overflow: hidden;
+}
+
+/* Veil — a translucent darkness over imagery that lifts on hover/focus.
+   ponytail: plain rgba, no backdrop-filter (Safari + view-transition snapshots
+   + mobile compositing all punish it). */
+.kk-veil {
+  position: absolute;
+  inset: 0;
+  background: var(--kk-veil-40);
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.kk-veil-lift:hover .kk-veil,
+.kk-veil-lift:focus-within .kk-veil {
+  opacity: 0;
+}
+
+/* The alif / staff — a vertical thread of gold light. */
+.kk-thread {
+  width: 1px;
+  height: 72px;
+  margin-inline: auto;
+  background: linear-gradient(to bottom, transparent, var(--kk-gold), transparent);
+}
+
+/* Light upon light — layered halo. Objects only (lamp, CTA, logo, star);
+   never on or behind a person. */
+.kk-halo,
+.kk-halo-hover:hover,
+.kk-halo-hover:focus-visible {
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--kk-halo-c) 30%, transparent),
+    0 0 64px color-mix(in srgb, var(--kk-halo-c) 14%, transparent),
+    0 0 128px color-mix(in srgb, var(--kk-halo-c) 7%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .kk-spin, .kk-shimmer, .kk-breathe, .kk-scroll-cue {
+  .kk-breathe, .kk-scroll-cue {
     animation: none;
+  }
+  .kk-veil {
+    transition: none;
   }
 }

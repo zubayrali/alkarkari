@@ -40,6 +40,7 @@ const WIKILINK = /^\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]$/;
 
 interface PropertiesPanelProps {
   data: Record<string, unknown>;
+  excludeKeys?: Iterable<string>;
 }
 
 function isEmpty(value: unknown): boolean {
@@ -169,18 +170,21 @@ function PropertyValue({ value }: { value: unknown }) {
  * type-aware, collapsible infobox above the article body. Self-hides when a
  * note carries no displayable properties, so ordinary notes are unaffected.
  */
-export function PropertiesPanel({ data }: PropertiesPanelProps) {
+export function PropertiesPanel({ data, excludeKeys = [] }: PropertiesPanelProps) {
+  const excluded = new Set([...HIDDEN_KEYS, ...excludeKeys]);
   // Aliases are hidden from the generic loop (they're a schema field) but worth
   // surfacing as a friendly "Also known as" row — the alternate names a reader
   // might search for or recognise.
-  const aliases = (Array.isArray(data.aliases) ? data.aliases : []).filter(
-    (a): a is string => typeof a === "string" && a.trim() !== "",
-  );
+  const aliases = excluded.has("aliases")
+    ? []
+    : (Array.isArray(data.aliases) ? data.aliases : []).filter(
+        (a): a is string => typeof a === "string" && a.trim() !== "",
+      );
 
   const entries = Object.entries(data).filter(
     ([key, value]) =>
       !key.startsWith("_") &&
-      !HIDDEN_KEYS.has(key) &&
+      !excluded.has(key) &&
       !isEmpty(value) &&
       isDisplayable(value),
   );

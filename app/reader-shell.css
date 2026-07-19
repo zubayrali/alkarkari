@@ -1,0 +1,938 @@
+/* Night Threshold reader shell.
+   Fumadocs owns the responsive layout; this file restyles project seams and
+   the documented stable layout IDs also used by ADR-0010. */
+
+/* ── Entry threshold ─────────────────────────────────────────────────── */
+
+.night-threshold-page {
+  --night-threshold-inline: 3.5rem;
+  max-width: none !important;
+  margin-inline: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.night-threshold-page .reader-shell-stack {
+  gap: 0;
+}
+
+.night-threshold {
+  position: relative;
+  isolation: isolate;
+  /* Above margin sidenotes (z-5) so the open Contents panel isn't overdrawn. */
+  z-index: 6;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--kk-night);
+  color: var(--kk-night-fg);
+  --color-fd-foreground: var(--kk-night-fg);
+  --color-fd-muted-foreground: var(--kk-night-muted);
+  --color-fd-border: var(--kk-glass-line);
+  --color-fd-accent: var(--kk-veil-c);
+  --color-fd-accent-foreground: var(--kk-night-fg);
+}
+
+.night-threshold-utility {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.3125rem;
+  padding-inline: var(--night-threshold-inline);
+  border-bottom: 1px solid #282828;
+  gap: 1rem;
+}
+
+.night-threshold-section {
+  margin: 0;
+  color: var(--kk-night-muted);
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+}
+
+.night-threshold-utility-lead {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  min-width: 0;
+}
+
+/* ── Contents dropdown (utility strip) ──────────────────────────────── */
+
+.night-contents {
+  position: relative;
+}
+
+.night-contents > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  cursor: pointer;
+  color: var(--kk-night-muted);
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+}
+
+.night-contents > summary::-webkit-details-marker {
+  display: none;
+}
+
+.night-contents > summary::after {
+  content: "▾";
+  font-size: 0.55rem;
+}
+
+.night-contents[open] > summary,
+.night-contents > summary:hover,
+.night-contents > summary:focus-visible {
+  color: var(--kk-night-fg);
+}
+
+.night-contents-panel {
+  position: absolute;
+  top: calc(100% + 0.85rem);
+  left: -1.1rem;
+  z-index: 30;
+  display: grid;
+  min-width: 16rem;
+  max-width: 24rem;
+  max-height: min(24rem, 70vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: 0.5rem;
+  background: color-mix(in srgb, var(--kk-night) 94%, #fff);
+  border: 1px solid var(--kk-glass-line);
+}
+
+.night-contents-panel a {
+  padding: 0.45rem 1.1rem;
+  color: color-mix(in srgb, var(--kk-night-fg) 78%, transparent);
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.night-contents-panel a:hover,
+.night-contents-panel a:focus-visible {
+  background: var(--kk-veil-c);
+  color: var(--kk-night-fg);
+}
+
+.night-contents-panel a[data-depth="3"] {
+  padding-inline-start: 2rem;
+}
+
+.night-contents-panel a[data-depth="4"] {
+  padding-inline-start: 2.9rem;
+}
+
+/* Reader mode hides every TOC surface; the Contents dropdown is one. */
+html[data-reader-mode="on"] .night-contents {
+  display: none;
+}
+
+.night-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--kk-night-muted);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.night-reading-time svg {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.night-threshold-main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 12.8125rem;
+  padding: 2.625rem var(--night-threshold-inline) 2.125rem;
+  /* Clips the Arabic backdrop; the header itself stays unclipped so the
+     Contents dropdown can extend past it. */
+  overflow: hidden;
+}
+
+/* Faint Arabic backdrop, right side of the hero. A full-height flex overlay
+   centers the word optically no matter what Amiri's oversized vertical
+   metrics (or harakat) do to the line box, and the word is sized to fit the
+   hero whole — no cropping, so it always reads as calligraphy, never as
+   stray fragments. */
+.night-threshold-arabic {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  /* Amiri's calligraphic swashes overhang the text box (side bearings), so
+     the anchor sits a full em-ish inside the inset to keep ink unclipped. */
+  right: calc(var(--night-threshold-inline) + 1.75rem);
+  display: flex;
+  align-items: center;
+  margin: 0;
+  color: color-mix(in srgb, var(--kk-ember) 16%, transparent);
+  font-size: clamp(5rem, 8vw, 8.5rem);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.night-threshold-title {
+  max-width: min(100%, 25ch);
+  margin: 0;
+  color: var(--kk-night-fg);
+  font-size: 2.875rem !important;
+  font-weight: 400 !important;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.night-threshold-aliases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.65rem;
+  margin: 0;
+  color: var(--kk-night-muted);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.night-threshold-aliases .kk-label {
+  color: var(--kk-night-muted);
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.night-threshold-description {
+  max-width: 32.5rem;
+  margin: 0.875rem 0 0 !important;
+  color: #aaaaaa !important;
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 1rem !important;
+  line-height: 1.58;
+}
+
+.night-threshold-meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1.25rem;
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  padding-block: 0.625rem;
+  border-block: 1px solid #292929;
+}
+
+.page-tags-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.page-tags-metadata li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.page-tags-metadata li + li::before {
+  content: "·";
+  margin-inline: 0.5rem;
+  color: var(--kk-night-muted);
+}
+
+.page-tags-metadata a {
+  color: color-mix(in srgb, var(--kk-night-fg) 76%, transparent);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.35em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.page-tags-metadata a:hover,
+.page-tags-metadata a:focus-visible {
+  color: var(--kk-night-fg);
+  text-decoration-color: var(--kk-ember);
+}
+
+.night-threshold .page-actions :where(a, button) {
+  border-color: var(--kk-glass-line) !important;
+  background: transparent !important;
+  color: var(--kk-night-muted) !important;
+  box-shadow: none !important;
+}
+
+.night-threshold .page-actions {
+  min-width: 0;
+}
+
+.night-threshold .page-actions :where(a, button) {
+  min-height: 1.8rem;
+  padding-block: 0.25rem !important;
+  font-size: 0.65rem !important;
+}
+
+.night-reading-field {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 2.1875rem var(--night-threshold-inline) 3rem;
+}
+
+.night-reading-field > :where(.properties-panel, .prose, [data-backlinks], [data-page-footer], #comments) {
+  width: min(100%, 56rem);
+}
+
+/* Base-backed tag pages keep their full-width table/gallery results. */
+.night-reading-field:where([data-entry-kind="tag-page"], [data-entry-kind="tags-index"]) > .prose {
+  width: 100%;
+}
+
+/* With the sidebar collapsed the article spans the whole viewport; the
+   shared inline inset grows so the reading column centers instead of
+   pinning left. Tag pages keep the fixed inset — their Base results are
+   intentionally full width. */
+/* The html attribute covers the pre-hydration window (blocking script in
+   app/layout.tsx) so the centered column doesn't jump when SidebarPersist
+   re-applies the collapsed state after React mounts. */
+@media (min-width: 48rem) {
+  #nd-docs-layout:has(#nd-sidebar[data-collapsed="true"])
+    .night-threshold-page:not(:has([data-entry-kind="tag-page"], [data-entry-kind="tags-index"])),
+  html[data-sidebar-collapsed="true"]
+    .night-threshold-page:not(:has([data-entry-kind="tag-page"], [data-entry-kind="tags-index"])) {
+    --night-threshold-inline: max(3.5rem, calc((100% - 56rem) / 2));
+  }
+}
+
+.night-threshold .page-actions :where(a, button):hover,
+.night-threshold .page-actions :where(a, button):focus-visible {
+  border-color: color-mix(in srgb, var(--kk-ember) 70%, transparent) !important;
+  color: var(--kk-night-fg) !important;
+}
+
+/* ── Night index sidebar ─────────────────────────────────────────────── */
+
+.site-identity {
+  display: grid;
+  gap: 0.08rem;
+  line-height: 1.05;
+}
+
+.site-identity-latin {
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.site-identity-arabic {
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.84rem;
+  font-weight: 400;
+}
+
+/* #nd-sidebar is a stable Fumadocs layout ID already relied on by ADR-0010. */
+@media (min-width: 48rem) {
+  #nd-sidebar {
+    color-scheme: dark;
+    background: var(--kk-night) !important;
+    color: var(--kk-night-fg);
+    border-color: var(--kk-glass-line) !important;
+    --color-fd-background: var(--kk-night);
+    --color-fd-card: var(--kk-night);
+    --color-fd-foreground: var(--kk-night-fg);
+    --color-fd-muted: var(--kk-veil-c);
+    --color-fd-muted-foreground: var(--kk-night-muted);
+    --color-fd-accent: var(--kk-veil-c);
+    --color-fd-accent-foreground: var(--kk-night-fg);
+    --color-fd-border: var(--kk-glass-line);
+    --color-fd-primary: var(--kk-ember);
+    --color-fd-popover: var(--kk-night);
+    --color-fd-popover-foreground: var(--kk-night-fg);
+    --color-fd-secondary: var(--kk-veil-c);
+    --color-fd-secondary-foreground: var(--kk-night-fg);
+  }
+
+  #nd-sidebar .site-identity-arabic {
+    color: var(--kk-night-muted);
+  }
+
+  #nd-sidebar .night-sidebar-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.32rem 0.25rem;
+    color: color-mix(in srgb, var(--kk-night-fg) 62%, transparent);
+    font-size: 0.8125rem;
+    border-radius: 0;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
+  /* Folder children: the base collapsible has no layout of its own. */
+  #nd-sidebar .night-sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding-top: 0.2rem;
+  }
+
+  #nd-sidebar .night-sidebar-item:hover,
+  #nd-sidebar .night-sidebar-item:focus-visible {
+    background: var(--kk-veil-c);
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar a[data-active="true"]:not(.sidebar-link) {
+    position: relative;
+    border-radius: 0;
+    background: transparent !important;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar a[data-active="true"]:not(.sidebar-link):hover {
+    background: transparent !important;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar a[data-active="true"]:not(.sidebar-link)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -1rem;
+    width: 2.2rem;
+    height: 2px;
+    transform: translateY(-50%);
+    background: var(--kk-ember);
+  }
+
+  /* Search: a quiet hairline row, not an input card. */
+  #nd-sidebar [data-search-full] {
+    padding: 0.55rem 0.15rem;
+    border: 0;
+    border-bottom: 1px solid var(--kk-glass-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--kk-night-muted);
+    font-family: var(--font-mono-plex), ui-monospace, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #nd-sidebar [data-search-full]:hover {
+    background: transparent;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar [data-search-full] svg {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  #nd-sidebar [data-search-full] kbd {
+    border-color: var(--kk-glass-line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--kk-night-muted);
+    font-size: 0.6rem;
+  }
+
+  /* Top-level vault folders: the mockup's ledger group labels. */
+  #nd-sidebar .night-sidebar-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 1.35rem;
+    padding: 0.3rem 0;
+    border-radius: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--kk-night-fg) 46%, transparent);
+    font-family: var(--font-mono-plex), ui-monospace, monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+
+  #nd-sidebar .night-sidebar-group:hover,
+  #nd-sidebar .night-sidebar-group:focus-visible {
+    background: transparent;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar .night-sidebar-group [data-icon] {
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-inline-start: auto;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  #nd-sidebar .night-sidebar-group:hover [data-icon],
+  #nd-sidebar .night-sidebar-group:focus-visible [data-icon] {
+    opacity: 0.7;
+  }
+
+  /* Nested folders read like items, with a chevron that stays visible. */
+  #nd-sidebar .night-sidebar-subfolder {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.35rem 0.25rem;
+    border-radius: 0;
+    color: color-mix(in srgb, var(--kk-night-fg) 62%, transparent);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
+  #nd-sidebar .night-sidebar-subfolder:hover,
+  #nd-sidebar .night-sidebar-subfolder:focus-visible {
+    background: var(--kk-veil-c);
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar .night-sidebar-subfolder [data-icon] {
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-inline-start: auto;
+    opacity: 0.5;
+  }
+
+  #nd-sidebar .night-sidebar-nested-content {
+    padding-inline-start: 0.75rem;
+    border-inline-start: 1px solid var(--kk-glass-line);
+  }
+
+  /* The side-foot: utility links + locale in small type near the bottom. */
+  #nd-sidebar .night-sidebar-foot {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 0.35rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--kk-glass-line);
+  }
+
+  #nd-sidebar .night-sidebar-foot .sidebar-links {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    gap: 1.1rem;
+  }
+
+  #nd-sidebar .night-sidebar-foot .sidebar-link {
+    flex: none;
+    justify-content: flex-start;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--kk-night-muted);
+    font-family: var(--font-mono-plex), ui-monospace, monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #nd-sidebar .night-sidebar-foot .sidebar-link svg {
+    display: none;
+  }
+
+  #nd-sidebar .night-sidebar-foot .sidebar-link:hover,
+  #nd-sidebar .night-sidebar-foot .sidebar-link:focus-visible {
+    background: transparent;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar .night-sidebar-foot .sidebar-link[data-active="true"] {
+    background: transparent;
+    color: var(--kk-ember);
+  }
+
+  /* Locale switcher: same quiet utility register as the links beside it. */
+  #nd-sidebar .night-sidebar-foot details > summary {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--kk-night-muted);
+    font-family: var(--font-mono-plex), ui-monospace, monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #nd-sidebar .night-sidebar-foot details > summary:hover {
+    background: transparent;
+    color: var(--kk-night-fg);
+  }
+
+  #nd-sidebar .night-sidebar-foot details > summary svg {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  /* The dropdown opens upward from the foot. */
+  #nd-sidebar .night-sidebar-foot details > div {
+    inset-block: auto calc(100% + 0.5rem);
+    border-radius: 0;
+  }
+}
+
+/* ── Reading rhythm ──────────────────────────────────────────────────── */
+
+.night-threshold-page .prose h2 {
+  position: relative;
+  margin-top: 2.8em;
+  padding-bottom: 0.55rem;
+}
+
+.night-threshold-page .prose h2::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-top: 0.65rem;
+  background: var(--kk-gold-ink);
+}
+
+.night-threshold-page .prose :where(a[href^="/"], a[href^="#"], a[href^="./"], a[href^="../"]):not(.prop-wikilink):not([data-orphan]) {
+  text-decoration-color: color-mix(in srgb, var(--kk-gold-ink) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.night-threshold-page .prose :where(a[href^="/"], a[href^="#"], a[href^="./"], a[href^="../"]):not(.prop-wikilink):not([data-orphan]):hover {
+  text-decoration-color: var(--kk-gold-ink);
+}
+
+/* ── Callouts (Obsidian > [!type]) — painted in the reader-shell idiom ── */
+
+.kk-callout {
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--callout-color) 32%, var(--color-fd-border));
+  border-radius: 0;
+  background: color-mix(in srgb, var(--callout-color) 5%, var(--color-fd-card));
+  box-shadow: none;
+}
+
+/* The thread bar keeps the stitch motif; the icon goes — the titled ledger
+   look is typographic, not iconographic. */
+.kk-callout > [role="none"] {
+  border-radius: 0;
+}
+
+.kk-callout > svg {
+  display: none;
+}
+
+.kk-callout-title {
+  color: color-mix(in srgb, var(--callout-color) 72%, var(--color-fd-foreground));
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+/* Obsidian types beyond fumadocs' four fall back to muted — remap the common
+   ones onto the muraqqaʿa spectrum (!important: the component sets
+   --callout-color as an inline style). Dark mode uses the luminous
+   --kk-ray-* variants per the theme's small-area rule. */
+.kk-callout[data-callout="note"],
+.kk-callout[data-callout="quote"],
+.kk-callout[data-callout="cite"] {
+  --callout-color: var(--kk-gold-ink) !important;
+}
+
+.kk-callout[data-callout="question"],
+.kk-callout[data-callout="help"],
+.kk-callout[data-callout="faq"] {
+  --callout-color: var(--kk-patch-9) !important;
+}
+
+.kk-callout[data-callout="example"] {
+  --callout-color: var(--kk-patch-7) !important;
+}
+
+.kk-callout[data-callout="abstract"],
+.kk-callout[data-callout="summary"],
+.kk-callout[data-callout="tldr"] {
+  --callout-color: var(--kk-patch-6) !important;
+}
+
+.kk-callout[data-callout="important"],
+.kk-callout[data-callout="caution"],
+.kk-callout[data-callout="attention"] {
+  --callout-color: var(--kk-patch-2) !important;
+}
+
+.kk-callout[data-callout="danger"],
+.kk-callout[data-callout="bug"],
+.kk-callout[data-callout="failure"],
+.kk-callout[data-callout="fail"],
+.kk-callout[data-callout="missing"] {
+  --callout-color: var(--kk-patch-1) !important;
+}
+
+.kk-callout[data-callout="done"],
+.kk-callout[data-callout="check"] {
+  --callout-color: var(--kk-patch-5) !important;
+}
+
+.dark .kk-callout[data-callout="question"],
+.dark .kk-callout[data-callout="help"],
+.dark .kk-callout[data-callout="faq"] {
+  --callout-color: var(--kk-ray-9) !important;
+}
+
+.dark .kk-callout[data-callout="example"] {
+  --callout-color: var(--kk-ray-7) !important;
+}
+
+.dark .kk-callout[data-callout="abstract"],
+.dark .kk-callout[data-callout="summary"],
+.dark .kk-callout[data-callout="tldr"] {
+  --callout-color: var(--kk-ray-6) !important;
+}
+
+.dark .kk-callout[data-callout="important"],
+.dark .kk-callout[data-callout="caution"],
+.dark .kk-callout[data-callout="attention"] {
+  --callout-color: var(--kk-ray-2) !important;
+}
+
+.dark .kk-callout[data-callout="danger"],
+.dark .kk-callout[data-callout="bug"],
+.dark .kk-callout[data-callout="failure"],
+.dark .kk-callout[data-callout="fail"],
+.dark .kk-callout[data-callout="missing"] {
+  --callout-color: var(--kk-ray-1) !important;
+}
+
+.dark .kk-callout[data-callout="done"],
+.dark .kk-callout[data-callout="check"] {
+  --callout-color: var(--kk-ray-5) !important;
+}
+
+/* ── Backlink connection rail ───────────────────────────────────────── */
+
+.backlinks-section {
+  margin-top: 3rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--color-fd-border);
+}
+
+.backlinks-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 1.25rem;
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.backlinks-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 2rem;
+}
+
+.backlink-rail-viewport {
+  max-height: 16rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.backlink-rail {
+  position: relative;
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+  list-style: none;
+}
+
+.backlink-rail::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.9rem;
+  left: 0.2rem;
+  width: 1px;
+  background: var(--color-fd-foreground);
+  opacity: 0.5;
+}
+
+.backlink-rail-item {
+  position: relative;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+.backlink-rail-item::before {
+  content: "";
+  position: absolute;
+  top: 1.2rem;
+  left: -1.3rem;
+  width: 0.8rem;
+  height: 1px;
+  background: var(--kk-gold-ink);
+}
+
+.backlink-rail-item::after {
+  content: "";
+  position: absolute;
+  top: calc(1.2rem - 2px);
+  left: -0.55rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--kk-gold-ink);
+}
+
+.backlink-rail-link {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem 0.75rem 0.9rem 0;
+  color: var(--color-fd-foreground);
+  text-decoration: none;
+}
+
+.backlink-rail-title {
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.backlink-rail-description {
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.backlink-rail-link:hover .backlink-rail-title,
+.backlink-rail-link:focus-visible .backlink-rail-title {
+  color: var(--kk-gold-ink);
+}
+
+/* ── Previous / next closing band ───────────────────────────────────── */
+
+.night-page-footer {
+  gap: 1px !important;
+  margin-top: 3rem;
+  padding: 1px;
+  background: color-mix(in srgb, var(--kk-night-fg) 12%, var(--kk-night));
+}
+
+.night-page-footer > a {
+  min-height: 7.5rem;
+  justify-content: center;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--kk-night) !important;
+  color: var(--kk-night-fg) !important;
+}
+
+.night-page-footer > a:hover,
+.night-page-footer > a:focus-visible {
+  background: var(--kk-veil-c) !important;
+}
+
+.night-page-footer > a > div {
+  color: var(--kk-ember);
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.night-page-footer > a > p:last-child {
+  color: var(--kk-night-muted) !important;
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 47.99rem) {
+  .night-threshold-page {
+    --night-threshold-inline: 1.5rem;
+  }
+
+  .night-threshold-utility {
+    min-height: 2.75rem;
+    flex-wrap: wrap;
+    row-gap: 0.15rem;
+    padding-block: 0.4rem;
+  }
+
+  .night-threshold-utility-lead {
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+  }
+
+  /* Anchor inside a wrapping strip; never wider than the viewport. */
+  .night-contents-panel {
+    left: -0.5rem;
+    min-width: 14rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .night-threshold .page-actions {
+    justify-content: flex-end;
+  }
+
+  .night-threshold-title {
+    max-width: 100%;
+    font-size: 2.35rem !important;
+  }
+
+  .night-reading-field {
+    padding-top: 1.75rem;
+  }
+
+  .backlinks-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .night-page-footer {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-tags-metadata a,
+  #nd-sidebar .night-sidebar-item {
+    transition: none;
+  }
+}

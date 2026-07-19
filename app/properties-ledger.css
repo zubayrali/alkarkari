@@ -1,0 +1,172 @@
+/* Quiet frontmatter ledger — the terminology infobox from ADR-0013. */
+
+.properties-panel {
+  position: relative;
+  margin: 0 0 1.75rem;
+  border-block: 1px solid var(--color-fd-border);
+  border-inline: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  font-size: 0.8125rem;
+}
+
+.properties-panel::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 2px;
+  background: var(--kk-gold-ink);
+}
+
+.properties-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.85rem 0.65rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.properties-header::-webkit-details-marker {
+  display: none;
+}
+
+.properties-header:hover,
+.properties-header:focus-visible {
+  color: var(--color-fd-foreground);
+}
+
+.properties-icon {
+  width: 0.82rem;
+  height: 0.82rem;
+}
+
+.properties-count {
+  margin-left: auto;
+  color: var(--color-fd-muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.properties-list {
+  margin: 0;
+  padding: 0 0.85rem 0.65rem 1rem;
+}
+
+.property-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: baseline;
+  padding: 0.48rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-fd-border) 65%, transparent);
+}
+
+.property-key,
+.property-value {
+  margin: 0;
+}
+
+.property-key {
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+}
+
+.property-value {
+  min-width: 0;
+  color: var(--color-fd-foreground);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.prop-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0;
+}
+
+.prop-chip {
+  display: inline;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.76rem;
+}
+
+.prop-chip + .prop-chip::before {
+  content: "·";
+  margin-inline: 0.45rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+.prop-alias {
+  font-style: italic;
+}
+
+.prop-number {
+  color: var(--kk-gold-ink);
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.prop-wikilink,
+.prop-url {
+  color: var(--color-fd-foreground);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--kk-gold-ink) 55%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.prop-wikilink:hover,
+.prop-url:hover {
+  text-decoration-color: var(--kk-gold-ink);
+}
+
+.prop-wikilink-dead {
+  color: var(--color-fd-muted-foreground);
+  text-decoration-style: dashed;
+}
+
+.prop-url,
+.prop-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: 100%;
+}
+
+.prop-url {
+  overflow-wrap: anywhere;
+}
+
+.prop-url-icon,
+.prop-date-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.prop-date {
+  color: var(--color-fd-muted-foreground);
+}
+
+.prop-object {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 35rem) {
+  .property-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+}

@@ -1,0 +1,158 @@
+/* Typographic tag ledger: hierarchy and content, never cards or pills. */
+
+.tags-index {
+  margin-top: 1rem;
+}
+
+.tags-filter-wrap {
+  display: grid;
+  grid-template-columns: auto minmax(12rem, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  padding: 0.75rem 0;
+  border-block: 1px solid var(--color-fd-border);
+}
+
+.tags-filter-label {
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+.tags-filter-icon {
+  display: none;
+}
+
+.tags-filter-input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.35rem 0.15rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-fd-foreground);
+  font: inherit;
+}
+
+.tags-filter-input:focus {
+  border-bottom-color: var(--kk-gold-ink);
+}
+
+.tags-filter-input::placeholder {
+  color: var(--color-fd-muted-foreground);
+}
+
+.tags-filter-count {
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tags-ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(2rem, 6vw, 5rem);
+  border-top: 1px solid var(--color-fd-foreground);
+}
+
+.tag-entry {
+  --tag-indent: 0rem;
+  --tag-rail: 0rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem 1rem;
+  min-height: 7rem;
+  padding: 1.1rem 2.25rem 1.15rem calc(0.2rem + var(--tag-indent));
+  border-bottom: 1px solid var(--color-fd-border);
+  color: var(--color-fd-foreground);
+  text-decoration: none;
+}
+
+.tag-entry[data-nested="true"]::before {
+  content: "";
+  position: absolute;
+  top: 1.1rem;
+  bottom: 1.1rem;
+  left: var(--tag-rail);
+  width: 2px;
+  background: var(--kk-gold-ink);
+}
+
+.tag-entry-name {
+  min-width: 0;
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.tag-entry-prefix {
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.82em;
+}
+
+.tag-entry-count {
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 0.64rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tag-entry-description {
+  grid-column: 1 / -1;
+  max-width: 42ch;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.tag-entry-arrow {
+  position: absolute;
+  right: 0.2rem;
+  bottom: 1.1rem;
+  color: var(--kk-gold-ink);
+  opacity: 0;
+  transform: translateX(-0.25rem);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.tag-entry:hover .tag-entry-name,
+.tag-entry:focus-visible .tag-entry-name {
+  color: var(--kk-gold-ink);
+}
+
+.tag-entry:hover .tag-entry-arrow,
+.tag-entry:focus-visible .tag-entry-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 47.99rem) {
+  .tags-filter-wrap {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .tags-filter-label {
+    grid-column: 1 / -1;
+  }
+
+  .tags-ledger {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag-entry-arrow {
+    transition: none;
+  }
+}

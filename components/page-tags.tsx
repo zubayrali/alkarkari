@@ -6,10 +6,29 @@ import { tagUrl } from "@/lib/tags";
 type PageTagsProps = {
   tags: string[];
   className?: string;
+  variant?: "chips" | "metadata";
+  ariaLabel?: string;
 };
 
-export function PageTags({ tags, className }: PageTagsProps) {
+export function PageTags({
+  tags,
+  className,
+  variant = "chips",
+  ariaLabel = "Tags",
+}: PageTagsProps) {
   if (tags.length === 0) return null;
+
+  if (variant === "metadata") {
+    return (
+      <ul className={cn("page-tags-metadata", className)} aria-label={ariaLabel}>
+        {tags.map((tag) => (
+          <li key={tag}>
+            <Link href={tagUrl(tag)}>#{tag}</Link>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <ul className={cn("flex flex-wrap gap-2 list-none p-0 m-0", className)}>

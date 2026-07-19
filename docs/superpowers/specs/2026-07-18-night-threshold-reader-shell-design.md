@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-18
 
-**Status:** Approved design; awaiting written-spec review
+**Status:** Implemented (2026-07-19). Two user-approved deviations: the clerk-style TOC bar was replaced by a "Contents" dropdown + reading time in the black utility strip (`components/night-contents.tsx`), and callout theming (originally deferred) shipped in this pass (`.kk-callout`).
 
 **Scope:** First bespoke visual pass for generated knowledge-base pages, excluding the graph and other specialized viewers
 

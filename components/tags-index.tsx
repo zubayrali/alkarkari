@@ -1,6 +1,7 @@
 import { source } from "@/lib/source";
 import { buildTagIndex } from "@/lib/tag-index";
 import { tagUrl } from "@/lib/tags";
+import { getSiteLanguage } from "@/lib/locale";
 import { TagsFilter } from "./tags-filter";
 
 /** Listing of every tag in use, rendered on the generated /tags page. */
@@ -31,12 +32,20 @@ export function TagsIndexContent() {
     };
   });
 
+  const siteLanguage = getSiteLanguage();
   return (
     <div className="tags-index">
-      <p className="tags-index-summary">
-        {tags.length} {tags.length === 1 ? "tag" : "tags"}
-      </p>
-      <TagsFilter tags={tags} />
+      <TagsFilter
+        tags={tags}
+        strings={{
+          label: siteLanguage.tagsFilterLabel,
+          placeholder: siteLanguage.tagsFilterPlaceholder,
+          empty: siteLanguage.tagsFilterEmpty,
+          pageSingular: siteLanguage.pageSingular,
+          pagePlural: siteLanguage.pagePlural,
+          countOf: siteLanguage.countOfLabel,
+        }}
+      />
     </div>
   );
 }

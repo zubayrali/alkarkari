@@ -5,13 +5,25 @@
 @import "./link-popover.css";
 @import "./sidenotes.css";
 @import "./note-embed.css";
-@import "./properties-panel.css";
+@import "./properties-ledger.css";
 @import "./citations.css";
 @import "./search.css";
 @import "./review.css";
-@import "./tags.css";
+@import "./tag-ledger.css";
+@import "./sewn.css";
+@import "./reader-shell.css";
 /* Karkari retheme — imported last so its token overrides win the cascade */
 @import "./karkari-theme.css";
+
+@theme inline {
+  --color-background: var(--color-fd-background);
+  --color-foreground: var(--color-fd-foreground);
+  --color-card: var(--color-fd-card);
+  --color-card-foreground: var(--color-fd-card-foreground);
+  --color-muted: var(--color-fd-muted);
+  --color-muted-foreground: var(--color-fd-muted-foreground);
+  --color-border: var(--color-fd-border);
+}
 
 /* Sidebar banner links (Tags, Graph) */
 .sidebar-links {
@@ -89,32 +101,34 @@ html[data-sidebar-collapsed="true"] #nd-sidebar {
 }
 
 
-/* Breathing room below the "On this page" / Connections section headings. */
-#toc-title {
-  margin-bottom: 0.625rem;
-}
-
-/* Give TOC items right padding so the progress curve overlay has room */
-#nd-toc > *:not(:last-child) {
-  position: relative;
-  z-index: 1;
-}
-
-/* Mobile TOC popover: its content panel is `max-h-[50vh]` inside a Radix
-   CollapsibleContent that clips with overflow:hidden, and fumadocs sets no
-   scroll — so a long TOC + the Connections local graph (footer) gets cropped.
-   Let the panel scroll, and keep the graph at its full height. */
-[data-toc-popover-content] > div {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-[data-toc-popover-content] > div > *:last-child {
-  flex-shrink: 0;
-}
-@media (max-width: 767px) {
-  [data-toc-popover-content] .h-44 {
-    height: 140px;
+/* Sidebar width. The `--fd-layout-width` override below is what balances the
+   sidenote margins, so the sidebar no longer needs to be slim for that — give
+   the explorer comfortable room, and more of it on wider screens where the
+   margins can spare it. !important because fumadocs sets the width via a
+   `layout:` variant (`#nd-docs-layout:has(…)`) that out-specifies a plain ID. */
+@media (min-width: 48rem) {
+  #nd-docs-layout {
+    --fd-sidebar-width: 272px !important;
   }
+}
+@media (min-width: 100rem) {
+  #nd-docs-layout {
+    --fd-sidebar-width: 300px !important;
+  }
+}
+
+/* Widen the layout past fumadocs' 97rem cap so the main content column spans
+   the full width beside the sidebar instead of dumping the surplus into dead
+   outer grid columns. Without this, on viewports wider than 97rem the leftover
+   width pools in the trailing (ex-TOC) column — unused space that sits beside
+   the RIGHT sidenotes while the LEFT ones stay pinned to the sidebar, so the
+   two margins measure unequal. Collapsing the dead columns re-centers the
+   article with symmetric margins (equal-width notes on both sides) and keeps
+   the TOC popover bar — which lives in the same grid column — aligned to it.
+   120rem covers all common laptop/desktop widths; true ultrawides fall back to
+   a centered block, which is fine. */
+#nd-docs-layout {
+  --fd-layout-width: 120rem;
 }
 
 /* Rough-notation annotation colors (lib/remark-annotations.ts syntax) */
@@ -240,12 +254,9 @@ a[data-orphan] {
   pointer-events: none;
 }
 
-/* Reader mode: sidebar is collapsed via useSidebar(); hide TOC + widen content */
-html[data-reader-mode="on"] #nd-toc,
-html[data-reader-mode="on"] [data-toc-popover] {
-  display: none !important;
-}
-
+/* Reader mode: sidebar is collapsed via useSidebar(); widen content. The
+   Contents dropdown (night pages' only TOC surface) is hidden in
+   app/reader-shell.css. */
 html[data-reader-mode="on"] article#nd-page {
   max-width: 52rem;
   margin-inline: auto;
@@ -260,10 +271,50 @@ html[data-reader-mode="on"] [data-page-footer] {
   display: none !important;
 }
 
-/* Backlinks: scrollable list with thin scrollbar */
-.backlinks-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-fd-border) transparent;
+/* ── Scrollbars ─────────────────────────────────────────────────────────
+   Overlay-style: transparent lane, slim rounded thumb, invisible until the
+   scroller is hovered or the page is actively scrolling (html[data-scrolling]
+   set by components/scrollbar-reveal.tsx). The root scrollbar only shows
+   while scrolling — html/body are excluded from the hover reveal since the
+   pointer is always over them. Firefox lacks ::-webkit-scrollbar and gets
+   thin + translucent via @supports; setting scrollbar-width/color outside
+   that guard would disable all the webkit styling in Chromium 121+. */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 4px solid transparent;
+  border-radius: 999px;
+  min-height: 3rem;
+}
+
+/* Reveal only the scroller being used: its own hover, or its own
+   [data-scrolling] mark (set per-element by scrollbar-reveal.tsx). */
+:hover:not(html):not(body)::-webkit-scrollbar-thumb,
+[data-scrolling]::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-fd-foreground) 24%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  background-color: color-mix(in srgb, var(--color-fd-foreground) 45%, transparent) !important;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-fd-foreground) 30%, transparent) transparent;
+  }
 }
 
 /* Floating exit bar — shown in reader mode at the bottom of the viewport */
@@ -973,4 +1024,3 @@ html > body[data-scroll-locked] {
     padding: 0.75rem;
   }
 }
-

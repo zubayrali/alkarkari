@@ -20,15 +20,16 @@ export async function GET(_: Request, { params }: RouteContext<'/og/[...slug]'>)
           width: '100%',
           height: '100%',
           padding: '60px 80px',
-          backgroundColor: '#0a0a0a',
-          color: '#fafafa',
+          /* keep in sync with karkari-theme.css (OG runtime can't read CSS vars) */
+          backgroundColor: '#000000',
+          color: '#ffffff',
         }}
       >
         <div
           style={{
             display: 'flex',
             fontSize: 14,
-            color: '#888',
+            color: '#d7a83f',
             marginBottom: 20,
           }}
         >
@@ -50,7 +51,7 @@ export async function GET(_: Request, { params }: RouteContext<'/og/[...slug]'>)
             style={{
               display: 'flex',
               fontSize: 20,
-              color: '#888',
+              color: '#a3a3a3',
               marginTop: 20,
               lineHeight: 1.4,
             }}

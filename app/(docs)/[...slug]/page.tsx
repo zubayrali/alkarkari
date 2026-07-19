@@ -36,6 +36,9 @@ import { getObsidianUrl } from "@/lib/obsidian";
 import { gitConfig } from "@/lib/shared";
 import { Presentation } from "lucide-react";
 import { SlideViewer } from "@/components/slide-viewer";
+import { EntryThreshold } from "@/components/entry-threshold";
+import { NightContents } from "@/components/night-contents";
+import { buildEntryChrome, usesNightThreshold } from "@/lib/entry-chrome";
 import "@/app/slides.css";
 
 export default async function Page(props: PageProps<"/[...slug]">) {
@@ -70,130 +73,167 @@ export default async function Page(props: PageProps<"/[...slug]">) {
 
   const siteLanguage = getSiteLanguage();
   const MDX = page.data.body;
+  const chrome = buildEntryChrome(
+    {
+      slugs: page.slugs,
+      data: page.data as Record<string, unknown>,
+    },
+    {
+      sectionFallback: siteLanguage.sectionFallback,
+      sectionTagsIndex: siteLanguage.sectionTagsIndex,
+      sectionTag: siteLanguage.sectionTag,
+      untitled: siteLanguage.untitledLabel,
+    },
+  );
+  const nightThreshold = usesNightThreshold(chrome.kind);
 
   // Base pages (incl. tag pages) and full-width pages (the graph) carry no
   // page chrome: no TOC, no actions bar, no prev/next footer.
   const chromeless = Boolean(page.data.base || page.data.full);
   const showToc = !chromeless;
   const structuredData = showToc ? page.data.structuredData : null;
-  const tocHeader = showToc && structuredData ? (
-    <ReadingTime
-      structuredData={structuredData}
-      label={siteLanguage.readingTimeUnit}
-    />
+  const pageActions = !chromeless ? (
+    <div className="page-actions flex flex-row gap-2 items-center shrink-0">
+      {page.data.slides && (
+        <Link
+          href={`${page.url}/slides`}
+          className="hidden md:inline-flex items-center gap-1.5 rounded-md border bg-fd-background px-2.5 py-1.5 text-xs font-medium text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+        >
+          <Presentation className="size-3.5" />
+          Slides
+        </Link>
+      )}
+      <ReaderToggle label={siteLanguage.readerModeLabel} exitLabel={siteLanguage.readerExitLabel} />
+      <span className="hidden md:contents">
+        <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
+        <ViewOptionsPopover
+          markdownUrl={getPageMarkdownUrl(page).url}
+          obsidianUrl={getObsidianUrl(page.path)}
+          obsidianLabel={siteLanguage.openInObsidian}
+          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/${page.path}`}
+        />
+      </span>
+    </div>
   ) : null;
+  const readingField = (
+    <>
+      {!chromeless && (
+        <PropertiesPanel
+          data={page.data as Record<string, unknown>}
+          excludeKeys={chrome.promotedPropertyKeys}
+        />
+      )}
+
+      <DocsBody>
+        <MDX
+          components={getMDXComponents({
+            a: createRelativeLink(source, page),
+            NoteEmbed,
+          })}
+        />
+      </DocsBody>
+
+      {!chromeless && (
+        <Backlinks
+          links={getBacklinks(page)}
+          label={siteLanguage.backlinksLabel}
+          graph={
+            <LocalGraph
+              graph={buildGraph()}
+              currentUrl={page.url}
+              label={siteLanguage.localGraphLabel}
+              globalGraphLabel={siteLanguage.openGlobalGraphLabel}
+            />
+          }
+        />
+      )}
+
+      {!chromeless && (
+        <div data-page-footer>
+          <PageFooter className="night-page-footer" />
+        </div>
+      )}
+
+      {!chromeless && (
+        <CusdisComments
+          // Locale-prefixed: all locale builds share one Cusdis app, so the
+          // prefix keeps each language's comment threads separate.
+          pageId={`${currentLocale()}:${page.slugs.join("/") || "index"}`}
+          pageUrl={page.url}
+          pageTitle={page.data.title}
+        />
+      )}
+    </>
+  );
+
   return (
     <DocsPage
+      className={nightThreshold ? "night-threshold-page" : undefined}
+      breadcrumb={{ enabled: !nightThreshold }}
       toc={showToc ? page.data.toc : undefined}
       // Base/tag pages (data tables) use the full content width, like the graph.
       full={chromeless}
-      tableOfContent={
-        showToc
-          ? {
-              style: "clerk",
-              header: tocHeader,
-              // Rail the sidenote engine fills when the margins have no room
-              // (i.e. whenever the TOC column is visible). Hidden until it
-              // receives notes; see components/sidenotes.tsx.
-              footer: (
-                <div id="sidenote-rail" hidden>
-                  <h3 className="inline-flex items-center gap-1.5 text-sm text-fd-muted-foreground">
-                    {siteLanguage.sidenotesLabel}
-                  </h3>
-                  <div data-rail-list className="sidenote-rail-list" />
-                </div>
-              ),
-            }
-          : { enabled: false }
-      }
-      tableOfContentPopover={
-        showToc
-          ? { header: tocHeader }
-          : { enabled: false }
-      }
+      // No fumadocs TOC surface anywhere: night pages carry their own
+      // Contents dropdown in the utility strip, specialized pages are
+      // chromeless. Without #nd-toc the sidenote engine uses margin notes.
+      tableOfContent={{ enabled: false }}
+      tableOfContentPopover={{ enabled: false }}
       // Footer is rendered manually below so comments can sit beneath the
       // prev/next cards (and stay decoupled if recommended reading is dropped).
       footer={{ enabled: false }}
     >
       <ViewTransition name="docs-content" share="auto" enter="auto" default="none">
-        <div className="flex flex-col gap-4 flex-1">
-          <div className="flex flex-row items-start justify-between gap-4">
-            <DocsTitle>
-              {page.data.title}
-            </DocsTitle>
-            {!chromeless && (
-              <div className="page-actions flex flex-row gap-2 items-center shrink-0 mt-1">
-                {page.data.slides && (
-                  <Link
-                    href={`${page.url}/slides`}
-                    className="hidden md:inline-flex items-center gap-1.5 rounded-md border bg-fd-background px-2.5 py-1.5 text-xs font-medium text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
-                  >
-                    <Presentation className="size-3.5" />
-                    Slides
-                  </Link>
-                )}
-                <ReaderToggle label={siteLanguage.readerModeLabel} exitLabel={siteLanguage.readerExitLabel} />
-                <span className="hidden md:contents">
-                  <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
-                  <ViewOptionsPopover
-                    markdownUrl={getPageMarkdownUrl(page).url}
-                    obsidianUrl={getObsidianUrl(page.path)}
-                    obsidianLabel={siteLanguage.openInObsidian}
-                    githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/${page.path}`}
-                  />
-                </span>
-              </div>
-            )}
-          </div>
-
-          {page.data.aliases && page.data.aliases.length > 0 && (
-            <p className="title-aliases">{page.data.aliases.join(" · ")}</p>
-          )}
-
-          <DocsDescription className="mb-0">
-            {page.data.description}
-          </DocsDescription>
-
-          {page.data.tags && <PageTags tags={page.data.tags} className="" />}
-
-          {!chromeless && (
-            <PropertiesPanel data={page.data as Record<string, unknown>} />
-          )}
-
-          <DocsBody>
-            <MDX
-              components={getMDXComponents({
-                a: createRelativeLink(source, page),
-                NoteEmbed,
-              })}
-            />
-          </DocsBody>
-
-          {!chromeless && (
-            <Backlinks
-              links={getBacklinks(page)}
-              label={siteLanguage.backlinksLabel}
-              graph={
-                <LocalGraph
-                  graph={buildGraph()}
-                  currentUrl={page.url}
-                  label={siteLanguage.localGraphLabel}
-                  globalGraphLabel={siteLanguage.openGlobalGraphLabel}
-                />
+        <div className="reader-shell-stack flex flex-col gap-4 flex-1">
+          {nightThreshold ? (
+            <EntryThreshold
+              chrome={chrome}
+              actions={pageActions}
+              aliasesLabel={siteLanguage.aliasesLabel}
+              tagsAriaLabel={siteLanguage.tagsAriaLabel}
+              contents={
+                showToc ? (
+                  <>
+                    <NightContents
+                      items={page.data.toc}
+                      label={siteLanguage.contentsLabel}
+                    />
+                    {structuredData && (
+                      <ReadingTime
+                        structuredData={structuredData}
+                        label={siteLanguage.readingTimeUnit}
+                        wordsLabel={siteLanguage.wordsUnit}
+                        className="night-reading-time"
+                      />
+                    )}
+                  </>
+                ) : undefined
               }
             />
+          ) : (
+            <>
+              <div className="flex flex-row items-start justify-between gap-4">
+                <DocsTitle>{page.data.title}</DocsTitle>
+                {pageActions}
+              </div>
+
+              {page.data.aliases && page.data.aliases.length > 0 && (
+                <p className="title-aliases">{page.data.aliases.join(" · ")}</p>
+              )}
+
+              <DocsDescription className="mb-0">
+                {page.data.description}
+              </DocsDescription>
+
+              {page.data.tags && <PageTags tags={page.data.tags} className="" />}
+            </>
           )}
 
-          {!chromeless && <div data-page-footer><PageFooter /></div>}
-
-          {!chromeless && (
-            <CusdisComments
-              // Locale-prefixed: all locale builds share one Cusdis app, so the
-              // prefix keeps each language's comment threads separate.
-              pageId={`${currentLocale()}:${page.slugs.join("/") || "index"}`}
-              pageUrl={page.url}
-              pageTitle={page.data.title}
-            />
+          {nightThreshold ? (
+            <div className="night-reading-field" data-entry-kind={chrome.kind}>
+              {readingField}
+            </div>
+          ) : (
+            readingField
           )}
         </div>
       </ViewTransition>

@@ -11,18 +11,27 @@ import { CitationTooltip } from '@/components/citation-tooltip';
 import { SidebarLinks } from '@/components/sidebar-links';
 import { NavMobileLinks } from '@/components/nav-mobile-links';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { NightSidebarItem } from '@/components/night-sidebar-item';
+import { NightSidebarFolder } from '@/components/night-sidebar-folder';
+import { SiteIdentity } from '@/components/site-identity';
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const options = baseOptions();
+
   return (
     <DocsLayout
       tree={filterPageTree(source.getPageTree())}
-      {...baseOptions()}
+      {...options}
+      nav={{ ...options.nav, title: <SiteIdentity /> }}
       sidebar={{
-        banner: (
-          <>
-            <LocaleSwitcher variant="sidebar" />
+        components: { Item: NightSidebarItem, Folder: NightSidebarFolder },
+        // The mockup's "side-foot": utility links + locale live in small
+        // type at the bottom of the index, not above the tree.
+        footer: (
+          <div className="night-sidebar-foot">
             <SidebarLinks key="sidebar-links" />
-          </>
+            <LocaleSwitcher variant="sidebar" />
+          </div>
         ),
       }}
     >
