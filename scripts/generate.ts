@@ -18,6 +18,7 @@ import {
   GenerateProgress,
   runWithGenerateUi,
 } from "./progress.ts";
+import { transformSidenoteSyntax } from "../lib/remark-sidenote-syntax.ts";
 import { frontmatter as parseFrontmatter } from "fumadocs-core/content/md/frontmatter";
 import fs from "node:fs/promises";
 import { statSync } from "node:fs";
@@ -131,26 +132,6 @@ function transformOrbitCallouts(content: string): string {
   });
 }
 
-const SIDENOTE_SYNTAX_RE = /\{\{sidenotes\[([^\]]+)\]:\s*([\s\S]*?)\}\}/g;
-
-function transformSidenoteSyntax(content: string): string {
-  SIDENOTE_SYNTAX_RE.lastIndex = 0;
-  if (!SIDENOTE_SYNTAX_RE.test(content)) return content;
-
-  let counter = 0;
-  const definitions: string[] = [];
-  SIDENOTE_SYNTAX_RE.lastIndex = 0;
-
-  const transformed = content.replace(SIDENOTE_SYNTAX_RE, (_match, label: string, body: string) => {
-    const id = `_sn_${++counter}`;
-    definitions.push(`[^${id}]: ${body.trim()}`);
-    return `${label}[^${id}]`;
-  });
-
-  if (definitions.length === 0) return content;
-  return transformed.trimEnd() + "\n\n" + definitions.join("\n\n") + "\n";
-}
-
 async function writeVaultOutputs(
   files: OutputFile[],
   step: ReturnType<typeof createStepProgress>,
@@ -171,11 +152,7 @@ async function writeVaultOutputs(
   for (const file of files) {
     const mappedPath = path.join(targetDirs[file.type], file.path);
     await fs.mkdir(path.dirname(mappedPath), { recursive: true });
-    let content = file.content;
-    if (file.type === "content" && typeof content === "string") {
-      content = transformSidenoteSyntax(content);
-    }
-    await fs.writeFile(mappedPath, content);
+    await fs.writeFile(mappedPath, file.content);
     step.advance(file.path);
   }
   step.complete(`Wrote ${files.length} file${files.length === 1 ? "" : "s"}`);
@@ -336,16 +313,18 @@ async function main() {
       `Found ${rawFiles.length} file${rawFiles.length === 1 ? "" : "s"}. Converting...`,
     );
 
-    // Transform [!orbit] callouts to ```orbit fences BEFORE fumadocs-obsidian
-    // converts them to <ObsidianCallout> components.
-    // Transform [!orbit] callouts to ```orbit fences BEFORE fumadocs-obsidian
-    // converts them to <ObsidianCallout> components. VaultFile.content may be
-    // a Buffer for .md files, so coerce to string first.
+    // Raw-text transforms BEFORE fumadocs-obsidian conversion (which escapes
+    // `{`/`[` in prose, so they'd never match afterwards). Orbit callouts
+    // become ```orbit fences first, so `{{` inside Q/A bodies is protected
+    // from the sidenote pass. VaultFile.content may be a Buffer for .md
+    // files, so coerce to string first.
     for (const f of rawFiles) {
       const raw = typeof f.content === "string" ? f.content : Buffer.isBuffer(f.content) ? f.content.toString("utf8") : null;
-      if (raw && raw.includes("[!orbit]")) {
-        f.content = transformOrbitCallouts(raw);
-      }
+      if (!raw || !f.path.endsWith(".md")) continue;
+      let content = raw;
+      if (content.includes("[!orbit]")) content = transformOrbitCallouts(content);
+      content = transformSidenoteSyntax(content);
+      if (content !== raw) f.content = content;
     }
 
     const baseRawFiles = rawFiles.filter((f: VaultFile) => f.path.endsWith('.base'));

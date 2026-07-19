@@ -63,12 +63,11 @@ Rules:
 
 ## Sidenotes
 
-- Vault notes: `{{sidenotes[label]: content}}` (generation-time transform) or
-  standard GFM footnotes `[^1]`.
-- Hand-maintained `content/` files (start-here, graph): GFM footnotes ONLY —
-  the `{{…}}` syntax crashes MDX there.
-- Rendering: margin notes in reader mode, cards below the TOC otherwise,
-  popover on mobile. Never a bottom footnote section.
+Full contract in the `sidenotes` skill. Quick recall: bare `{{note}}`,
+labeled `{{sidenotes[label]: content}}`, or GFM `[^1]` (the only form
+allowed in hand-maintained `content/` files, and the only way to get
+multi-paragraph notes). Code fences, inline code, and frontmatter are
+protected; any other `{{…}}` in prose becomes a sidenote.
 
 ## Reserved delimiters (rough-notation annotations, ADR-0012)
 
