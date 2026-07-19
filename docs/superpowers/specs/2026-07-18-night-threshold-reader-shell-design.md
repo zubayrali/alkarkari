@@ -78,7 +78,7 @@ Official Fumadocs reference: <https://www.fumadocs.dev/docs/ui/layouts/docs>
 - content editing or Arabic metadata authoring.
 
 Specialized pages continue using their current layouts in this phase.
-Tag pages are the only Base-backed page kind included: they receive the Night Threshold and tag ledger, while non-tag Base pages retain their existing chrome and views.
+Tag pages are the only Base-backed page kind included. The `/tags` index receives the Night Threshold and tag ledger. Individual `/tags/<tag>` pages receive the Night Threshold but retain their existing Base results view beneath it. Non-tag Base pages retain their existing chrome and views.
 
 ## Sidebar: the night index
 
