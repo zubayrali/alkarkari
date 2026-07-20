@@ -20,7 +20,7 @@ function childVariants(reduced: boolean): Variants {
 }
 
 /** Section wrapper: fades/rises its children in on scroll, staggered. */
-export function Reveal({
+export function ScrollReveal({
   children,
   className,
   as = 'section',
@@ -43,8 +43,8 @@ export function Reveal({
   );
 }
 
-/** A single staggered child inside <Reveal>. */
-export function RevealItem({
+/** A single staggered child inside <ScrollReveal>. */
+export function ScrollRevealItem({
   children,
   className,
 }: {

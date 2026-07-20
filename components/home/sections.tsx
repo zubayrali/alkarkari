@@ -1,15 +1,23 @@
-// Server components — compose the client animation primitives (Reveal,
-// RevealItem, Muraqqaa) with serializable data passed from app/(home)/page.tsx.
+// Server components — compose the client animation primitives (ScrollReveal,
+// ScrollRevealItem, Parallax) with serializable data passed from app/(home)/page.tsx.
 // The symbolism of the cloak and the light is shown, never captioned.
+//
+// The page is a journey min aẓ-ẓulumāt ilā n-nūr: IntroBand, FeaturedCard,
+// ImageGallery, and FeatureSplit sit in the dark zone (.kk-journey-dark);
+// NavCardGrid, RecentNotes, and KeyTerms arrive in the light.
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Reveal, RevealItem } from './reveal';
+import { ScrollReveal, ScrollRevealItem } from './reveal';
 import { RelativeTime } from './relative-time';
+import { Parallax } from './motion-primitives';
+import { FlipLink } from './flip-link';
 import type { HomeStrings } from '@/lib/locale';
 import cloak from './images/cloak.png';
 import hadra from './images/hadra.png';
 import zawiya from './images/zawiya.png';
+import zawiyaWall from './images/zawiya-wall.png';
+import shaykh from './images/shaykh.png';
 
 export interface LinkItem {
   title: string;
@@ -20,53 +28,64 @@ export interface RecentItem extends LinkItem {
   modified: string;
 }
 
-/* ── Intention / bismillah band ─────────────────────────────────────────── */
-export function IntentionBand({ home }: { home: HomeStrings }) {
+/* ── Intention / bismillah band (night) ─────────────────────────────────── */
+export function IntroBand({ home }: { home: HomeStrings }) {
   return (
-    <Reveal className="text-center py-24">
-      <RevealItem>
-        <p dir="rtl" lang="ar" className="kk-arabic text-3xl sm:text-4xl mb-3" style={{ color: 'var(--kk-gold-ink)' }}>
+    <ScrollReveal className="text-center py-24">
+      <ScrollRevealItem>
+        <p dir="rtl" lang="ar" className="kk-arabic text-3xl sm:text-4xl mb-3" style={{ color: 'var(--kk-ember)' }}>
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </p>
-      </RevealItem>
-      <RevealItem>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
         <p className="kk-label mb-11">{home.bismillahGloss}</p>
-      </RevealItem>
-      <RevealItem>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
         <p className="text-2xl sm:text-3xl font-light leading-relaxed max-w-2xl mx-auto mb-6 text-balance">
           {home.intentionLead}
         </p>
-      </RevealItem>
-      <RevealItem>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
         <p className="text-base leading-relaxed max-w-xl mx-auto text-fd-muted-foreground">
           {home.intentionSub}
         </p>
-      </RevealItem>
-    </Reveal>
+      </ScrollRevealItem>
+      {/* The alif — a thread of light leading out of the darkness */}
+      <ScrollRevealItem>
+        <div className="kk-thread mt-14 mb-8" aria-hidden />
+      </ScrollRevealItem>
+      <ScrollRevealItem>
+        <p className="text-xl sm:text-2xl font-light mb-2" style={{ color: 'var(--kk-moon)' }}>
+          {home.journeyLine}
+        </p>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
+        <p className="kk-label italic !normal-case !tracking-[0.12em]">{home.journeyGloss}</p>
+      </ScrollRevealItem>
+    </ScrollReveal>
   );
 }
 
-/* ── Context gallery — the cloak, the ḥaḍra, the zāwiya ──────────────────── */
-const PHOTOS = [
-  { src: cloak, alt: 'The patched cloak', label: 'Al-Muraqqaʿa', aspect: 'aspect-[3/4]' },
-  { src: hadra, alt: 'The ḥaḍra gathering', label: 'Al-Ḥaḍra', aspect: 'aspect-[3/4]' },
-  { src: zawiya, alt: 'The zāwiya in Morocco', label: 'Al-Zāwiya', aspect: 'aspect-[3/4]' },
-] as const;
-
-export function ContextGallery({ home }: { home: HomeStrings }) {
+/* ── Context gallery — the cloak, the ḥaḍra, the zāwiya, the wall ────────── */
+export function ImageGallery({ home }: { home: HomeStrings }) {
+  const photos = [
+    { src: cloak, alt: home.cloakAlt, label: 'Al-Muraqqaʿa' },
+    { src: hadra, alt: home.hadraAlt, label: 'Al-Ḥaḍra' },
+    { src: zawiya, alt: home.zawiyaAlt, label: 'Al-Zāwiya' },
+  ] as const;
   return (
-    <Reveal className="pt-14">
-      <RevealItem>
+    <ScrollReveal className="pt-14">
+      <ScrollRevealItem>
         <div className="flex items-baseline gap-3 mb-7">
           <span className="kk-arabic text-lg leading-none" style={{ color: 'var(--kk-gold)' }}>۞</span>
           <p className="kk-label !text-xs">{home.galleryLabel}</p>
         </div>
-      </RevealItem>
+      </ScrollRevealItem>
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        {PHOTOS.map((p) => (
-          <RevealItem key={p.label}>
+        {photos.map((p) => (
+          <ScrollRevealItem key={p.label}>
             <figure className="m-0">
-              <div className={`relative ${p.aspect} overflow-hidden rounded-xl border border-fd-border`}>
+              <div className="kk-veil-lift relative aspect-[3/4] overflow-hidden rounded-xl border border-fd-border">
                 <Image
                   src={p.src}
                   alt={p.alt}
@@ -75,26 +94,92 @@ export function ContextGallery({ home }: { home: HomeStrings }) {
                   className="object-cover transition-transform duration-500 hover:scale-[1.04]"
                   sizes="(max-width: 640px) 33vw, 220px"
                 />
+                <span className="kk-veil" aria-hidden />
               </div>
               <figcaption className="kk-arabic text-center text-sm mt-2" style={{ color: 'var(--kk-gold-ink)' }}>
                 {p.label}
               </figcaption>
             </figure>
-          </RevealItem>
+          </ScrollRevealItem>
         ))}
+        {/* The refraction realized in the world — the painted zāwiya wall */}
+        <ScrollRevealItem className="col-span-3">
+          <figure className="m-0">
+            <Parallax range={16}>
+              <div className="kk-veil-lift relative aspect-[16/7] overflow-hidden rounded-xl border border-fd-border">
+                <Image
+                  src={zawiyaWall}
+                  alt={home.wallAlt}
+                  fill
+                  placeholder="blur"
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 704px"
+                />
+                <span className="kk-veil" aria-hidden />
+              </div>
+            </Parallax>
+            <figcaption className="kk-arabic text-center text-sm mt-2" style={{ color: 'var(--kk-gold-ink)' }}>
+              {home.wallLabel}
+            </figcaption>
+          </figure>
+        </ScrollRevealItem>
       </div>
-    </Reveal>
+    </ScrollReveal>
+  );
+}
+
+/* ── The living guide (mist — the threshold of the light) ───────────────── */
+// Environmental light only: the room is lit, the person is not haloed.
+export function FeatureSplit({ home }: { home: HomeStrings }) {
+  return (
+    <ScrollReveal className="pt-20">
+      <div className="grid grid-cols-1 sm:grid-cols-[2fr_3fr] gap-8 items-center">
+        <ScrollRevealItem>
+          <div className="kk-niche relative aspect-[3/4] max-w-[300px] mx-auto">
+            <Image
+              src={shaykh}
+              alt={home.shaykhAlt}
+              fill
+              placeholder="blur"
+              className="object-cover"
+              sizes="(max-width: 640px) 80vw, 300px"
+            />
+            {/* light falling into the room from above, not from the figure */}
+            <span
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.16), transparent 55%)' }}
+            />
+          </div>
+        </ScrollRevealItem>
+        <div className="text-center sm:text-start">
+          <ScrollRevealItem>
+            <p className="kk-label mb-3" style={{ color: 'var(--kk-gold-ink)' }}>
+              {home.guideLabel}
+            </p>
+          </ScrollRevealItem>
+          <ScrollRevealItem>
+            <p className="text-2xl sm:text-3xl font-light mb-4 text-balance">{home.guideName}</p>
+          </ScrollRevealItem>
+          <ScrollRevealItem>
+            <p className="text-base leading-relaxed text-fd-muted-foreground max-w-md mx-auto sm:mx-0">
+              {home.guideLine}
+            </p>
+          </ScrollRevealItem>
+        </div>
+      </div>
+    </ScrollReveal>
   );
 }
 
 /* ── "Start here" featured card ─────────────────────────────────────────── */
 export function FeaturedCard({ home, title, href, description }: { home: HomeStrings; title: string; href: string; description: string }) {
   return (
-    <Reveal className="pt-14">
-      <RevealItem>
+    <ScrollReveal className="pt-14">
+      <ScrollRevealItem>
         <Link
           href={href}
-          className="flex items-center gap-6 no-underline rounded-2xl px-7 py-6 transition-transform hover:-translate-y-0.5"
+          className="kk-stitch-b kk-halo-hover flex items-center gap-6 no-underline rounded-2xl px-7 py-6 transition-transform hover:-translate-y-0.5"
           style={{ border: '1px solid var(--kk-gold)', background: 'var(--kk-soft)' }}
         >
           <span className="kk-arabic text-5xl leading-none shrink-0" style={{ color: 'var(--kk-gold)' }} aria-hidden>
@@ -111,13 +196,17 @@ export function FeaturedCard({ home, title, href, description }: { home: HomeStr
             →
           </span>
         </Link>
-      </RevealItem>
-    </Reveal>
+      </ScrollRevealItem>
+    </ScrollReveal>
   );
 }
 
-/* ── Pathways grid ──────────────────────────────────────────────────────── */
+/* ── Ways in — an index of doors, not a grid of cards ───────────────────── */
 // Structure only — titles, tags, and descriptions come from lib/locale.ts.
+// Each destination is one large serif line that rolls to gold on hover
+// (FlipLink); the Arabic name and one-line gloss ride the same rule. Reads
+// like a book's table of contents — which is what a knowledge base's "ways
+// in" actually is.
 const PATHWAYS = [
   { key: 'dictionary', arabic: 'القاموس', hue: 3, href: '/dictionary' },
   { key: 'foundations', arabic: 'الأركان', hue: 6, href: '/foundations' },
@@ -127,38 +216,44 @@ const PATHWAYS = [
   { key: 'history', arabic: 'السلسلة', hue: 2, href: '/history' },
 ] as const;
 
-export function PathwaysGrid({ home }: { home: HomeStrings }) {
+export function NavCardGrid({ home }: { home: HomeStrings }) {
   const pathways = PATHWAYS.map((p) => ({ ...p, ...home.pathways[p.key] }));
   return (
-    <Reveal className="pt-14">
-      <RevealItem>
+    <ScrollReveal className="pt-14">
+      <ScrollRevealItem>
         <div className="flex items-baseline gap-3 mb-7">
           <span className="kk-arabic text-lg leading-none" style={{ color: 'var(--kk-gold)' }}>۞</span>
           <p className="kk-label !text-xs">{home.waysInLabel}</p>
           <span className="text-sm italic text-fd-muted-foreground">{home.waysInHint}</span>
         </div>
-      </RevealItem>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      </ScrollRevealItem>
+      <div className="border-y border-fd-border">
         {pathways.map((p) => (
-          <RevealItem key={p.href}>
-            <Link
-              href={p.href}
-              className="relative block no-underline overflow-hidden rounded-xl p-5 transition-transform hover:-translate-y-0.5 bg-fd-card border border-fd-border hover:border-[color:var(--kk-gold)] h-full"
-            >
-              <span className="absolute top-0 inset-x-0 h-[3px]" style={{ background: `var(--kk-patch-${p.hue})` }} />
-              <span className="kk-label block mb-3">{p.tag}</span>
-              <span className="flex items-baseline gap-2.5 mb-1.5">
-                <span className="text-lg font-medium text-fd-foreground">{p.title}</span>
-                <span className="kk-arabic text-base" style={{ color: 'var(--kk-gold-ink)' }}>
-                  {p.arabic}
-                </span>
+          <ScrollRevealItem key={p.href}>
+            <div className="group flex flex-wrap items-baseline gap-x-5 gap-y-1 border-b border-fd-border py-5 last:border-b-0 sm:flex-nowrap">
+              <span
+                aria-hidden
+                className="hidden h-2.5 w-2.5 shrink-0 self-center rounded-[3px] sm:block"
+                style={{ background: `var(--kk-patch-${p.hue})` }}
+              />
+              <FlipLink
+                href={p.href}
+                className="text-3xl font-light text-fd-foreground sm:text-4xl lg:text-5xl"
+              >
+                {p.title}
+              </FlipLink>
+              <span dir="rtl" lang="ar" className="kk-arabic text-lg" style={{ color: 'var(--kk-gold-ink)' }}>
+                {p.arabic}
               </span>
-              <span className="block text-sm leading-relaxed text-fd-muted-foreground">{p.description}</span>
-            </Link>
-          </RevealItem>
+              <span className="ms-auto hidden max-w-[22rem] shrink-0 text-right text-sm leading-relaxed text-fd-muted-foreground md:block">
+                <span className="kk-label !text-[10px] block opacity-70">{p.tag}</span>
+                {p.description}
+              </span>
+            </div>
+          </ScrollRevealItem>
         ))}
       </div>
-    </Reveal>
+    </ScrollReveal>
   );
 }
 
@@ -166,14 +261,14 @@ export function PathwaysGrid({ home }: { home: HomeStrings }) {
 export function RecentNotes({ home, items, locale }: { home: HomeStrings; items: RecentItem[]; locale: string }) {
   if (items.length === 0) return null;
   return (
-    <Reveal className="pt-14">
-      <RevealItem>
+    <ScrollReveal className="pt-14">
+      <ScrollRevealItem>
         <div className="flex items-baseline gap-3 mb-5">
           <span className="kk-arabic text-lg leading-none" style={{ color: 'var(--kk-gold)' }}>۞</span>
           <p className="kk-label !text-xs">{home.recentLabel}</p>
         </div>
-      </RevealItem>
-      <RevealItem>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
         <div className="flex flex-col">
           {items.map((n) => (
             <Link
@@ -190,8 +285,8 @@ export function RecentNotes({ home, items, locale }: { home: HomeStrings; items:
             </Link>
           ))}
         </div>
-      </RevealItem>
-    </Reveal>
+      </ScrollRevealItem>
+    </ScrollReveal>
   );
 }
 
@@ -199,14 +294,14 @@ export function RecentNotes({ home, items, locale }: { home: HomeStrings; items:
 export function KeyTerms({ home, items }: { home: HomeStrings; items: LinkItem[] }) {
   if (items.length === 0) return null;
   return (
-    <Reveal className="pt-14">
-      <RevealItem>
+    <ScrollReveal className="pt-14">
+      <ScrollRevealItem>
         <div className="flex items-baseline gap-3 mb-5">
           <span className="kk-arabic text-lg leading-none" style={{ color: 'var(--kk-gold)' }}>۞</span>
           <p className="kk-label !text-xs">{home.keyTermsLabel}</p>
         </div>
-      </RevealItem>
-      <RevealItem>
+      </ScrollRevealItem>
+      <ScrollRevealItem>
         <div className="flex flex-wrap gap-2">
           {items.map((t) => (
             <Link
@@ -224,7 +319,7 @@ export function KeyTerms({ home, items }: { home: HomeStrings; items: LinkItem[]
             {home.moreLabel}
           </Link>
         </div>
-      </RevealItem>
-    </Reveal>
+      </ScrollRevealItem>
+    </ScrollReveal>
   );
 }
