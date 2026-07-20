@@ -22,6 +22,7 @@
   gap: 0;
   overflow-x: auto;
   border-bottom: 1px solid var(--color-fd-border);
+  scrollbar-width: none;
 }
 
 .base-view-tabs::-webkit-scrollbar {

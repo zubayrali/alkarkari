@@ -154,7 +154,7 @@ export function BasesViewTable({ notes, properties, order, hideHeader, groupBy, 
         )}
       </table>
       {notes.length === 0 && (
-        <p className="py-4 text-center text-sm text-fd-muted-foreground">{strings.noResults}</p>
+        <p className="base-empty">{strings.noResults}</p>
       )}
       {!isGrouped && visibleCount < notes.length && (
         <button

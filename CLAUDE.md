@@ -100,7 +100,7 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/bases-inline-view.tsx` — client component: view-tab switching, lazy VM re-evaluation
 - `components/bases-view-table.tsx` / `bases-view-gallery.tsx` / `bases-view-list.tsx` — view renderers; all import property resolution from `lib/base-properties.ts`
 - View styles (table/list/gallery/sphere, view tabs, result count) live in `app/base-ledger.css` — the Night Threshold ledger idiom (hairlines, mono uppercase labels, Spectral titles, gold position marks), not scattered fumadocs overrides
-- `lib/bases-strings.ts` — `basesStringsFrom(lang)` resolves localized Base-view strings ("No results.", "Show more (N remaining)", pageSingular/pagePlural/countOfLabel, etc.); threaded through `components/bases-page.tsx` and `components/mdx.tsx` (which re-exports it for `bases-inline-view.tsx`) rather than hardcoded per-component
+- `lib/bases-strings.ts` — `basesStringsFrom(lang)` resolves localized Base-view strings ("No results.", "Show more (N remaining)", pageSingular/pagePlural/countOfLabel, etc.); `bases-inline-view.tsx` re-exports the strings API for interface compatibility, while the server call-sites (`components/bases-page.tsx`, `components/mdx.tsx`) import `basesStringsFrom` directly
 
 **Tags**
 - `lib/tags.ts` — tag primitives: `normalizeTags`, `getTagPrefixes`, `tagUrl`
