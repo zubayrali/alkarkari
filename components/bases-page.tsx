@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { CompiledBase } from '@/lib/base-types'
+import { getSiteLanguage } from '@/lib/locale'
+import { basesStringsFrom } from '@/lib/bases-strings'
 import { BasesInlineView } from './bases-inline-view'
 
 interface Props {
@@ -50,6 +52,7 @@ export async function BasesPageContent({ src }: Props) {
         separator: v.separator,
       }))}
       properties={compiled.config.properties ?? {}}
+      strings={basesStringsFrom(getSiteLanguage())}
     />
   )
 }

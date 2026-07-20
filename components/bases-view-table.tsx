@@ -6,6 +6,7 @@ import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
 import { resolveNoteProperty, isNameColumn, resolveDisplayName } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
 import { entryTransitionName } from '@/lib/transition-name'
+import { DEFAULT_BASES_STRINGS, type BasesStrings } from '@/lib/bases-strings'
 
 const PAGE_SIZE = 100
 
@@ -15,6 +16,7 @@ interface Props {
   order?: string[]
   hideHeader?: boolean
   groupBy?: { property: string; direction: string }
+  strings?: Pick<BasesStrings, 'noResults' | 'showMore' | 'remainingUnit'>
 }
 
 function getColumns(notes: NoteRecord[], order?: string[]): string[] {
@@ -31,7 +33,7 @@ function renderCell(note: NoteRecord, col: string): React.ReactNode {
     return (
       <Link
         href={note.slug}
-        className="underline underline-offset-2"
+        className="base-name-link"
         onClick={(e) => {
           const name = entryTransitionName(note.slug)
           if (name) (e.currentTarget as HTMLElement).style.viewTransitionName = name
@@ -76,7 +78,7 @@ function groupByProperty(
   return new Map(sorted)
 }
 
-export function BasesViewTable({ notes, properties, order, hideHeader, groupBy }: Props) {
+export function BasesViewTable({ notes, properties, order, hideHeader, groupBy, strings = DEFAULT_BASES_STRINGS }: Props) {
   const columns = getColumns(notes, order)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
@@ -152,7 +154,7 @@ export function BasesViewTable({ notes, properties, order, hideHeader, groupBy }
         )}
       </table>
       {notes.length === 0 && (
-        <p className="py-4 text-center text-sm text-fd-muted-foreground">No results.</p>
+        <p className="py-4 text-center text-sm text-fd-muted-foreground">{strings.noResults}</p>
       )}
       {!isGrouped && visibleCount < notes.length && (
         <button
@@ -160,7 +162,7 @@ export function BasesViewTable({ notes, properties, order, hideHeader, groupBy }
           className="base-load-more"
           onClick={() => setVisibleCount(v => v + PAGE_SIZE)}
         >
-          Show more ({notes.length - visibleCount} remaining)
+          {strings.showMore} ({notes.length - visibleCount} {strings.remainingUnit})
         </button>
       )}
     </div>

@@ -6,6 +6,17 @@ import { ReviewBlock } from "@/components/review-block";
 import type { MDXComponents } from "mdx/types";
 import type { ComponentProps, ImgHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
+import { BasesInlineView } from "@/components/bases-inline-view";
+import { basesStringsFrom, type BasesStrings } from "@/lib/bases-strings";
+import { getSiteLanguage } from "@/lib/locale";
+
+const basesStrings: BasesStrings = basesStringsFrom(getSiteLanguage());
+
+function LocalizedBasesInlineView(
+  props: Omit<ComponentProps<typeof BasesInlineView>, "strings">,
+) {
+  return <BasesInlineView strings={basesStrings} {...props} />;
+}
 
 function FigureImage(props: ImgHTMLAttributes<HTMLImageElement>) {
   const { alt, ...rest } = props;
@@ -55,6 +66,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ...ObsidianComponents,
     ObsidianCallout: KarkariCallout,
     ObsidianCalloutTitle: KarkariCalloutTitle,
+    BasesInlineView: LocalizedBasesInlineView,
     ...components,
   } satisfies MDXComponents;
 }

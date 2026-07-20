@@ -5,6 +5,7 @@ import { Fragment, useState } from 'react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
 import { resolveNoteProperty, isNameColumn, resolveDisplayName } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
+import { DEFAULT_BASES_STRINGS, type BasesStrings } from '@/lib/bases-strings'
 
 const PAGE_SIZE = 200
 
@@ -15,6 +16,7 @@ interface Props {
   groupBy?: { property: string; direction: string }
   nestedProperties?: boolean
   separator?: string
+  strings?: Pick<BasesStrings, 'noResults' | 'showMore' | 'remainingUnit'>
 }
 
 function groupByProperty(
@@ -142,6 +144,7 @@ export function BasesViewList({
   groupBy,
   nestedProperties,
   separator,
+  strings = DEFAULT_BASES_STRINGS,
 }: Props) {
   const columns = order ?? []
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
@@ -170,7 +173,7 @@ export function BasesViewList({
           </div>
         ))}
         {notes.length === 0 && (
-          <p className="base-empty">No results.</p>
+          <p className="base-empty">{strings.noResults}</p>
         )}
       </div>
     )
@@ -193,7 +196,7 @@ export function BasesViewList({
         ))}
       </ul>
       {notes.length === 0 && (
-        <p className="base-empty">No results.</p>
+        <p className="base-empty">{strings.noResults}</p>
       )}
       {visibleCount < notes.length && (
         <button
@@ -201,7 +204,7 @@ export function BasesViewList({
           className="base-load-more"
           onClick={() => setVisibleCount(v => v + PAGE_SIZE)}
         >
-          Show more ({notes.length - visibleCount} remaining)
+          {strings.showMore} ({notes.length - visibleCount} {strings.remainingUnit})
         </button>
       )}
     </div>

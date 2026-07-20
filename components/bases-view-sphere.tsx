@@ -5,11 +5,13 @@ import type { NoteRecord } from '@/lib/base-types'
 import { resolveImageUrl } from '@/lib/base-properties'
 import SphereImageGrid, { type ImageData } from '@/components/ui/img-sphere'
 import { extractYouTubeId, youTubeThumbnail } from '@/lib/youtube'
+import type { BasesStrings } from '@/lib/bases-strings'
 
 interface Props {
   notes: NoteRecord[]
   /** View's `image:` property; falls back to a thumbnail derived from `youtube` frontmatter. */
   imageProperty?: string
+  strings?: BasesStrings
 }
 
 const MAX_SIZE = 600

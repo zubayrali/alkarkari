@@ -3,10 +3,19 @@
 import { useState, useCallback, useTransition, useMemo } from 'react'
 import { List, LayoutGrid, Table2, Orbit, Search, X } from 'lucide-react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
+import { DEFAULT_BASES_STRINGS, type BasesStrings } from '@/lib/bases-strings'
 import { BasesViewTable } from './bases-view-table'
 import { BasesViewGallery } from './bases-view-gallery'
 import { BasesViewList } from './bases-view-list'
 import { BasesViewSphere } from './bases-view-sphere'
+
+// Re-exported for client consumers (the view components below already import
+// from here). Server components (bases-page.tsx, mdx.tsx) must import
+// `basesStringsFrom` directly from '@/lib/bases-strings' instead — this
+// module has 'use client', so calling a plain function re-exported from it
+// inside a Server Component fails at build time ("Attempted to call ... from
+// the server but ... is on the client").
+export { DEFAULT_BASES_STRINGS, basesStringsFrom, type BasesStrings } from '@/lib/bases-strings'
 
 interface ViewMeta {
   name: string
@@ -30,6 +39,7 @@ interface Props {
   initialView?: string
   configBase64?: string
   hideToolbar?: boolean
+  strings?: BasesStrings
 }
 
 const viewIcons: Record<string, React.ReactNode> = {
@@ -47,6 +57,7 @@ export function BasesInlineView({
   initialView,
   configBase64: _configBase64,
   hideToolbar,
+  strings = DEFAULT_BASES_STRINGS,
 }: Props) {
   const [activeViewName, setActiveViewName] = useState(
     initialView ?? views[0]?.name ?? '',
@@ -152,14 +163,14 @@ export function BasesInlineView({
         <div className="base-toolbar-right">
           <span className="base-results-count">
             {filteredNotes.length === notes.length
-              ? `${notes.length} results`
-              : `${filteredNotes.length} of ${notes.length}`}
+              ? `${notes.length} ${notes.length === 1 ? strings.pageSingular : strings.pagePlural}`
+              : `${filteredNotes.length} ${strings.countOf} ${notes.length}`}
           </span>
           <div className="base-search">
             <Search className="base-search-icon" />
             <input
               type="text"
-              placeholder="Filter…"
+              placeholder={strings.filterPlaceholder}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="base-search-input"
@@ -189,6 +200,7 @@ export function BasesInlineView({
           order={activeView?.order}
           hideHeader={activeView?.hideHeader}
           groupBy={activeView?.groupBy}
+          strings={strings}
         />
       )}
       {viewType === 'gallery' && (
@@ -200,12 +212,14 @@ export function BasesInlineView({
           cardAspect={activeView?.cardAspect}
           imageProperty={activeView?.image}
           groupBy={activeView?.groupBy}
+          strings={strings}
         />
       )}
       {viewType === 'sphere' && (
         <BasesViewSphere
           notes={filteredNotes}
           imageProperty={activeView?.image}
+          strings={strings}
         />
       )}
       {viewType === 'list' && (
@@ -216,6 +230,7 @@ export function BasesInlineView({
           groupBy={activeView?.groupBy}
           nestedProperties={activeView?.nestedProperties}
           separator={activeView?.separator}
+          strings={strings}
         />
       )}
     </div>

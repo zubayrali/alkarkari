@@ -5,6 +5,7 @@ import { useState } from 'react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
 import { resolveNoteProperty, isNameColumn, resolveDisplayName, resolveImageUrl } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
+import { DEFAULT_BASES_STRINGS, type BasesStrings } from '@/lib/bases-strings'
 
 const PAGE_SIZE = 60
 
@@ -16,6 +17,7 @@ interface Props {
   cardAspect?: number
   imageProperty?: string
   groupBy?: { property: string; direction: string }
+  strings?: Pick<BasesStrings, 'noResults' | 'showMore' | 'remainingUnit'>
 }
 
 function groupByProperty(
@@ -105,6 +107,7 @@ export function BasesViewGallery({
   cardAspect,
   imageProperty,
   groupBy,
+  strings = DEFAULT_BASES_STRINGS,
 }: Props) {
   const columns = (order ?? []).filter(
     c => !isNameColumn(c) && c !== imageProperty && c !== 'description' && c !== 'tags',
@@ -140,7 +143,7 @@ export function BasesViewGallery({
           </div>
         ))}
         {notes.length === 0 && (
-          <p className="base-empty">No results.</p>
+          <p className="base-empty">{strings.noResults}</p>
         )}
       </div>
     )
@@ -163,7 +166,7 @@ export function BasesViewGallery({
         ))}
       </div>
       {notes.length === 0 && (
-        <p className="base-empty">No results.</p>
+        <p className="base-empty">{strings.noResults}</p>
       )}
       {visibleCount < notes.length && (
         <button
@@ -171,7 +174,7 @@ export function BasesViewGallery({
           className="base-load-more"
           onClick={() => setVisibleCount(v => v + PAGE_SIZE)}
         >
-          Show more ({notes.length - visibleCount} remaining)
+          {strings.showMore} ({notes.length - visibleCount} {strings.remainingUnit})
         </button>
       )}
     </div>
