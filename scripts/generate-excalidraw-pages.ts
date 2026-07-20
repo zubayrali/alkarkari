@@ -35,7 +35,7 @@ title: ${JSON.stringify(title)}
 description: Excalidraw Drawing
 full: true
 ---
-import { ExcalidrawPageContent } from "@/components/excalidraw-view";
+import { ExcalidrawPageContent } from "@/components/excalidraw-page";
 
 <ExcalidrawPageContent src=${JSON.stringify(src)} />
 `;
