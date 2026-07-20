@@ -61,6 +61,15 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <RootProvider
           i18n={i18nProvider(siteLanguage.translations)}
+          searchStrings={{
+            placeholder: siteLanguage.searchPlaceholder,
+            loading: siteLanguage.searchLoading,
+            typeToBegin: siteLanguage.searchTypeToBegin,
+            noResults: siteLanguage.searchNoResults,
+            hintNavigate: siteLanguage.searchHintNavigate,
+            hintOpen: siteLanguage.searchHintOpen,
+            hintClose: siteLanguage.searchHintClose,
+          }}
         >
           <NavProgress />
           <ScrollbarReveal />

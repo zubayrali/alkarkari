@@ -1,11 +1,21 @@
 'use client';
 
 import { RootProvider as FumadocsProvider } from 'fumadocs-ui/provider/next';
-import type { ComponentProps } from 'react';
-import SearchDialog from './search-dialog';
+import { useMemo, type ComponentProps } from 'react';
+import SearchDialog, { type SearchStrings } from './search-dialog';
 
-type Props = Omit<ComponentProps<typeof FumadocsProvider>, 'search'>;
+type Props = Omit<ComponentProps<typeof FumadocsProvider>, 'search'> & {
+  searchStrings?: SearchStrings;
+};
 
-export function RootProvider(props: Props) {
-  return <FumadocsProvider {...props} search={{ SearchDialog }} />;
+export function RootProvider({ searchStrings, ...props }: Props) {
+  const search = useMemo(
+    () => ({
+      SearchDialog: (p: { open: boolean; onOpenChange: (open: boolean) => void }) => (
+        <SearchDialog {...p} strings={searchStrings} />
+      ),
+    }),
+    [searchStrings],
+  );
+  return <FumadocsProvider {...props} search={search} />;
 }

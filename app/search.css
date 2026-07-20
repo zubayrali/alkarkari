@@ -1,4 +1,8 @@
-/* Search dialog — fumadocs look + quartz split-pane layout */
+/* Search dialog — constant night: black in BOTH color modes. Search is a
+   navigation surface, and navigation is night in this system (sidebar,
+   threshold, prev/next band). Gold on this ground is --kk-ember, never
+   light-mode --kk-gold-ink (same rule as reader-shell.css night scopes).
+   fd tokens are remapped locally so inner rules stay on fd vars. */
 
 .fd-search-dialog {
   position: fixed;
@@ -10,18 +14,19 @@
   max-height: min(80vh, 560px);
   margin: 0;
   padding: 0;
-  border: 1px solid var(--color-fd-border);
-  border-radius: 12px;
-  background: var(--color-fd-popover);
-  color: var(--color-fd-popover-foreground);
-  box-shadow:
-    0 0 0 1px var(--color-fd-border),
-    0 16px 40px rgba(0, 0, 0, 0.16);
+  border: 1px solid var(--kk-glass-line);
+  border-radius: 0;
+  background: var(--kk-night);
+  color: var(--kk-night-fg);
+  --color-fd-foreground: var(--kk-night-fg);
+  --color-fd-muted-foreground: var(--kk-night-muted);
+  --color-fd-border: var(--kk-glass-line);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
 .fd-search-dialog::backdrop {
-  background: color-mix(in srgb, var(--color-fd-background) 80%, transparent);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
@@ -38,7 +43,7 @@
 .fd-search-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--color-fd-border);
   flex-shrink: 0;
@@ -55,8 +60,9 @@
   border: none;
   outline: none;
   font-size: 15px;
-  color: var(--color-fd-popover-foreground);
+  color: var(--color-fd-foreground);
   font-family: inherit;
+  caret-color: var(--kk-ember);
 }
 
 .fd-search-input::placeholder {
@@ -74,13 +80,14 @@
 .fd-search-footer kbd {
   display: inline-block;
   padding: 2px 6px;
-  font-size: 11px;
-  font-family: inherit;
+  font-size: 10px;
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  letter-spacing: 0.04em;
   line-height: 1.4;
   color: var(--color-fd-muted-foreground);
-  background: var(--color-fd-secondary);
+  background: transparent;
   border: 1px solid var(--color-fd-border);
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 /* Body: split layout */
@@ -94,7 +101,7 @@
 .fd-search-results {
   flex: 0 0 min(50%, 380px);
   overflow-y: auto;
-  padding: 4px;
+  padding: 4px 0;
   border-right: 1px solid var(--color-fd-border);
   overscroll-behavior: contain;
 }
@@ -112,26 +119,24 @@
   align-items: flex-start;
   gap: 8px;
   width: 100%;
-  padding: 8px 10px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 0;
   background: none;
   cursor: pointer;
   text-align: left;
-  color: var(--color-fd-popover-foreground);
+  color: var(--color-fd-foreground);
   font-family: inherit;
   font-size: 14px;
   line-height: 1.4;
   transition: background 0.1s ease;
 }
 
-.fd-search-item + .fd-search-item {
-  margin-top: 1px;
-}
-
 .fd-search-item.active,
 .fd-search-item:hover {
-  background: var(--color-fd-accent);
+  background: rgba(255, 255, 255, 0.06);
+  /* gold position segment — same mark as sidebar and ledger rows */
+  box-shadow: inset 2px 0 0 var(--kk-ember);
 }
 
 .fd-search-item-icon {
@@ -160,6 +165,14 @@
   font-weight: 500;
 }
 
+/* Highlight marks */
+.fd-search-mark {
+  background: color-mix(in srgb, var(--kk-ember) 24%, transparent);
+  color: var(--kk-ember);
+  border-radius: 0;
+  padding: 0 1px;
+}
+
 /* Preview pane (right) */
 .fd-search-preview {
   flex: 1;
@@ -169,14 +182,17 @@
 }
 
 .fd-search-preview-title {
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-spectral), Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
   margin-bottom: 4px;
 }
 
 .fd-search-preview-section {
-  font-size: 14px;
-  font-weight: 500;
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-fd-muted-foreground);
   margin-bottom: 12px;
 }
@@ -194,7 +210,9 @@
   gap: 12px;
   padding: 8px 16px;
   border-top: 1px solid var(--color-fd-border);
-  font-size: 12px;
+  font-size: 11px;
+  font-family: var(--font-mono-plex), ui-monospace, monospace;
+  letter-spacing: 0.05em;
   color: var(--color-fd-muted-foreground);
   flex-shrink: 0;
 }
@@ -216,5 +234,11 @@
 
   .fd-search-preview {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-search-item {
+    transition: none;
   }
 }

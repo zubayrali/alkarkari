@@ -85,7 +85,7 @@ function highlightText(text: string, query: string): ReactNode {
   const parts = text.split(re);
   return parts.map((part, i) =>
     i % 2 === 1 ? (
-      <mark key={i} className="bg-fd-primary/20 text-fd-primary rounded-sm px-px">
+      <mark key={i} className="fd-search-mark">
         {part}
       </mark>
     ) : (
@@ -94,13 +94,34 @@ function highlightText(text: string, query: string): ReactNode {
   );
 }
 
+export interface SearchStrings {
+  placeholder: string;
+  loading: string;
+  typeToBegin: string;
+  noResults: string;
+  hintNavigate: string;
+  hintOpen: string;
+  hintClose: string;
+}
+
+const DEFAULT_STRINGS: SearchStrings = {
+  placeholder: 'Search the library…',
+  loading: 'Loading search index…',
+  typeToBegin: 'Type to search…',
+  noResults: 'No results found',
+  hintNavigate: 'Navigate',
+  hintOpen: 'Open',
+  hintClose: 'Close',
+};
 
 export default function SearchDialog({
   open,
   onOpenChange,
+  strings = DEFAULT_STRINGS,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  strings?: SearchStrings;
 }) {
   const [query, setQuery] = useState('');
   const [data, setData] = useState(cached);
@@ -223,7 +244,7 @@ export default function SearchDialog({
           <input
             ref={inputRef}
             className="fd-search-input"
-            placeholder="Search documentation…"
+            placeholder={strings.placeholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -241,13 +262,13 @@ export default function SearchDialog({
           {/* Results list */}
           <div className="fd-search-results" ref={resultsRef}>
             {!data && (
-              <div className="fd-search-empty">Loading search index…</div>
+              <div className="fd-search-empty">{strings.loading}</div>
             )}
             {data && !query.trim() && (
-              <div className="fd-search-empty">Type to search…</div>
+              <div className="fd-search-empty">{strings.typeToBegin}</div>
             )}
             {data && query.trim() && results.length === 0 && (
-              <div className="fd-search-empty">No results found</div>
+              <div className="fd-search-empty">{strings.noResults}</div>
             )}
             {results.map((entry, i) => (
               <button
@@ -309,9 +330,9 @@ export default function SearchDialog({
 
         {/* Footer */}
         <div className="fd-search-footer">
-          <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>
-          <span><kbd>&crarr;</kbd> Open</span>
-          <span><kbd>Esc</kbd> Close</span>
+          <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> {strings.hintNavigate}</span>
+          <span><kbd>&crarr;</kbd> {strings.hintOpen}</span>
+          <span><kbd>Esc</kbd> {strings.hintClose}</span>
         </div>
       </div>
     </dialog>
