@@ -76,10 +76,10 @@
 .excalidraw-controls button {
   width: 2rem;
   height: 2rem;
-  border: 1px solid var(--fd-border);
-  border-radius: 6px;
-  background: var(--fd-background);
-  color: var(--fd-muted-foreground);
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0;
+  background: var(--color-fd-background);
+  color: var(--color-fd-muted-foreground);
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
@@ -90,8 +90,8 @@
 }
 
 .excalidraw-controls button:hover {
-  background: var(--fd-accent);
-  color: var(--fd-accent-foreground);
+  background: var(--color-fd-accent);
+  color: var(--color-fd-accent-foreground);
 }
 
 /* Embedded in popover previews */

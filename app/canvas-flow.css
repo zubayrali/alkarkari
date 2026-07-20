@@ -81,3 +81,11 @@
   border-radius: 0;
   box-shadow: none;
 }
+
+/* Viewer chrome — Night Instruments pass: square hairline zoom controls.
+   Unlayered CSS wins over the Tailwind utility layer's rounded classes
+   from buttonVariants. */
+.canvas-controls button {
+  border-radius: 0;
+  border: 1px solid var(--color-fd-border);
+}

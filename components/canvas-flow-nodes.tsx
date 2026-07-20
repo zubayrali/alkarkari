@@ -93,11 +93,11 @@ function getLinkLabel(url: string) {
 }
 
 const cardClass =
-  'h-full w-full overflow-hidden rounded-lg border text-fd-card-foreground shadow-sm';
+  'h-full w-full overflow-hidden border text-fd-card-foreground';
 
 const groupFrameClass = cn(
   buttonVariants({ color: 'secondary' }),
-  'h-full w-full !p-0 hover:bg-fd-secondary hover:text-fd-secondary-foreground',
+  'h-full w-full !rounded-none !p-0 hover:bg-fd-secondary hover:text-fd-secondary-foreground',
 );
 
 const TextFlowNode = memo(function TextFlowNode({ data }: NodeProps<Node<CanvasFlowNodeData>>) {

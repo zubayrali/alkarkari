@@ -92,7 +92,7 @@ export function CanvasView({ data, mdxPreviews = {} }: CanvasViewProps) {
   useCanvasFullbleed();
   if (data.nodes.length === 0) {
     return (
-      <div className="not-prose flex h-[min(480px,60vh)] items-center justify-center rounded-xl border bg-fd-background text-sm text-fd-muted-foreground">
+      <div className="not-prose flex h-[min(480px,60vh)] items-center justify-center border bg-fd-background text-sm text-fd-muted-foreground">
         Empty canvas
       </div>
     );
@@ -105,7 +105,7 @@ export function CanvasView({ data, mdxPreviews = {} }: CanvasViewProps) {
           <CanvasFlow data={data} />
         </ReactFlowProvider>
       </CanvasMdxPreviewContext.Provider>
-      <div className="pointer-events-none absolute bottom-3 right-3 z-10 rounded-md border bg-fd-background/90 px-2 py-1 text-xs text-fd-muted-foreground">
+      <div className="pointer-events-none absolute bottom-3 right-3 z-10 border bg-fd-background/90 px-2 py-1 text-xs text-fd-muted-foreground">
         Drag to pan · Scroll to zoom
       </div>
     </div>
