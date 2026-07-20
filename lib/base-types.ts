@@ -38,7 +38,7 @@ export interface PropertyConfig {
 }
 
 export interface BaseView {
-  type: 'table' | 'gallery' | 'list'
+  type: 'table' | 'gallery' | 'list' | 'sphere'
   name: string
   filters?: FilterNode
   groupBy?: { property: string; direction: 'ASC' | 'DESC' }

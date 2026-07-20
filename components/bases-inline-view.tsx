@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useCallback, useTransition, useMemo } from 'react'
-import { List, LayoutGrid, Table2, Search, X } from 'lucide-react'
+import { List, LayoutGrid, Table2, Orbit, Search, X } from 'lucide-react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
 import { BasesViewTable } from './bases-view-table'
 import { BasesViewGallery } from './bases-view-gallery'
 import { BasesViewList } from './bases-view-list'
+import { BasesViewSphere } from './bases-view-sphere'
 
 interface ViewMeta {
   name: string
-  type: 'table' | 'gallery' | 'list'
+  type: 'table' | 'gallery' | 'list' | 'sphere'
   hideHeader?: boolean
   groupBy?: { property: string; direction: string }
   order?: string[]
@@ -35,6 +36,7 @@ const viewIcons: Record<string, React.ReactNode> = {
   table: <Table2 className="size-3.5" />,
   list: <List className="size-3.5" />,
   gallery: <LayoutGrid className="size-3.5" />,
+  sphere: <Orbit className="size-3.5" />,
 }
 
 export function BasesInlineView({
@@ -198,6 +200,12 @@ export function BasesInlineView({
           cardAspect={activeView?.cardAspect}
           imageProperty={activeView?.image}
           groupBy={activeView?.groupBy}
+        />
+      )}
+      {viewType === 'sphere' && (
+        <BasesViewSphere
+          notes={filteredNotes}
+          imageProperty={activeView?.image}
         />
       )}
       {viewType === 'list' && (

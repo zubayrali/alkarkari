@@ -115,7 +115,9 @@ function parseViews(raw: unknown): BaseView[] {
           ? 'gallery'
           : rawType === 'list'
             ? 'list'
-            : 'table'
+            : rawType === 'sphere'
+              ? 'sphere'
+              : 'table'
       const name = typeof v.name === 'string' ? v.name : type[0].toUpperCase() + type.slice(1)
       const view: BaseView = { type, name }
       if (v.filters) view.filters = v.filters as FilterNode

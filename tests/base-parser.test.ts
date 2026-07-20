@@ -24,6 +24,13 @@ describe('parseBaseConfig', () => {
     expect(config.views![0]).toMatchObject({ type: 'table', name: 'Table' })
   })
 
+  it('parses the sphere view type', () => {
+    const yaml = `views:\n  - type: sphere\n    name: Sphere\n  - type: nonsense\n`
+    const { config } = parseBaseConfig(yaml)
+    expect(config.views![0].type).toBe('sphere')
+    expect(config.views![1].type).toBe('table') // unknown types still fall back
+  })
+
   it('synthesises default table view when views array is absent', () => {
     const { config } = parseBaseConfig('')
     expect(config.views).toHaveLength(1)
