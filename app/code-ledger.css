@@ -1,0 +1,44 @@
+/* Code blocks as ledger panels — the Night Instruments pass.
+   Frame + labels only; shiki syntax colors stay fumadocs' defaults in
+   both modes (theme-following, per the spec decision).
+
+   Selector contract (stable-DOM dependency, same rule as nd-page/nd-toc):
+   fumadocs-ui's CodeBlock (dist/components/codeblock.js) renders
+     figure.shiki
+       > div (title bar, contains > figcaption)   — only when titled
+       > div[class*="backdrop-blur"] > button     — floating copy button
+       > div > pre                                — the code area
+   Re-verify these shapes when upgrading fumadocs-ui. */
+
+#nd-page figure.shiki {
+  border-radius: 0;
+  border: 1px solid var(--color-fd-border);
+  box-shadow: none;
+}
+
+/* Title bar: mono uppercase label on its hairline rule — the same idiom
+   as ledger column heads. */
+#nd-page figure.shiki > div:has(> figcaption) {
+  font-family: var(--font-mono-plex), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+/* Copy button and its floating wrapper: square, quiet. */
+#nd-page figure.shiki button,
+#nd-page figure.shiki div[class*="backdrop-blur"] {
+  border-radius: 0;
+}
+
+/* Inline code: de-pilled — faint ink tint, no border, no radius.
+   `:not(pre) >` keeps block code untouched; the compound selector
+   out-specifies the typography plugin's `.prose :where(code)` rule. */
+.prose :not(pre) > code {
+  border: none;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--color-fd-foreground) 6%, transparent);
+  padding: 0.15em 0.4em;
+}

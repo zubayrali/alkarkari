@@ -12,6 +12,7 @@
 @import "./tag-ledger.css";
 @import "./base-ledger.css";
 @import "./graph-ledger.css";
+@import "./code-ledger.css";
 @import "./sewn.css";
 @import "./reader-shell.css";
 /* Karkari retheme — imported last so its token overrides win the cascade */
