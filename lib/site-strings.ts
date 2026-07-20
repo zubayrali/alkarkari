@@ -280,6 +280,17 @@ export interface SiteStrings {
   pageSingular: string;
   pagePlural: string;
   countOfLabel: string;
+  baseNoResults: string;
+  baseShowMore: string;
+  baseRemainingUnit: string;
+  baseFilterPlaceholder: string;
+  searchPlaceholder: string;
+  searchLoading: string;
+  searchTypeToBegin: string;
+  searchNoResults: string;
+  searchHintNavigate: string;
+  searchHintOpen: string;
+  searchHintClose: string;
   navStartHere: string;
   navDictionary: string;
   navBooks: string;
