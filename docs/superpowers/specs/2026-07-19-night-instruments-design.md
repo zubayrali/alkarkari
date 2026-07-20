@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-19
 
-**Status:** Approved (design).
+**Status:** Implemented (2026-07-19).
 
 **Scope:** Third Night Threshold pass — extends the ledger language to the
 remaining deferred surfaces: the graph view (global + local), the spaced-
