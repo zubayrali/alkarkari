@@ -99,6 +99,8 @@ Generation is read-only on the vault — it never modifies Obsidian files.
 - `components/bases-page.tsx` — RSC: reads compiled JSON from disk, renders first view (no fetch); properties come from `compiled.config.properties` (single source, not duplicated at top level)
 - `components/bases-inline-view.tsx` — client component: view-tab switching, lazy VM re-evaluation
 - `components/bases-view-table.tsx` / `bases-view-gallery.tsx` / `bases-view-list.tsx` — view renderers; all import property resolution from `lib/base-properties.ts`
+- View styles (table/list/gallery/sphere, view tabs, result count) live in `app/base-ledger.css` — the Night Threshold ledger idiom (hairlines, mono uppercase labels, Spectral titles, gold position marks), not scattered fumadocs overrides
+- `lib/bases-strings.ts` — `basesStringsFrom(lang)` resolves localized Base-view strings ("No results.", "Show more (N remaining)", pageSingular/pagePlural/countOfLabel, etc.); threaded through `components/bases-page.tsx` and `components/mdx.tsx` (which re-exports it for `bases-inline-view.tsx`) rather than hardcoded per-component
 
 **Tags**
 - `lib/tags.ts` — tag primitives: `normalizeTags`, `getTagPrefixes`, `tagUrl`
@@ -204,7 +206,7 @@ The site is deployed as **one isolated static build per locale**, stitched into 
 
 **Search:**
 - Build side: `app/api/search-index/route.ts` iterates `source.getPages()`, extracts `structuredData` (headings + contents), and exports a static JSON array of `{url, title, section?, sectionId?, content}` entries at `/api/search-index`.
-- Client side: `components/search-dialog.tsx` fetches the JSON index, builds a `flexsearch` `Index` (tokenize: forward), and renders a split-pane dialog (results left, content preview right) wired into fumadocs via `components/root-provider.tsx` → `search: { SearchDialog }`. The dialog uses a native `<dialog>` element with `showModal()`. The index is cached module-level so it persists across dialog open/close.
+- Client side: `components/search-dialog.tsx` fetches the JSON index, builds a `flexsearch` `Index` (tokenize: forward), and renders a split-pane dialog (results left, content preview right) wired into fumadocs via `components/root-provider.tsx` → `search: { SearchDialog }`. The dialog uses a native `<dialog>` element with `showModal()`. The index is cached module-level so it persists across dialog open/close. The dialog is a **constant-night** surface (`app/search.css`) — black panel, gold accents, and dark-mode-safe gold in both light and dark site themes, since the ground never changes. Strings are localized and threaded via `RootProvider`'s `searchStrings` prop.
 - Reader mode's Escape handler (`components/reader-toggle.tsx`) guards against `dialog[open]` so Escape closes the search dialog without also exiting reader mode.
 
 ## Environment variables

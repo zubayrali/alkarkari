@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-19
 
-**Status:** Approved design; awaiting implementation
+**Status:** Implemented (2026-07-19).
 
 **Scope:** Second Night Threshold pass — extends the reader shell's ledger
 language to the four Base views (table, list, gallery, sphere) and the
