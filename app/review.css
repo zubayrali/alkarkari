@@ -192,10 +192,6 @@
   background: color-mix(in oklab, var(--rv-color-accent) 10%, var(--color-fd-background));
 }
 
-.dark .rv-card {
-  border: 1px solid var(--color-fd-border);
-}
-
 /* ── Prompt (question) ── */
 
 /* Quantum hierarchy: big friendly sans question, serif answer. */
@@ -638,6 +634,10 @@
   white-space: nowrap;
 }
 
+.rv-restart:hover {
+  background: var(--color-fd-accent);
+  color: var(--color-fd-foreground);
+}
 
 /* ── Mobile ── */
 
