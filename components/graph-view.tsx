@@ -129,6 +129,8 @@ interface ThemeColors {
   tag: Rgb;
   label: Rgb;
   link: Rgb;
+  /** Resolved font-family list for canvas labels (mono ledger face). */
+  font: string;
 }
 
 function readThemeColors(container: HTMLElement): ThemeColors {
@@ -144,9 +146,10 @@ function readThemeColors(container: HTMLElement): ThemeColors {
       Math.round((primary[2] + muted[2]) / 2),
     ],
     page: muted,
-    tag: resolveColor(token('--color-teal-500') || 'teal'),
+    tag: resolveColor(token('--graph-tag-color') || 'teal'),
     label: resolveColor(token('--color-fd-foreground')),
     link: muted,
+    font: token('--font-mono').trim() || 'monospace',
   };
 }
 
@@ -210,7 +213,7 @@ export function GraphView({
   return (
     <div
       ref={ref}
-      className={`not-prose group relative w-full max-w-full overflow-hidden rounded-xl border bg-fd-background ${
+      className={`not-prose group relative w-full max-w-full overflow-hidden graph-frame ${
         className ?? 'h-[min(600px,70vh)]'
       }`}
     >
@@ -229,7 +232,7 @@ export function GraphView({
         <button
           type="button"
           aria-label="Zoom to fit"
-          className="rounded-md border bg-fd-background/80 p-1.5 text-fd-muted-foreground backdrop-blur hover:text-fd-foreground"
+          className="graph-btn"
           onClick={() => fitRef.current?.()}
         >
           <Crosshair className="size-3.5" />
@@ -237,7 +240,7 @@ export function GraphView({
         <button
           type="button"
           aria-label={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-          className="rounded-md border bg-fd-background/80 p-1.5 text-fd-muted-foreground backdrop-blur hover:text-fd-foreground"
+          className="graph-btn"
           onClick={() => {
             if (document.fullscreenElement === ref.current) {
               void document.exitFullscreen();
@@ -523,7 +526,7 @@ function ClientOnly({
 
     if (labelAlpha > 0.01) {
       const fontSize = LABEL_FONT_PX / globalScale;
-      ctx.font = `${fontSize}px sans-serif`;
+      ctx.font = `${fontSize}px ${colors.font}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillStyle = rgba(colors.label, labelAlpha);
@@ -601,7 +604,7 @@ function ClientOnly({
       />
       <div
         ref={tooltipRef}
-        className="pointer-events-none absolute z-10 max-w-xs rounded-lg border bg-fd-popover p-2 text-sm text-fd-popover-foreground shadow-lg"
+        className="graph-tooltip pointer-events-none absolute z-10 max-w-xs p-2 text-sm"
         style={{ display: 'none' }}
       >
         <div className="font-medium" />

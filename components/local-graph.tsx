@@ -39,7 +39,7 @@ export function LocalGraph({
       extraControls={
         <select
           aria-label="Graph depth"
-          className="rounded-md border bg-fd-background/80 px-1.5 py-1 text-xs text-fd-muted-foreground backdrop-blur"
+          className="graph-select text-xs"
           value={depth}
           onChange={(event) => setDepth(Number(event.target.value))}
         >

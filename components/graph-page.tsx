@@ -11,12 +11,12 @@ export async function GraphPageContent() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="not-prose flex flex-wrap items-center justify-between gap-2 text-sm text-fd-muted-foreground">
+      <div className="not-prose graph-legend flex flex-wrap items-center justify-between gap-2 text-fd-muted-foreground">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
             <span
               aria-hidden
-              className="inline-block size-2.5 rounded-full"
+              className="inline-block size-2.5"
               style={{ backgroundColor: 'var(--color-fd-muted-foreground)' }}
             />
             {siteLanguage.graphLegendPage}
@@ -24,8 +24,8 @@ export async function GraphPageContent() {
           <span className="flex items-center gap-1.5">
             <span
               aria-hidden
-              className="inline-block size-2.5 rounded-full"
-              style={{ backgroundColor: 'var(--color-teal-500)' }}
+              className="inline-block size-2.5"
+              style={{ backgroundColor: 'var(--graph-tag-color)' }}
             />
             {siteLanguage.graphLegendTag}
           </span>
