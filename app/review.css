@@ -512,6 +512,12 @@
   background: color-mix(in srgb, currentColor 14%, transparent);
 }
 
+.rv-btn:focus-visible,
+.rv-restart:focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: 1px;
+}
+
 /* The affirmative action carries the gold position mark (AA per mode). */
 .rv-remembered:not(.disabled) {
   border-color: var(--kk-gold-ink);
