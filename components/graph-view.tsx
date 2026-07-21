@@ -18,6 +18,7 @@ import type {
 import { forceCollide, forceLink, forceManyBody, forceRadial } from 'd3-force';
 import { useRouter } from 'fumadocs-core/framework';
 import { Crosshair, Maximize2, Minimize2 } from 'lucide-react';
+import { patchOf } from '@/lib/patch';
 
 // Graph rendering behaviors (degree-sized nodes, zoom-faded labels,
 // focus-on-hover dimming, visited tint, radial layout for the global view)
@@ -37,6 +38,8 @@ export interface NodeType {
   neighbors?: string[];
   url: string;
   kind?: 'page' | 'tag';
+  /** Section (top-level URL segment) — drives node colour via patchOf. */
+  group?: string;
 }
 
 export type LinkType = Record<string, unknown>;
@@ -58,8 +61,11 @@ const ForceGraph2D = lazy(
 // basePath-less, so an unprefixed key would tint pages "visited" across
 // languages (see the i18n spec's per-locale details table).
 const VISITED_KEY = `graph-visited:${process.env.NEXT_PUBLIC_SITE_LANGUAGE || 'en'}`;
-/** How quickly labels appear as you zoom in; higher = appear later. */
-const LABEL_OPACITY_SCALE = 0.6;
+/** How quickly labels appear as you zoom in; higher = appear later.
+ *  Local graphs show labels near rest (few nodes, titles are the content);
+ *  the global graph keeps them hidden until ~1.3× the fitted zoom — hundreds
+ *  of overlapping titles at rest read as text soup. */
+const LABEL_OPACITY_SCALE = { local: 0.6, global: 1.4 };
 const LABEL_FONT_PX = 11;
 const DIM_ALPHA = 0.12;
 
@@ -124,39 +130,43 @@ function rgba([r, g, b]: Rgb, alpha: number): string {
 
 interface ThemeColors {
   current: Rgb;
-  visited: Rgb;
   page: Rgb;
   tag: Rgb;
   label: Rgb;
   link: Rgb;
+  /** Section → resolved patch colour (muraqqaʿa spectrum via patchOf). */
+  groups: Record<string, Rgb>;
   /** Resolved font-family list for canvas labels (mono ledger face). */
   font: string;
 }
 
-function readThemeColors(container: HTMLElement): ThemeColors {
+function readThemeColors(container: HTMLElement, groups: string[]): ThemeColors {
   const style = getComputedStyle(container);
   const token = (name: string) => style.getPropertyValue(name);
-  const primary = resolveColor(token('--color-fd-primary'));
   const muted = resolveColor(token('--color-fd-muted-foreground'));
   return {
-    current: primary,
-    visited: [
-      Math.round((primary[0] + muted[0]) / 2),
-      Math.round((primary[1] + muted[1]) / 2),
-      Math.round((primary[2] + muted[2]) / 2),
-    ],
+    current: resolveColor(token('--color-fd-primary')),
     page: muted,
     tag: resolveColor(token('--graph-tag-color') || 'teal'),
     label: resolveColor(token('--color-fd-foreground')),
     link: muted,
+    groups: Object.fromEntries(
+      groups.map((group) => [
+        group,
+        resolveColor(token(`--graph-node-color-${patchOf(group)}`)),
+      ]),
+    ),
     font: token('--font-mono').trim() || 'monospace',
   };
 }
 
-/** Per-frame exponential approach toward a target alpha (smooth fades). */
-function tween(map: Map<string, number>, key: string, target: number): number {
+/** Exponential approach toward a target alpha (smooth fades). Time-based
+ *  (τ ≈ 85ms ≈ the old 0.18/frame at 60fps): a fixed per-frame factor runs
+ *  2× fast on 120Hz displays and crawls through frame stalls. */
+function tween(map: Map<string, number>, key: string, target: number, dt: number): number {
   const current = map.get(key) ?? target;
-  let next = current + (target - current) * 0.18;
+  const factor = 1 - Math.exp(-dt / 85);
+  let next = current + (target - current) * factor;
   if (Math.abs(next - target) < 0.01) next = target;
   map.set(key, next);
   return next;
@@ -300,6 +310,34 @@ function ClientOnly({
   // d3 mutates node objects (x/y/vx/vy); never hand it the RSC-owned props.
   const data = useMemo(() => structuredClone(graph), [graph]);
 
+  const groups = useMemo(
+    () =>
+      [...new Set(data.nodes.map((node) => node.group))].filter(
+        (group): group is string => Boolean(group),
+      ),
+    [data],
+  );
+
+  // Wall-clock frame delta for the time-based tween(), captured once per frame.
+  const lastFrameRef = useRef(0);
+  const frameDtRef = useRef(16);
+
+  // Semantic zoom (aarnphm's √-law): solid marks scale as √zoom while
+  // distances scale linearly, so gaps visibly open as you zoom in. Both refs
+  // are stamped once per frame in onRenderFramePre.
+  const relativeZoomRef = useRef(1);
+  const visualScaleRef = useRef(1);
+
+  // Density-aware label threshold: past 55 nodes, labels appear at the zoom
+  // where ~40 nodes fill the view (nodes-in-view ∝ n/rz², and this formula's
+  // log2 semantics put the start at rz = 2^(scale-1)); never earlier than the
+  // variant's configured value.
+  const labelOpacityScale = useMemo(() => {
+    const base = LABEL_OPACITY_SCALE[variant];
+    const n = data.nodes.length;
+    return n > 55 ? Math.max(base, 1 + 0.5 * Math.log2(n / 40)) : base;
+  }, [data, variant]);
+
   useEffect(() => {
     return () => {
       if (hoverClearTimer.current) clearTimeout(hoverClearTimer.current);
@@ -311,18 +349,18 @@ function ClientOnly({
 
     const container = containerRef.current;
     if (!container) return;
-    colorsRef.current = readThemeColors(container);
+    colorsRef.current = readThemeColors(container, groups);
 
     // Re-resolve theme tokens when light/dark mode flips.
     const observer = new MutationObserver(() => {
-      colorsRef.current = readThemeColors(container);
+      colorsRef.current = readThemeColors(container, groups);
     });
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
     return () => observer.disconnect();
-  }, [containerRef]);
+  }, [containerRef, groups]);
 
   useEffect(() => {
     fitRef.current = () => fitGraph(graphRef.current);
@@ -467,7 +505,9 @@ function ClientOnly({
     (node: Node) => {
       const degree = node.neighbors?.length ?? 0;
       const isCurrent = currentUrl !== undefined && node.url === currentUrl;
-      return 2 + Math.sqrt(degree) + (isCurrent ? 1.5 : 0);
+      // 1.8× on √degree so hubs visually anchor their cluster (a 50-link hub
+      // reads ~15px vs ~9px with the plain √) — gives the eye a hierarchy.
+      return 2 + Math.sqrt(degree) * 1.8 + (isCurrent ? 1.5 : 0);
     },
     [currentUrl],
   );
@@ -482,22 +522,28 @@ function ClientOnly({
 
     const id = node.id as string;
     const isCurrent = currentUrl !== undefined && node.url === currentUrl;
-    const radius = nodeRadius(node);
+    const isHovered = hoveredRef.current?.id === node.id;
+    const radius = nodeRadius(node) * visualScaleRef.current;
+    const dt = frameDtRef.current;
 
     const active = isActive(node);
-    const alpha = tween(nodeAlphas.current, id, active ? 1 : DIM_ALPHA);
+    const alpha = tween(nodeAlphas.current, id, active ? 1 : DIM_ALPHA, dt);
 
-    const fill = isCurrent
+    const fill = isCurrent || isHovered
       ? colors.current
       : node.kind === 'tag'
         ? colors.tag
-        : visitedRef.current.has(node.url)
-          ? colors.visited
-          : colors.page;
+        : (node.group && colors.groups[node.group]) || colors.page;
+
+    // Visited pages keep their section colour but sit back a step — an alpha
+    // dim instead of the old dedicated visited hue, which would erase the
+    // section colouring for every page the reader has seen.
+    const visitedDim =
+      !isCurrent && !isHovered && visitedRef.current.has(node.url) ? 0.55 : 1;
 
     ctx.beginPath();
     ctx.arc(node.x!, node.y!, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = rgba(fill, alpha);
+    ctx.fillStyle = rgba(fill, alpha * visitedDim);
     ctx.fill();
 
     if (isCurrent) {
@@ -509,11 +555,10 @@ function ClientOnly({
     }
 
     // Zoom-faded labels (quartz formula): fade in as you zoom past baseline.
-    const baseline = baselineZoomRef.current ?? globalScale;
-    const relativeZoom = Math.max(globalScale / baseline, 1e-4);
+    const relativeZoom = relativeZoomRef.current;
     const zoomAlpha = Math.min(
       1,
-      Math.max(0, Math.log2(relativeZoom) + 1 - LABEL_OPACITY_SCALE),
+      Math.max(0, Math.log2(relativeZoom) + 1 - labelOpacityScale),
     );
 
     const hovered = hoveredRef.current !== null;
@@ -522,10 +567,12 @@ function ClientOnly({
         ? 1
         : zoomAlpha * DIM_ALPHA
       : zoomAlpha;
-    const labelAlpha = tween(labelAlphas.current, id, labelTarget);
+    const labelAlpha = tween(labelAlphas.current, id, labelTarget, dt);
 
     if (labelAlpha > 0.01) {
-      const fontSize = LABEL_FONT_PX / globalScale;
+      // Labels grow as √zoom (same law as nodes), capped at 1.5× so long
+      // titles don't blow up into a wall of giant text at deep zoom.
+      const fontSize = (LABEL_FONT_PX * Math.min(Math.sqrt(relativeZoom), 1.5)) / globalScale;
       ctx.font = `${fontSize}px ${colors.font}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -551,8 +598,57 @@ function ClientOnly({
       if (active) color = colors.current;
     }
 
-    return rgba(color, tween(linkAlphas.current, key, alphaTarget));
+    return rgba(color, tween(linkAlphas.current, key, alphaTarget, frameDtRef.current));
   };
+
+  // Draw links trimmed at each node's radius so edges touch circles instead
+  // of piercing through them — center-to-center lines turn hubs into
+  // scribbles. Width is screen-constant (counter-scaled by zoom).
+  const linkCanvasObject: ForceGraphProps<Node, Link>['linkCanvasObject'] = (
+    link,
+    ctx,
+    globalScale,
+  ) => {
+    const source = link.source as Node;
+    const target = link.target as Node;
+    if (source.x == null || target.x == null) return;
+
+    const dx = target.x - source.x;
+    const dy = target.y! - source.y!;
+    const dist = Math.hypot(dx, dy);
+    const sourceRadius = nodeRadius(source) * visualScaleRef.current;
+    const targetRadius = nodeRadius(target) * visualScaleRef.current;
+    if (dist <= sourceRadius + targetRadius) return;
+
+    const ux = dx / dist;
+    const uy = dy / dist;
+    ctx.strokeStyle = linkColor(link);
+    ctx.lineWidth = 1.5 / globalScale;
+    ctx.beginPath();
+    ctx.moveTo(source.x + ux * sourceRadius, source.y! + uy * sourceRadius);
+    ctx.lineTo(target.x - ux * targetRadius, target.y! - uy * targetRadius);
+    ctx.stroke();
+  };
+
+  // Label-fade baseline = the zoom zoomToFit lands on, derived from the node
+  // bounding box (same 32px padding) instead of sampling zoom() on a timer —
+  // the old setTimeout(450) raced the 400ms fit animation and any user input.
+  const computeFitZoom = useCallback(() => {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const node of data.nodes) {
+      if (node.x == null || node.y == null) continue;
+      if (node.x < minX) minX = node.x;
+      if (node.x > maxX) maxX = node.x;
+      if (node.y < minY) minY = node.y;
+      if (node.y > maxY) maxY = node.y;
+    }
+    if (minX === Infinity) return null;
+    const pad = 32;
+    return Math.min(8, Math.max(0.3, Math.min(
+      (size.width - 2 * pad) / Math.max(maxX - minX, 1),
+      (size.height - 2 * pad) / Math.max(maxY - minY, 1),
+    )));
+  }, [data, size.width, size.height]);
 
   useEffect(() => {
     // New dataset (navigation, depth change): re-arm one fresh auto-fit. The
@@ -567,14 +663,27 @@ function ClientOnly({
         height={size.height}
         ref={fgRefObject.current}
         graphData={data}
+        onRenderFramePre={(_ctx, globalScale) => {
+          const now = performance.now();
+          frameDtRef.current = lastFrameRef.current
+            ? Math.min(now - lastFrameRef.current, 100)
+            : 16;
+          lastFrameRef.current = now;
+
+          const baseline = baselineZoomRef.current ?? globalScale;
+          const rz = Math.max(globalScale / baseline, 1e-4);
+          relativeZoomRef.current = rz;
+          visualScaleRef.current = Math.min(Math.max(1 / Math.sqrt(rz), 0.25), 4);
+        }}
         nodeCanvasObject={nodeCanvasObject}
         nodePointerAreaPaint={(node, color, ctx) => {
           ctx.beginPath();
-          ctx.arc(node.x!, node.y!, nodeRadius(node) + 2, 0, 2 * Math.PI, false);
+          ctx.arc(node.x!, node.y!, nodeRadius(node) * visualScaleRef.current + 2, 0, 2 * Math.PI, false);
           ctx.fillStyle = color;
           ctx.fill();
         }}
-        linkColor={linkColor}
+        linkCanvasObjectMode={() => 'replace'}
+        linkCanvasObject={linkCanvasObject}
         onNodeHover={handleNodeHover}
         onNodeClick={(node) => {
           recordVisited(node.url);
@@ -590,14 +699,14 @@ function ClientOnly({
           if (didAutoFitRef.current) return;
           didAutoFitRef.current = true;
           fitGraph(graphRef.current);
-          // Record the post-fit zoom as the label-fade baseline.
-          window.setTimeout(() => {
-            baselineZoomRef.current = graphRef.current?.zoom() ?? null;
-          }, 450);
+          // Label-fade baseline: the fit target, computed — not sampled later.
+          baselineZoomRef.current = computeFitZoom();
         }}
         minZoom={0.3}
-        maxZoom={8}
-        linkWidth={1.5}
+        // Zoom ceiling scales with graph size (√(n/4), capped 8..16): big
+        // graphs need headroom to thin out to a readable label regime, but a
+        // fixed high ceiling on a small graph just zooms into empty space.
+        maxZoom={Math.min(16, Math.max(8, Math.sqrt(data.nodes.length / 4)))}
         autoPauseRedraw={false}
         enableNodeDrag
         enableZoomInteraction

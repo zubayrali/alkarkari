@@ -16,6 +16,13 @@ export function buildGraph(): Graph {
   return graph;
 }
 
+/** Section (top-level URL segment) a page belongs to — drives node colour via
+ *  patchOf(section). Root-level pages (start-here etc.) have none. */
+function sectionOf(url: string): string | undefined {
+  const segments = url.split('/').filter(Boolean);
+  return segments.length >= 2 ? segments[0] : undefined;
+}
+
 function computeGraph(): Graph {
   const pages = source.getPages().filter(
     (page) => !page.data.unlisted,
@@ -62,6 +69,7 @@ function computeGraph(): Graph {
       text: page.data.title,
       description: page.data.description,
       kind: 'page',
+      group: sectionOf(page.url),
     });
 
     const { extractedReferences = [] } = page.data;

@@ -7,10 +7,40 @@
 :root {
   /* Tag nodes: muraqqaʿa spectrum, luminous variant on the ink ground. */
   --graph-tag-color: var(--kk-patch-6);
+
+  /* Page nodes: coloured by section via patchOf(section) — graph-view.tsx
+     resolves --graph-node-color-N at runtime, graph-page.tsx uses the same
+     vars for the legend swatches. Ray variants on the night ground because
+     graph dots sit in the "small mark" regime the spectrum comment calls out. */
+  --graph-node-color-1: var(--kk-patch-1);
+  --graph-node-color-2: var(--kk-patch-2);
+  --graph-node-color-3: var(--kk-patch-3);
+  --graph-node-color-4: var(--kk-patch-4);
+  --graph-node-color-5: var(--kk-patch-5);
+  --graph-node-color-6: var(--kk-patch-6);
+  --graph-node-color-7: var(--kk-patch-7);
+  --graph-node-color-8: var(--kk-patch-8);
+  --graph-node-color-9: var(--kk-patch-9);
+  --graph-node-color-10: var(--kk-patch-10);
+  --graph-node-color-11: var(--kk-patch-11);
+  --graph-node-color-12: var(--kk-patch-12);
 }
 
 .dark {
   --graph-tag-color: var(--kk-ray-6);
+
+  --graph-node-color-1: var(--kk-ray-1);
+  --graph-node-color-2: var(--kk-ray-2);
+  --graph-node-color-3: var(--kk-ray-3);
+  --graph-node-color-4: var(--kk-ray-4);
+  --graph-node-color-5: var(--kk-ray-5);
+  --graph-node-color-6: var(--kk-ray-6);
+  --graph-node-color-7: var(--kk-ray-7);
+  --graph-node-color-8: var(--kk-ray-8);
+  --graph-node-color-9: var(--kk-ray-9);
+  --graph-node-color-10: var(--kk-ray-10);
+  --graph-node-color-11: var(--kk-ray-11);
+  --graph-node-color-12: var(--kk-ray-12);
 }
 
 .graph-frame {
