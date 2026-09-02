@@ -50,7 +50,13 @@ async function main() {
     : undefined;
   const poller = createSnapshotPoller({
     client: bridgeClient!, workspaceId, statePath, pollSeconds,
-    refresh: async () => { await runNode("scripts/generate-affine.ts"); await runNode("scripts/stage.ts"); },
+    refresh: async () => {
+      await runNode("scripts/generate-affine.ts");
+      await runNode("scripts/stage.ts");
+      if (process.env.PUBLISHER_RELEASE_ON_CHANGE === "1") {
+        await runNode("scripts/publisher-release.ts");
+      }
+    },
   });
   await poller.start();
 }

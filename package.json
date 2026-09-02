@@ -39,6 +39,8 @@
     "generate:affine": "node --env-file=.env.affine scripts/generate-affine.ts",
     "publisher:watch": "node --env-file=.env.publisher scripts/affine-publisher-service.ts",
     "publisher:doctor": "node --env-file=.env.publisher scripts/publisher-doctor.ts",
+    "publisher:release": "node --env-file=.env.publisher scripts/publisher-release.ts",
+    "publisher:rollback": "node --env-file=.env.publisher scripts/publisher-rollback.ts",
     "publisher:service:install": "node scripts/install-affine-publisher-service.ts",
     "migrate:affine-metadata": "node --env-file=.env.publisher scripts/migrate-affine-metadata.ts",
     "prepare:affine-import": "node scripts/prepare-affine-import.ts",

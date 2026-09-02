@@ -1,10 +1,19 @@
 import { existsSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { startReadOnlyBridgePublisher } from "@affine-fumadocs/publisher/service";
 
 const root = process.cwd();
 const bridgeUrl = process.env.AFFINE_BRIDGE_MCP_URL?.trim() || "http://127.0.0.1:3333/mcp";
-const servicePath = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
+const servicePath = [
+  path.join(os.homedir(), ".local", "bin"),
+  path.join(os.homedir(), ".local", "share", "pnpm"),
+  "/opt/homebrew/bin",
+  "/usr/local/bin",
+  "/usr/bin",
+  "/bin",
+  process.env.PATH,
+].filter(Boolean).join(":");
 let stopping = false;
 let service: { stop(): void } | undefined;
 
@@ -31,10 +40,11 @@ async function main() {
     bridgeCommand: affineMcpCommand(),
     publisherCommand: process.execPath,
     publisherArgs: ["scripts/affine-publisher.ts"],
+    environment: { ...process.env, PATH: servicePath },
     bridgeEnvironment: {
       AFFINE_BASE_URL: process.env.AFFINE_BASE_URL?.trim() || "http://localhost:3010",
       AFFINE_COOKIE: cookie,
-      PATH: `${servicePath}:${process.env.PATH ?? ""}`,
+      PATH: servicePath,
     },
     onUnexpectedExit(name, detail) {
       if (stopping) return;

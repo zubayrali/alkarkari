@@ -52,6 +52,10 @@ pnpm publisher:service:install
 
 Its logs are stored in `.affine-publisher/logs/`.
 
+The installer supplies common macOS package-manager paths to the LaunchAgent.
+If `pnpm` lives elsewhere, set `PUBLISHER_PNPM_BIN` in `.env.publisher` to the
+absolute path reported by `command -v pnpm`, then restart the service.
+
 The first check generates a snapshot. Later checks publish only when the
 workspace metadata fingerprint changes. The poll interval cannot be below 15
 seconds; 45–60 seconds is the recommended range for a small self-hosted setup.
@@ -91,6 +95,36 @@ For local development, keep `pnpm dev` running; staged content updates are picke
 up by Next.js. For production, run this poller alongside the deployment process
 and make its successful refresh trigger your normal build/deploy action. A static
 export cannot change until it is rebuilt and redeployed.
+
+### Local production releases
+
+Set `PUBLISHER_RELEASE_ON_CHANGE=1` to run the production gates after each
+successful AFFiNE refresh. The same flow can be run manually:
+
+```bash
+pnpm publisher:release
+```
+
+The command requires a healthy publisher, then runs tests, lint, and the static
+production build. Only a successful build becomes an immutable release under
+`.affine-publisher/releases/<release-id>`. The `current` symlink switches
+atomically after all gates pass, so a static server can safely serve:
+
+```text
+/absolute/path/to/alkarkari-affine/.affine-publisher/releases/current
+```
+
+Each release contains `health.json` and `release.json` with its snapshot time and
+page counts. Three releases are retained by default. To switch `current` back to
+the previous build without deleting either release:
+
+```bash
+pnpm publisher:rollback
+```
+
+An explicit release ID may be supplied as the final argument. This local release
+path is intended for Caddy, nginx, or another static server on the self-hosted
+machine; GitHub Pages remains a separate code-deployment workflow.
 
 ## Security
 
