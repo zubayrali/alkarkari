@@ -29,6 +29,7 @@ managed read-only publisher service:
 
 ```bash
 pnpm publisher:watch
+pnpm publisher:doctor
 pnpm dev
 ```
 
@@ -61,6 +62,7 @@ default. This is near-real-time publishing, not browser-level Yjs collaboration.
 | `pnpm generate` | Manual official-MCP snapshot fallback |
 | `pnpm generate:affine` | Explicit alias for the manual snapshot fallback |
 | `pnpm publisher:watch` | Poll the bridge MCP and refresh the snapshot when AFFiNE changes |
+| `pnpm publisher:doctor` | Verify bridge access, snapshot freshness, diagnostics, and required configuration |
 | `pnpm prepare:affine-import` | Prepare a sanitized one-time Markdown/media import copy |
 | `pnpm stage:affine` | Stage the generated AFFiNE snapshot for Fumadocs |
 | `pnpm stage:obsidian` | Explicitly stage the frozen legacy comparison tree |

@@ -5,6 +5,7 @@ import {
   rewriteAffineDocumentLinks,
   rewriteObsidianWikiLinks,
   sanitizeAffineMarkdown,
+  stripLegacyPublicationMetadata,
 } from "../lib/affine/publication";
 import type { AffineDiagnostic } from "../lib/affine/types";
 
@@ -116,6 +117,35 @@ sourcePath: dictionary/wird.md
     ).toBe(
       "Read [the Wird](/dictionary/wird) and [Wird](/dictionary/wird#practice).",
     );
+  });
+
+  it("removes retained legacy vault metadata after native AFFiNE metadata is applied", () => {
+    const { page } = parseAffinePublicationPage(
+      {
+        id: "bridge-doc",
+        markdown: `---
+title: Native AFFiNE title
+slug: dictionary/native-affine-title
+locale: en
+publish: true
+---
+
+\`\`\` yaml
+title: Legacy vault title
+slug: dictionary/legacy-vault-title
+sourcePath: dictionary/legacy-vault-title.md
+contentSource: affine-import
+\`\`\`
+
+# The actual article
+
+Body`,
+      },
+      "en",
+    );
+    expect(page.title).toBe("Native AFFiNE title");
+    expect(page.markdown).toBe("# The actual article\n\nBody");
+    expect(stripLegacyPublicationMetadata("``` yaml\nanswer: 42\n```\n")).toContain("answer: 42");
   });
 
   it("discovers and rewrites AFFiNE document links", () => {

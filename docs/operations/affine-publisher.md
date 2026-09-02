@@ -33,6 +33,17 @@ On its first run, it creates an ignored, owner-readable random bridge token at
 mode, waits for its health endpoint, and then starts the poller. The token never
 needs to be pasted into `.env.publisher`.
 
+Before relying on the public site, run the readiness check:
+
+```bash
+pnpm publisher:doctor
+```
+
+It checks configuration without printing secrets, verifies that the local bridge
+can enumerate the workspace, and reports snapshot age plus any blocking or
+warning diagnostics. A non-zero exit means the public snapshot should not be
+treated as current.
+
 To keep it running across macOS logins and restarts, install the LaunchAgent:
 
 ```bash
@@ -59,6 +70,20 @@ properties include `Description`, `Draft`, `Unlisted`, `Featured`, `Order`,
 `Draft` prevents publication even when `Publish` is checked.
 The internal import manifest is deliberately not published as a reader-facing
 page.
+
+### Authoring flow
+
+1. Create and collaboratively edit the page in AFFiNE.
+2. Give it a stable `Slug`, choose `Locale`, and write the reader-facing
+   `Description`.
+3. Leave `Publish` unchecked while the page is being reviewed; `Draft` is a
+   hard safety lock and always wins over `Publish`.
+4. When an editor approves it, check `Publish`. The worker will include it on
+   its next refresh.
+
+Use AFFiNE's native tags for topical classification. Do not add YAML metadata to
+the body of new documents: legacy YAML from the Obsidian import is ignored by
+bridge publishing and removed from the public article.
 
 ## Serving updates
 

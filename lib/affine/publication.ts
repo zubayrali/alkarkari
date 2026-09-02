@@ -13,6 +13,23 @@ const BLOB_IMAGE = /<img\b[^>]*\bsrc=["']blob:\/\/([^"']+)["'][^>]*\/?\s*>/gi;
 const AFFINE_SPAN = /<\/?span\b[^>]*>/gi;
 const AFFINE_EMPTY_SPAN = /<span\b[^>]*>\s*<\/span>/gi;
 
+export function stripLegacyPublicationMetadata(markdown: string): string {
+  const source = markdown.replace(/^\uFEFF/, "");
+  const candidate = source.replace(/^(?:\r?\n)+/, "");
+  const match = candidate.match(/^```[\t ]*(?:yaml|yml)(?:[\t ]+affine-publication)?[\t ]*\r?\n([\s\S]*?)\r?\n```[\t ]*(?:\r?\n|$)/i);
+  if (!match) return source;
+  try {
+    const metadata = yaml.load(match[1]);
+    if (metadata && typeof metadata === "object" && !Array.isArray(metadata) &&
+      ("sourcePath" in metadata || "contentSource" in metadata)) {
+      return candidate.slice(match[0].length).replace(/^\r?\n/, "");
+    }
+  } catch {
+    // A real YAML example belongs in the document body even if it is malformed.
+  }
+  return source;
+}
+
 function parseFrontmatter(markdown: string): {
   data: Record<string, unknown>;
   content: string;
@@ -133,7 +150,9 @@ export function sanitizeAffineMarkdown(
   docId: string,
 ): { markdown: string; diagnostics: AffineDiagnostic[] } {
   const diagnostics: AffineDiagnostic[] = [];
-  let output = markdown.replace(AFFINE_EMPTY_SPAN, "").replace(AFFINE_SPAN, "");
+  let output = stripLegacyPublicationMetadata(markdown)
+    .replace(AFFINE_EMPTY_SPAN, "")
+    .replace(AFFINE_SPAN, "");
 
   output = output.replace(BLOB_IMAGE, (_match, blobId: string) => {
     diagnostics.push({
