@@ -32,7 +32,7 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getSiteLanguage } from "@/lib/locale";
 import { currentLocale } from "@/lib/locales-manifest";
-import { getObsidianUrl } from "@/lib/obsidian";
+import { getAffineDocumentUrl } from "@/lib/affine/url";
 import { gitConfig } from "@/lib/shared";
 import { Presentation } from "lucide-react";
 import { SlideViewer } from "@/components/slide-viewer";
@@ -108,8 +108,8 @@ export default async function Page(props: PageProps<"/[...slug]">) {
         <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
         <ViewOptionsPopover
           markdownUrl={getPageMarkdownUrl(page).url}
-          obsidianUrl={getObsidianUrl(page.path)}
-          obsidianLabel={siteLanguage.openInObsidian}
+          affineUrl={getAffineDocumentUrl(page.data.affineDocId)}
+          affineLabel="Open in AFFiNE"
           githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/${page.path}`}
         />
       </span>

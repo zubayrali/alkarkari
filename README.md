@@ -1,57 +1,69 @@
-# VaultPress
+# Alkarkari AFFiNE deployment
 
 ![Preview](./vaultpress.png)
 
-Publish an Obsidian vault as a documentation site with VaultPress.
+This is the private Alkarkari Fumadocs deployment. It consumes the reusable
+`@affine-fumadocs/publisher` contract and publishes the collaborative AFFiNE
+workspace through the existing Alkarkari frontend.
 
-## What is VaultPress?
+## Architecture
 
-VaultPress turns an **Obsidian vault** into a **documentation site**.
+AFFiNE is the authoring system and source of truth. The local publisher bridge
+reads native AFFiNE publication properties, emits a local MDX/media snapshot,
+and Fumadocs serves that derived snapshot. Visitors never query AFFiNE directly.
 
-Keep writing in Obsidian as usual. Run `pnpm generate` to sync notes into `content/`, then preview or deploy the site. The stack is [Next.js](https://nextjs.org) + [Fumadocs](https://fumadocs.dev), with Obsidian wikilinks, embeds, callouts, Mermaid, and math.
+```text
+AFFiNE workspace → publisher bridge → affine/<locale> → stage → Fumadocs site
+```
+
+The separate `alkarkari` repository remains the frozen Obsidian rollback copy.
+This repository defaults to AFFiNE and has no active runtime dependency on the
+original vault. The generic product boundary is documented in
+[`docs/specs/affine-fumadocs-publisher-v0.1.md`](./docs/specs/affine-fumadocs-publisher-v0.1.md).
 
 ## Setup
 
-Copy `.env.example` to `.env` and configure:
+Copy `.env.publisher.example` to `.env.publisher`, set the workspace ID and the
+complete signed-in AFFiNE Cookie header in `AFFINE_BLOB_COOKIE`, then start the
+managed read-only publisher service:
 
 ```bash
-# Required for pnpm generate and pnpm obsidian
-OBSIDIAN_VAULT_PATH="/path/to/your/vault"
-
-# Optional
-SITE_LANGUAGE=en
-GENERATE_INCLUDE=fleeting,permanent,literature
-SITE_PROTECT_PASSWORD=your-password
+pnpm publisher:watch
+pnpm dev
 ```
 
-| Variable | Used by | Description |
-| --- | --- | --- |
-| `OBSIDIAN_VAULT_PATH` | `pnpm generate`, `pnpm obsidian` | Absolute path to your Obsidian vault (local CLI only) |
-| `SITE_LANGUAGE` | Site UI | `en` (default) or `cn` — search, navigation, table of contents |
-| `GENERATE_INCLUDE` | `pnpm generate` | Comma-separated top-level folders/files to sync; saved after interactive selection |
-| `SITE_PROTECT_PASSWORD` | Site access | Shared password gate for `protected: true` pages (not encryption) |
-
-`OBSIDIAN_VAULT_PATH` is not read when building site links — the server never accesses your local filesystem for page actions.
+The service creates its loopback bridge token locally and keeps it out of Git.
+See [the publisher runbook](./docs/operations/affine-publisher.md) for session
+rotation and service health checks. The official workspace MCP remains an
+explicit manual-snapshot fallback only.
 
 ## Workflow
 
-```text
-Obsidian vault → pnpm generate → content/ + public/ → pnpm dev → site
-```
+`pnpm publisher:watch` polls AFFiNE and refreshes the snapshot after edits.
+`pnpm dev`,
+`pnpm types:check`, and `pnpm build` stage that snapshot automatically. Use
+`CONTENT_SOURCE=obsidian pnpm dev` only for an explicit comparison against the
+frozen pre-cutover locale tree.
 
-1. Edit notes in your Obsidian vault
-2. Run `pnpm generate` to convert Markdown into MDX under `content/`, and sync Canvas files into `public/`
-3. Run `pnpm dev` to preview locally at http://localhost:3000
+### Near-real-time publishing
 
-`pnpm generate` only reads your vault and writes to `content/` and `public/` — it does not modify notes in Obsidian.
+The default workspace MCP is appropriate for an explicit snapshot. To publish
+collaborative edits continuously, run the separate bridge and poller described in
+[the publisher runbook](./docs/operations/affine-publisher.md). The poller uses
+`DAWNCR0W/affine-mcp-server` to enumerate/export the workspace, regenerates only
+when document metadata changes, and stages the new snapshot every 45 seconds by
+default. This is near-real-time publishing, not browser-level Yjs collaboration.
 
 ## Commands
 
 | Command | Description |
 | --- | --- |
-| `pnpm obsidian` | Open the vault configured in `OBSIDIAN_VAULT_PATH` |
-| `pnpm generate` | Generate site content from the vault |
-| `pnpm generate -- --select` | Re-pick top-level folders and files to include |
+| `pnpm generate` | Manual official-MCP snapshot fallback |
+| `pnpm generate:affine` | Explicit alias for the manual snapshot fallback |
+| `pnpm publisher:watch` | Poll the bridge MCP and refresh the snapshot when AFFiNE changes |
+| `pnpm prepare:affine-import` | Prepare a sanitized one-time Markdown/media import copy |
+| `pnpm stage:affine` | Stage the generated AFFiNE snapshot for Fumadocs |
+| `pnpm stage:obsidian` | Explicitly stage the frozen legacy comparison tree |
 | `pnpm dev` | Start the development server |
 | `pnpm build` | Build for production |
 | `pnpm types:check` | Run MDX generation, Next.js typegen, and TypeScript |
@@ -59,7 +71,7 @@ Obsidian vault → pnpm generate → content/ + public/ → pnpm dev → site
 
 ## Site language
 
-Set `SITE_LANGUAGE` in `.env`:
+Set `SITE_LANGUAGE` in the shell or deployment environment:
 
 ```bash
 SITE_LANGUAGE=en   # English (default)
@@ -72,10 +84,10 @@ Restart the dev server after changing it. This changes the site UI only — your
 
 Each documentation page includes:
 
-- **Tags** — From frontmatter `tags` (string or list), shown below the description
+- **Tags** — From AFFiNE publication metadata, shown below the description
 - **Copy Markdown** — Copy the processed Markdown for the page
 - **Open** menu:
-  - **Open in Obsidian** — `obsidian://open?file=…` using the page's public relative path (`.mdx` → `.md`). Opens the note in local Obsidian when your vault mirrors the generated structure.
+  - **Open in AFFiNE** — Opens the source document in the collaborative workspace
   - **Open in GitHub** — Link to the page source under `content/` (configure `lib/shared.ts` → `gitConfig` for your repo)
   - **View as Markdown** — Open the raw Markdown endpoint for the page
 
@@ -93,7 +105,7 @@ Mark a note with frontmatter:
 protected: true
 ```
 
-Obsidian may export this as a string (`protected: 'true'`) — both are supported.
+Imported metadata may contain this as a string (`protected: 'true'`) — both are supported.
 
 Set the shared password in `.env` (never commit this value):
 
@@ -137,109 +149,58 @@ After a correct password, the browser stores an HttpOnly cookie for about 30 day
 
 - Use a long, unique `SITE_PROTECT_PASSWORD` and keep `.env` out of version control
 - Deploy over HTTPS so the HttpOnly cookie is marked `Secure` in production
-- For highly sensitive material, do not publish it through `pnpm generate`; keep it only in Obsidian, or use a proper auth system instead
+- For highly sensitive material, leave `publish` disabled in AFFiNE or use a proper auth system instead
 
 ## Directory layout
 
-- `.env` — Vault path, site language, generate selection, protect password
-- `content/` — Generated MDX (from `generate`), plus hand-written `index.mdx` and `graph.mdx`
-- `public/` — Generated static assets (vault media, Canvas `.canvas` files, and canvas-referenced images/PDFs, etc.)
+- `.env.affine` — Uncommitted AFFiNE MCP endpoint and token
+- `affine/import-map.en.json` — Verified source-path → AFFiNE document mapping
+- `affine/<locale>/` — Atomic AFFiNE content snapshots and diagnostics
+- `content/`, `public/` — Gitignored live trees staged from the AFFiNE snapshot
 - `app/` — Next.js pages and routes
-- `lib/` — Locale, Obsidian URIs, tags, protected access, canvas parsing, shared config
+- `lib/affine/` — MCP client, publication parsing, link rewriting, and editor URLs
 - `components/canvas-*.tsx` — Canvas viewer (React Flow) and node renderers
-- `scripts/generate.ts` — Vault → site generation script (read-only on vault)
-- `scripts/generate-canvas-pages.ts` — Syncs canvas files/assets and generates canvas MDX pages
-- `scripts/open-obsidian.ts` — Opens the configured vault in Obsidian
+- `scripts/generate-affine.ts` — AFFiNE MCP → atomic Fumadocs snapshot
+- `scripts/prepare-affine-import.ts` — One-time sanitized migration-copy builder
 
 ## Generation rules
 
-### Cleanup scope
+### Snapshot scope
 
-Each `pnpm generate` run starts by deleting previously generated output so removed vault items do not leave stale site files.
-
-| Location | What is removed | What is preserved |
-| --- | --- | --- |
-| `content/` | Every top-level file and folder | `index.mdx`, `graph.mdx` only |
-| `public/` | Everything inside the directory | Nothing |
-
-Examples of items removed from `content/`: note folders (`fleeting/`, `permanent/`, …), generated canvas pages (`canvas/demo.mdx`), and any other generated MDX trees.
-
-Examples of items removed from `public/`: synced `.canvas` files (`canvas/demo.canvas`), canvas-referenced assets (`vaultpress.png`), and other vault media written by `generate`.
-
-After cleanup, `generate` repopulates both directories from the current vault selection:
-
-1. Vault notes and media → `content/` + `public/`
-2. Canvas files and their referenced assets → `public/`
-3. Canvas page wrappers → `content/`
-
-Do not store hand-maintained static files under `public/` — they will be deleted on the next run. Keep long-lived documentation in `content/index.mdx`, `content/graph.mdx`, or outside the generated output paths.
+`pnpm generate` reads the verified document map, fetches each page through MCP,
+normalizes publication metadata, rewrites AFFiNE and imported wikilinks, and replaces
+`affine/<locale>` atomically. Removed or unpublished documents therefore cannot leave
+stale routes behind.
 
 ### Draft exclusion
 
-Notes with `draft: true` or `private: true` in frontmatter are excluded from generation:
+Pages with `draft: true` or without `publish: true` in their publication metadata are
+excluded from generation:
 
 ```yaml
 draft: true
 ```
 
-This is the primary way to keep notes out of the site while they're still being written. The site will never generate pages for draft notes.
+This is the primary way to keep collaborative drafts out of the public site.
 
-### Include selection
+### Document discovery
 
-By default, all top-level vault items are included (minus drafts). To curate which folders/files are synced, use `pnpm generate -- --select` to pick interactively. The choice is saved as `GENERATE_INCLUDE` in `.env`. Clear `GENERATE_INCLUDE` to return to "include everything" mode.
-
-Excluded from generation:
-
-- `.obsidian/` — Obsidian configuration
-- `templates/` — Note templates
-
-Canvas handling (during `pnpm generate`):
-
-- `.canvas` files under `GENERATE_INCLUDE` are copied from the vault to `public/` (same relative path)
-- Media referenced by canvas nodes (images, video, audio, PDF, group backgrounds) are copied into `public/` even when the asset is outside `GENERATE_INCLUDE`
-- An MDX wrapper is generated under `content/` for each canvas (for example `public/canvas/demo.canvas` → `content/canvas/demo.mdx`)
-
-Frontmatter handling:
-
-- `title` — Uses the note's `title` field, then the first `#` heading, then the filename
-- `description` — Uses the note's `description` field only; omitted if empty
-- `tags` — Passed through from Obsidian frontmatter; normalized to a string array for display
-- `protected` — When `true` (or `'true'`), gates the page body behind `SITE_PROTECT_PASSWORD` (not encryption)
+AFFiNE's current MCP does not enumerate workspace documents, so imports use the
+checked-in verified map. Newly created AFFiNE pages can be added to that map or
+reached through native AFFiNE document links from an existing seed page.
 
 ## Graph View
 
-The [Graph View](/graph) page shows an interactive graph of site pages and wikilink connections. Each node is a page; edges are internal links. Click a node to open that page. Protected pages appear only after unlocking.
+The [Graph View](/graph) page shows an interactive graph of published AFFiNE pages
+and normalized internal links. Protected pages appear only after unlocking.
 
-## Canvas View
+## AFFiNE rich-object status
 
-VaultPress publishes [Obsidian Canvas](https://jsoncanvas.org/) files as read-only pages.
-
-### Setup
-
-1. Create or edit `.canvas` files in your vault (for example `canvas/demo.canvas`)
-2. Include the canvas folder in `GENERATE_INCLUDE` (or select it during `pnpm generate -- --select`)
-3. Run `pnpm generate` — canvas files land in `public/`, and site pages are generated under `content/`
-4. Open the page in the site (for example [/canvas/demo](/canvas/demo))
-
-### Supported features
-
-- **Nodes** — text, file, link, and group
-- **Edges** — side anchors, arrow ends, colors, labels
-- **Colors** — Obsidian presets `1`–`6` and custom hex values
-- **Group** — label above the frame; optional background image (`cover` / `ratio` / `repeat`)
-- **File** — filename label above the frame; image, video, audio, PDF, and other file types
-- **Markdown files** — in-node preview using the same MDX pipeline as documentation pages; click the node background to open the full page; links inside the preview work independently
-- **Text** — lightweight Markdown and wikilinks inside the node
-- **Interaction** — drag to pan, scroll to zoom
-
-Canvas pages use `full: true` layout (no table of contents) and render inside a fixed-height viewer.
-
-### Limitations (v1)
-
-- Read-only — no editing on the site
-- Text nodes use a lightweight Markdown renderer, not full MDX
-- `![[note.canvas]]` embeds in notes are not supported yet
-- File `subpath` (heading anchors) is appended to links but does not scroll the in-node preview
+The original `.base` and `.canvas` files were uploaded and preserved during the
+migration, but AFFiNE's MCP currently exposes only document Markdown—not database
+records, Edgeless geometry, or blob bytes. The cutover never fabricates those
+objects. Native databases, Edgeless canvases, and attachment extraction remain
+explicit adapter work as AFFiNE exposes suitable read APIs.
 
 ## Reading affordances
 
@@ -253,7 +214,8 @@ Toggle distraction-free reading with the book icon in the page actions bar (next
 
 ### Orphan link styling
 
-Wikilinks that reference pages not in the vault are rendered with a wavy amber underline and disabled pointer — immediate visual feedback that a link target is missing.
+Wikilinks that do not resolve to a mapped AFFiNE page are rendered with a wavy
+amber underline and disabled pointer.
 
 ### Figure image cartridge
 
@@ -265,7 +227,7 @@ Note transclusion bodies (`![[Note]]`) fade in on render to prevent hydration fl
 
 ### Callout animation
 
-Obsidian callout bodies animate in with a subtle fade + rise on page load.
+Callout bodies animate in with a subtle fade + rise on page load.
 
 ### Task checkbox styling
 
@@ -342,8 +304,10 @@ SITE_URL=https://your-domain.com
 ## Stack
 
 - **Framework**: Next.js + Fumadocs + React Flow
-- **Content**: Obsidian Markdown → MDX ([fumadocs-obsidian](https://fumadocs.dev/docs/integrations/obsidian))
-- **Features**: Full-text search, knowledge graph, Obsidian Canvas, page tags, shared-password page gating, Obsidian/GitHub/Markdown actions, Mermaid, math, sidenotes, link popovers, annotations, backlinks, slides, reader mode, RSS, masonry layout
+- **Content**: AFFiNE workspace MCP → atomic MDX snapshot → Fumadocs
+- **Features**: Full-text search, knowledge graph, page tags, shared-password page
+  gating, AFFiNE/GitHub/Markdown actions, Mermaid, math, sidenotes, link popovers,
+  annotations, backlinks, slides, reader mode, RSS, and masonry layout
 
 ## TODO
 
