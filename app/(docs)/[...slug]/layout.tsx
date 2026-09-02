@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         footer: (
           <div className="night-sidebar-foot">
             <SidebarLinks key="sidebar-links" />
-            <LocaleSwitcher variant="sidebar" />
+            <LocaleSwitcher key="locale-switcher" variant="sidebar" />
           </div>
         ),
       }}

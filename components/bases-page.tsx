@@ -18,7 +18,7 @@ export async function BasesPageContent({ src }: Props) {
     compiled = JSON.parse(raw) as CompiledBase
   } catch {
     return (
-      <div className="rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded border border-fd-border bg-fd-card p-4 text-sm text-fd-foreground">
         Base not found: {src}
       </div>
     )
@@ -29,7 +29,7 @@ export async function BasesPageContent({ src }: Props) {
     : undefined
   const initialView = defaultView ?? compiled.views[0]
   if (!initialView) {
-    return <div className="text-sm text-neutral-500">No views defined.</div>
+    return <div className="text-sm text-fd-muted-foreground">No views defined.</div>
   }
 
   return (

@@ -1,8 +1,5 @@
-/* Search dialog — constant night: black in BOTH color modes. Search is a
-   navigation surface, and navigation is night in this system (sidebar,
-   threshold, prev/next band). Gold on this ground is --kk-ember, never
-   light-mode --kk-gold-ink (same rule as reader-shell.css night scopes).
-   fd tokens are remapped locally so inner rules stay on fd vars. */
+/* Search dialog follows the active reading theme. Its gold position marks use
+   the mode-aware ink token so they retain contrast on both paper and night. */
 
 .fd-search-dialog {
   position: fixed;
@@ -14,13 +11,10 @@
   max-height: min(80vh, 560px);
   margin: 0;
   padding: 0;
-  border: 1px solid var(--kk-glass-line);
+  border: 1px solid var(--color-fd-border);
   border-radius: 0;
-  background: var(--kk-night);
-  color: var(--kk-night-fg);
-  --color-fd-foreground: var(--kk-night-fg);
-  --color-fd-muted-foreground: var(--kk-night-muted);
-  --color-fd-border: var(--kk-glass-line);
+  background: var(--color-fd-popover);
+  color: var(--color-fd-popover-foreground);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
@@ -62,7 +56,7 @@
   font-size: 15px;
   color: var(--color-fd-foreground);
   font-family: inherit;
-  caret-color: var(--kk-ember);
+  caret-color: var(--kk-gold-ink);
 }
 
 .fd-search-input::placeholder {
@@ -134,9 +128,9 @@
 
 .fd-search-item.active,
 .fd-search-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--color-fd-foreground) 6%, transparent);
   /* gold position segment — same mark as sidebar and ledger rows */
-  box-shadow: inset 2px 0 0 var(--kk-ember);
+  box-shadow: inset 2px 0 0 var(--kk-gold-ink);
 }
 
 .fd-search-item-icon {
@@ -167,8 +161,8 @@
 
 /* Highlight marks */
 .fd-search-mark {
-  background: color-mix(in srgb, var(--kk-ember) 24%, transparent);
-  color: var(--kk-ember);
+  background: color-mix(in srgb, var(--kk-gold-ink) 18%, transparent);
+  color: var(--kk-gold-ink);
   border-radius: 0;
   padding: 0 1px;
 }

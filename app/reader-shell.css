@@ -24,13 +24,8 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background: var(--kk-night);
-  color: var(--kk-night-fg);
-  --color-fd-foreground: var(--kk-night-fg);
-  --color-fd-muted-foreground: var(--kk-night-muted);
-  --color-fd-border: var(--kk-glass-line);
-  --color-fd-accent: var(--kk-veil-c);
-  --color-fd-accent-foreground: var(--kk-night-fg);
+  background: var(--color-fd-card);
+  color: var(--color-fd-foreground);
 }
 
 .night-threshold-utility {
@@ -41,13 +36,13 @@
   justify-content: space-between;
   min-height: 2.3125rem;
   padding-inline: var(--night-threshold-inline);
-  border-bottom: 1px solid #282828;
+  border-bottom: 1px solid var(--color-fd-border);
   gap: 1rem;
 }
 
 .night-threshold-section {
   margin: 0;
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
   font-size: 0.5rem;
   letter-spacing: 0.09em;
 }
@@ -71,7 +66,7 @@
   gap: 0.4rem;
   list-style: none;
   cursor: pointer;
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
   font-size: 0.5rem;
   letter-spacing: 0.09em;
 }
@@ -88,7 +83,7 @@
 .night-contents[open] > summary,
 .night-contents > summary:hover,
 .night-contents > summary:focus-visible {
-  color: var(--kk-night-fg);
+  color: var(--color-fd-foreground);
 }
 
 .night-contents-panel {
@@ -103,13 +98,13 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-block: 0.5rem;
-  background: color-mix(in srgb, var(--kk-night) 94%, #fff);
-  border: 1px solid var(--kk-glass-line);
+  background: var(--color-fd-popover);
+  border: 1px solid var(--color-fd-border);
 }
 
 .night-contents-panel a {
   padding: 0.45rem 1.1rem;
-  color: color-mix(in srgb, var(--kk-night-fg) 78%, transparent);
+  color: var(--color-fd-muted-foreground);
   font-family: var(--font-spectral), Georgia, serif;
   font-size: 0.85rem;
   line-height: 1.35;
@@ -118,8 +113,8 @@
 
 .night-contents-panel a:hover,
 .night-contents-panel a:focus-visible {
-  background: var(--kk-veil-c);
-  color: var(--kk-night-fg);
+  background: var(--color-fd-accent);
+  color: var(--color-fd-accent-foreground);
 }
 
 .night-contents-panel a[data-depth="3"] {
@@ -139,7 +134,7 @@ html[data-reader-mode="on"] .night-contents {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
   font-family: var(--font-mono-plex), ui-monospace, monospace;
   font-size: 0.5rem;
   letter-spacing: 0.09em;
@@ -178,7 +173,7 @@ html[data-reader-mode="on"] .night-contents {
   display: flex;
   align-items: center;
   margin: 0;
-  color: color-mix(in srgb, var(--kk-ember) 16%, transparent);
+  color: color-mix(in srgb, var(--kk-gold-ink) 16%, transparent);
   font-size: clamp(5rem, 8vw, 8.5rem);
   font-weight: 400;
   line-height: 1;
@@ -190,7 +185,7 @@ html[data-reader-mode="on"] .night-contents {
 .night-threshold-title {
   max-width: min(100%, 25ch);
   margin: 0;
-  color: var(--kk-night-fg);
+  color: var(--color-fd-foreground);
   font-size: 2.875rem !important;
   font-weight: 400 !important;
   line-height: 0.98;
@@ -205,7 +200,7 @@ html[data-reader-mode="on"] .night-contents {
   align-items: baseline;
   gap: 0.4rem 0.65rem;
   margin: 0;
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
   font-family: var(--font-mono-plex), ui-monospace, monospace;
   font-size: 0.5rem;
   letter-spacing: 0.09em;
@@ -213,7 +208,7 @@ html[data-reader-mode="on"] .night-contents {
 }
 
 .night-threshold-aliases .kk-label {
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
   font-size: inherit;
   letter-spacing: inherit;
 }
@@ -221,7 +216,7 @@ html[data-reader-mode="on"] .night-contents {
 .night-threshold-description {
   max-width: 32.5rem;
   margin: 0.875rem 0 0 !important;
-  color: #aaaaaa !important;
+  color: var(--color-fd-muted-foreground) !important;
   font-family: var(--font-spectral), Georgia, serif;
   font-size: 1rem !important;
   line-height: 1.58;
@@ -237,7 +232,7 @@ html[data-reader-mode="on"] .night-contents {
   max-width: 48rem;
   margin-top: 1.25rem;
   padding-block: 0.625rem;
-  border-block: 1px solid #292929;
+  border-block: 1px solid var(--color-fd-border);
 }
 
 .page-tags-metadata {
@@ -261,11 +256,11 @@ html[data-reader-mode="on"] .night-contents {
 .page-tags-metadata li + li::before {
   content: "·";
   margin-inline: 0.5rem;
-  color: var(--kk-night-muted);
+  color: var(--color-fd-muted-foreground);
 }
 
 .page-tags-metadata a {
-  color: color-mix(in srgb, var(--kk-night-fg) 76%, transparent);
+  color: var(--color-fd-muted-foreground);
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 0.35em;
@@ -274,14 +269,14 @@ html[data-reader-mode="on"] .night-contents {
 
 .page-tags-metadata a:hover,
 .page-tags-metadata a:focus-visible {
-  color: var(--kk-night-fg);
-  text-decoration-color: var(--kk-ember);
+  color: var(--color-fd-foreground);
+  text-decoration-color: var(--kk-gold-ink);
 }
 
 .night-threshold .page-actions :where(a, button) {
-  border-color: var(--kk-glass-line) !important;
+  border-color: var(--color-fd-border) !important;
   background: transparent !important;
-  color: var(--kk-night-muted) !important;
+  color: var(--color-fd-muted-foreground) !important;
   box-shadow: none !important;
 }
 
@@ -330,8 +325,8 @@ html[data-reader-mode="on"] .night-contents {
 
 .night-threshold .page-actions :where(a, button):hover,
 .night-threshold .page-actions :where(a, button):focus-visible {
-  border-color: color-mix(in srgb, var(--kk-ember) 70%, transparent) !important;
-  color: var(--kk-night-fg) !important;
+  border-color: color-mix(in srgb, var(--kk-gold-ink) 70%, transparent) !important;
+  color: var(--color-fd-foreground) !important;
 }
 
 /* ── Night index sidebar ─────────────────────────────────────────────── */
@@ -383,27 +378,13 @@ html[data-reader-mode="on"] .night-contents {
 /* #nd-sidebar is a stable Fumadocs layout ID already relied on by ADR-0010. */
 @media (min-width: 48rem) {
   #nd-sidebar {
-    color-scheme: dark;
-    background: var(--kk-night) !important;
-    color: var(--kk-night-fg);
-    border-color: var(--kk-glass-line) !important;
-    --color-fd-background: var(--kk-night);
-    --color-fd-card: var(--kk-night);
-    --color-fd-foreground: var(--kk-night-fg);
-    --color-fd-muted: var(--kk-veil-c);
-    --color-fd-muted-foreground: var(--kk-night-muted);
-    --color-fd-accent: var(--kk-veil-c);
-    --color-fd-accent-foreground: var(--kk-night-fg);
-    --color-fd-border: var(--kk-glass-line);
-    --color-fd-primary: var(--kk-ember);
-    --color-fd-popover: var(--kk-night);
-    --color-fd-popover-foreground: var(--kk-night-fg);
-    --color-fd-secondary: var(--kk-veil-c);
-    --color-fd-secondary-foreground: var(--kk-night-fg);
+    background: var(--color-fd-background) !important;
+    color: var(--color-fd-foreground);
+    border-color: var(--color-fd-border) !important;
   }
 
   #nd-sidebar .site-identity-arabic {
-    color: var(--kk-night-muted);
+    color: var(--color-fd-muted-foreground);
   }
 
   #nd-sidebar .night-sidebar-item {
@@ -412,7 +393,7 @@ html[data-reader-mode="on"] .night-contents {
     align-items: center;
     gap: 0.5rem;
     padding: 0.32rem 0.25rem;
-    color: color-mix(in srgb, var(--kk-night-fg) 62%, transparent);
+    color: var(--color-fd-muted-foreground);
     font-size: 0.8125rem;
     border-radius: 0;
     transition: color 150ms ease, background-color 150ms ease;
@@ -420,20 +401,20 @@ html[data-reader-mode="on"] .night-contents {
 
   #nd-sidebar .night-sidebar-item:hover,
   #nd-sidebar .night-sidebar-item:focus-visible {
-    background: var(--kk-veil-c);
-    color: var(--kk-night-fg);
+    background: var(--color-fd-accent);
+    color: var(--color-fd-accent-foreground);
   }
 
   #nd-sidebar a[data-active="true"]:not(.sidebar-link) {
     position: relative;
     border-radius: 0;
     background: transparent !important;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar a[data-active="true"]:not(.sidebar-link):hover {
     background: transparent !important;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar a[data-active="true"]:not(.sidebar-link)::after {
@@ -444,17 +425,17 @@ html[data-reader-mode="on"] .night-contents {
     width: 2.2rem;
     height: 2px;
     transform: translateY(-50%);
-    background: var(--kk-ember);
+    background: var(--kk-gold-ink);
   }
 
   /* Search: a quiet hairline row, not an input card. */
   #nd-sidebar [data-search-full] {
     padding: 0.55rem 0.15rem;
     border: 0;
-    border-bottom: 1px solid var(--kk-glass-line);
+    border-bottom: 1px solid var(--color-fd-border);
     border-radius: 0;
     background: transparent;
-    color: var(--kk-night-muted);
+    color: var(--color-fd-muted-foreground);
     font-family: var(--font-mono-plex), ui-monospace, monospace;
     font-size: 0.6rem;
     letter-spacing: 0.12em;
@@ -463,7 +444,7 @@ html[data-reader-mode="on"] .night-contents {
 
   #nd-sidebar [data-search-full]:hover {
     background: transparent;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar [data-search-full] svg {
@@ -472,10 +453,10 @@ html[data-reader-mode="on"] .night-contents {
   }
 
   #nd-sidebar [data-search-full] kbd {
-    border-color: var(--kk-glass-line);
+    border-color: var(--color-fd-border);
     border-radius: 0;
     background: transparent;
-    color: var(--kk-night-muted);
+    color: var(--color-fd-muted-foreground);
     font-size: 0.6rem;
   }
 
@@ -488,7 +469,7 @@ html[data-reader-mode="on"] .night-contents {
     padding: 0.3rem 0;
     border-radius: 0;
     background: transparent;
-    color: color-mix(in srgb, var(--kk-night-fg) 46%, transparent);
+    color: var(--color-fd-muted-foreground);
     font-family: var(--font-mono-plex), ui-monospace, monospace;
     font-size: 0.6rem;
     font-weight: 500;
@@ -501,7 +482,7 @@ html[data-reader-mode="on"] .night-contents {
   #nd-sidebar .night-sidebar-group:hover,
   #nd-sidebar .night-sidebar-group:focus-visible {
     background: transparent;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar .night-sidebar-group [data-icon] {
@@ -525,7 +506,7 @@ html[data-reader-mode="on"] .night-contents {
     width: 100%;
     padding: 0.35rem 0.25rem;
     border-radius: 0;
-    color: color-mix(in srgb, var(--kk-night-fg) 62%, transparent);
+    color: var(--color-fd-muted-foreground);
     font-size: 0.8125rem;
     cursor: pointer;
     transition: color 150ms ease, background-color 150ms ease;
@@ -533,8 +514,8 @@ html[data-reader-mode="on"] .night-contents {
 
   #nd-sidebar .night-sidebar-subfolder:hover,
   #nd-sidebar .night-sidebar-subfolder:focus-visible {
-    background: var(--kk-veil-c);
-    color: var(--kk-night-fg);
+    background: var(--color-fd-accent);
+    color: var(--color-fd-accent-foreground);
   }
 
   #nd-sidebar .night-sidebar-subfolder [data-icon] {
@@ -546,7 +527,7 @@ html[data-reader-mode="on"] .night-contents {
 
   #nd-sidebar .night-sidebar-nested-content {
     padding-inline-start: 0.75rem;
-    border-inline-start: 1px solid var(--kk-glass-line);
+    border-inline-start: 1px solid var(--color-fd-border);
   }
 
   /* The side-foot: utility links + locale in small type near the bottom. */
@@ -555,7 +536,7 @@ html[data-reader-mode="on"] .night-contents {
     gap: 0.65rem;
     margin-top: 0.35rem;
     padding-top: 0.85rem;
-    border-top: 1px solid var(--kk-glass-line);
+    border-top: 1px solid var(--color-fd-border);
   }
 
   #nd-sidebar .night-sidebar-foot .sidebar-links {
@@ -571,7 +552,7 @@ html[data-reader-mode="on"] .night-contents {
     padding: 0;
     border-radius: 0;
     background: transparent;
-    color: var(--kk-night-muted);
+    color: var(--color-fd-muted-foreground);
     font-family: var(--font-mono-plex), ui-monospace, monospace;
     font-size: 0.6rem;
     font-weight: 500;
@@ -586,12 +567,12 @@ html[data-reader-mode="on"] .night-contents {
   #nd-sidebar .night-sidebar-foot .sidebar-link:hover,
   #nd-sidebar .night-sidebar-foot .sidebar-link:focus-visible {
     background: transparent;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar .night-sidebar-foot .sidebar-link[data-active="true"] {
     background: transparent;
-    color: var(--kk-ember);
+    color: var(--kk-gold-ink);
   }
 
   /* Locale switcher: same quiet utility register as the links beside it. */
@@ -600,7 +581,7 @@ html[data-reader-mode="on"] .night-contents {
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: var(--kk-night-muted);
+    color: var(--color-fd-muted-foreground);
     font-family: var(--font-mono-plex), ui-monospace, monospace;
     font-size: 0.6rem;
     font-weight: 500;
@@ -610,7 +591,7 @@ html[data-reader-mode="on"] .night-contents {
 
   #nd-sidebar .night-sidebar-foot details > summary:hover {
     background: transparent;
-    color: var(--kk-night-fg);
+    color: var(--color-fd-foreground);
   }
 
   #nd-sidebar .night-sidebar-foot details > summary svg {
@@ -871,7 +852,7 @@ html[data-reader-mode="on"] .night-contents {
   gap: 1px !important;
   margin-top: 3rem;
   padding: 1px;
-  background: color-mix(in srgb, var(--kk-night-fg) 12%, var(--kk-night));
+  background: var(--color-fd-border);
 }
 
 .night-page-footer > a {
@@ -879,23 +860,23 @@ html[data-reader-mode="on"] .night-contents {
   justify-content: center;
   border: 0 !important;
   border-radius: 0 !important;
-  background: var(--kk-night) !important;
-  color: var(--kk-night-fg) !important;
+  background: var(--color-fd-card) !important;
+  color: var(--color-fd-foreground) !important;
 }
 
 .night-page-footer > a:hover,
 .night-page-footer > a:focus-visible {
-  background: var(--kk-veil-c) !important;
+  background: var(--color-fd-accent) !important;
 }
 
 .night-page-footer > a > div {
-  color: var(--kk-ember);
+  color: var(--kk-gold-ink);
   font-family: var(--font-spectral), Georgia, serif;
   font-size: 1.15rem;
 }
 
 .night-page-footer > a > p:last-child {
-  color: var(--kk-night-muted) !important;
+  color: var(--color-fd-muted-foreground) !important;
   font-family: var(--font-mono-plex), ui-monospace, monospace;
   font-size: 0.67rem;
   letter-spacing: 0.11em;

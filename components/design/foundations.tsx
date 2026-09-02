@@ -54,7 +54,13 @@ function TokenTile({
         style={{ background: hex, boxShadow: chipRing }}
         aria-hidden
       />
-      <p className="kk-label mt-2" style={{ letterSpacing: '0.08em' }}>
+      <p
+        className="kk-label mt-2"
+        style={{
+          letterSpacing: '0.08em',
+          color: onDark ? 'rgba(255,255,255,0.72)' : undefined,
+        }}
+      >
         {token}
       </p>
       <p
