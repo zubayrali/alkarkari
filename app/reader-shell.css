@@ -354,6 +354,32 @@ html[data-reader-mode="on"] .night-contents {
   font-weight: 400;
 }
 
+/* Structural sidebar rules must apply to both the desktop rail and the mobile
+   drawer. NightSidebarFolder introduces a wrapper around Fumadocs' items; if
+   that wrapper is only laid out at the desktop breakpoint, mobile links fall
+   back to inline flow and their labels concatenate into one long string. */
+:is(#nd-sidebar, #nd-sidebar-mobile) .night-sidebar-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding-top: 0.2rem;
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile) .night-sidebar-item,
+:is(#nd-sidebar, #nd-sidebar-mobile) .night-sidebar-group,
+:is(#nd-sidebar, #nd-sidebar-mobile) .night-sidebar-subfolder {
+  min-width: 0;
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile) .night-sidebar-item {
+  display: flex;
+}
+
 /* #nd-sidebar is a stable Fumadocs layout ID already relied on by ADR-0010. */
 @media (min-width: 48rem) {
   #nd-sidebar {
@@ -390,14 +416,6 @@ html[data-reader-mode="on"] .night-contents {
     font-size: 0.8125rem;
     border-radius: 0;
     transition: color 150ms ease, background-color 150ms ease;
-  }
-
-  /* Folder children: the base collapsible has no layout of its own. */
-  #nd-sidebar .night-sidebar-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    padding-top: 0.2rem;
   }
 
   #nd-sidebar .night-sidebar-item:hover,
