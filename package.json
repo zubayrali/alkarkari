@@ -46,6 +46,7 @@
     "publisher:doctor": "node --env-file=.env.publisher scripts/publisher-doctor.ts",
     "publisher:release": "node --env-file=.env.publisher scripts/publisher-release.ts",
     "publisher:rollback": "node --env-file=.env.publisher scripts/publisher-rollback.ts",
+    "publisher:deploy": "node --env-file=.env.publisher scripts/publisher-deploy.ts",
     "publisher:service:install": "node scripts/install-affine-publisher-service.ts",
     "migrate:affine-metadata": "node --env-file=.env.publisher scripts/run-affine-authoring.ts scripts/migrate-affine-metadata.ts",
     "prepare:affine-import": "node scripts/prepare-affine-import.ts",
@@ -53,7 +54,7 @@
     "stage:obsidian": "CONTENT_SOURCE=obsidian node scripts/stage.ts"
   },
   "dependencies": {
-    "@affine-fumadocs/publisher": "github:zubayrali/affine-fumadocs-publisher#723721a04a0829999154698cbb31aff02b7466d7",
+    "@affine-fumadocs/publisher": "github:zubayrali/affine-fumadocs-publisher#6b6d45f47c578ec2b51ee6121b3dbc17161c6917",
     "@floating-ui/dom": "^1.7.6",
     "@types/lz-string": "^1.5.0",
     "@xyflow/react": "^12.11.0",

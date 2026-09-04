@@ -99,6 +99,7 @@ async function main() {
     await run(pnpm, ["exec", "fumadocs-mdx"]);
   }
   console.log(`[release] ${releaseId} is current (${release.pages} pages across ${release.locales.join(", ")}, ${htmlFiles} HTML files).`);
+  await run(process.execPath, ["--env-file=.env.publisher", "scripts/publisher-deploy.ts"]);
 }
 
 void main().catch(async (error) => {

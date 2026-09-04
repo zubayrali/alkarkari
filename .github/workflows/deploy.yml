@@ -1,8 +1,14 @@
-name: Deploy to GitHub Pages
+# GitHub Pages is published from the VPS publisher hook (gh-pages branch).
+# This workflow is a manual fallback for code-only rebuilds from the repo.
+# Prefer: PUBLISHER_DEPLOY_TARGET=github-pages on the VPS.
+#
+# To use VPS deploys as primary:
+#   Repo Settings → Pages → Deploy from a branch → gh-pages / (root)
+# and leave this workflow for emergencies only (workflow_dispatch).
+
+name: Deploy to GitHub Pages (manual fallback)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -21,12 +27,18 @@ jobs:
       locales: ${{ steps.locales.outputs.value }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - id: locales
-        shell: bash
         run: |
-          echo "value=$(node -e \"const c=require('./affine/locales.config.json'); process.stdout.write(JSON.stringify(c.locales.map((locale) => locale.code)))\")" >> "$GITHUB_OUTPUT"
+          node <<'EOF' >> "$GITHUB_OUTPUT"
+          const fs = require('node:fs');
+          const config = JSON.parse(fs.readFileSync('affine/locales.config.json', 'utf8'));
+          const locales = config.locales.map((locale) => locale.code);
+          process.stdout.write(`value=${JSON.stringify(locales)}\n`);
+          EOF
 
-  # One isolated build per locale (see docs/superpowers/specs/2026-07-02-i18n-design.md).
   build:
     needs: configure
     runs-on: ubuntu-latest
@@ -49,14 +61,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Quality gates — a type error, lint error, or failing test blocks deploy.
-      # types:check and build stage locales/${SITE_LANGUAGE}/ into content/+public/.
+      # AFFiNE snapshots must already be present under affine/<locale>/ for this
+      # fallback path. The VPS publisher is the primary content pipeline.
       - run: pnpm types:check
-
       - run: pnpm lint
-
       - run: pnpm test
-
       - run: pnpm build
         env:
           PAGES_BASE_PATH: /${{ github.event.repository.name }}/${{ matrix.locale }}
@@ -71,22 +80,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      # Node 22+ needed to run the .ts stitch script directly (type stripping).
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - uses: actions/download-artifact@v4
         with:
           pattern: out-*
           path: artifacts
-
       - run: node scripts/stitch-deploy.ts
         env:
           BASE_PATH: /${{ github.event.repository.name }}
           SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

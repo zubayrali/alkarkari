@@ -140,7 +140,33 @@ pnpm publisher:rollback
 
 An explicit release ID may be supplied as the final argument. This local release
 path is intended for Caddy, nginx, or another static server on the self-hosted
-machine; GitHub Pages remains a separate code-deployment workflow.
+machine; GitHub Pages / Cloudflare Pages can also receive the release through
+the deploy hook below.
+
+## Deploy hook (GitHub Pages now, Cloudflare later)
+
+After a successful `pnpm publisher:release` (and after rollback), the publisher
+runs `scripts/publisher-deploy.ts`.
+
+```dotenv
+PUBLISHER_DEPLOY_TARGET=github-pages
+PUBLISHER_DEPLOY_GITHUB_REPO=zubayrali/alkarkari
+PUBLISHER_DEPLOY_GITHUB_BRANCH=gh-pages
+PUBLISHER_DEPLOY_GITHUB_TOKEN=...
+```
+
+Repo setting: Pages → Deploy from a branch → `gh-pages` / root.
+
+To move to Cloudflare Pages later, change only:
+
+```dotenv
+PUBLISHER_DEPLOY_TARGET=cloudflare-pages
+PUBLISHER_DEPLOY_CF_PROJECT=...
+CLOUDFLARE_API_TOKEN=...
+CLOUDFLARE_ACCOUNT_ID=...
+```
+
+See `affine-fumadocs-publisher` docs/vps-publisher.md for the shared contract.
 
 ## Security
 

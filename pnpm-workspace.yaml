@@ -3,5 +3,4 @@ allowBuilds:
   sharp: false
   workerd: true
 patchedDependencies:
-  '@affine-fumadocs/publisher@0.1.0': patches/@affine-fumadocs__publisher@0.1.0.patch
   rehype-citation@2.3.2: patches/rehype-citation@2.3.2.patch

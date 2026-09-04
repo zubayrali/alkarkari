@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@affine-fumadocs/publisher@0.1.0':
-    hash: d52097aa01750836feec4f6d49fe1fbf73dc8bda815e7b3a7f9c1fa2f2ee6bde
-    path: patches/@affine-fumadocs__publisher@0.1.0.patch
   rehype-citation@2.3.2:
     hash: 7a24a5502164cbaa34b957f675ff8230890c5db7d44fbcd3f214875600b3379a
     path: patches/rehype-citation@2.3.2.patch
@@ -17,8 +14,8 @@ importers:
   .:
     dependencies:
       '@affine-fumadocs/publisher':
-        specifier: github:zubayrali/affine-fumadocs-publisher#723721a04a0829999154698cbb31aff02b7466d7
-        version: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/723721a04a0829999154698cbb31aff02b7466d7(patch_hash=d52097aa01750836feec4f6d49fe1fbf73dc8bda815e7b3a7f9c1fa2f2ee6bde)
+        specifier: github:zubayrali/affine-fumadocs-publisher#6b6d45f47c578ec2b51ee6121b3dbc17161c6917
+        version: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917
       '@floating-ui/dom':
         specifier: ^1.7.6
         version: 1.7.6
@@ -214,8 +211,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/723721a04a0829999154698cbb31aff02b7466d7':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/723721a04a0829999154698cbb31aff02b7466d7}
+  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917':
+    resolution: {gitHosted: true, integrity: sha512-KWSwcwKz1YR1S1+PIe8qBDlPOYT4zChDEXoZLLhWqEWNm9iVxd8xlUlNJZmgNGq7A9+4i5KMumDlOWKM7nUzgQ==, tarball: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917}
     version: 0.1.0
 
   '@alcalzone/ansi-tokenize@0.3.0':
@@ -4622,7 +4619,7 @@ snapshots:
       react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       use-sync-external-store: 1.6.0(react@19.2.7)
 
-  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/723721a04a0829999154698cbb31aff02b7466d7(patch_hash=d52097aa01750836feec4f6d49fe1fbf73dc8bda815e7b3a7f9c1fa2f2ee6bde)': {}
+  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917': {}
 
   '@alcalzone/ansi-tokenize@0.3.0':
     dependencies:
