@@ -176,5 +176,22 @@ See `affine-fumadocs-publisher` docs/vps-publisher.md for the shared contract.
   without HTTPS and authentication.
 - Keep `AFFINE_TOOL_PROFILE=read_only`; the publisher only needs list and export
   operations.
-- Rotate an expired AFFiNE session by replacing `AFFINE_BLOB_COOKIE` and running
-  `launchctl kickstart -k gui/$(id -u)/pro.alkarkari.affine-publisher`.
+- Rotate an expired AFFiNE session by replacing `AFFINE_BLOB_COOKIE` and
+  restarting the publisher unit (`systemctl --user restart affine-publisher`
+  on Linux, or `launchctl kickstart -k gui/$(id -u)/pro.alkarkari.affine-publisher`
+  on macOS).
+
+## Linux VPS (systemd)
+
+On the same machine as AFFiNE:
+
+```bash
+pnpm install
+cp .env.publisher.example .env.publisher   # fill secrets + deploy token
+pnpm publisher:systemd:install             # user unit + linger
+pnpm publisher:doctor
+```
+
+Full runbook (Docker AFFiNE, Pages branch mode, Cloudflare swap): see the
+linked package doc `docs/vps-publisher.md` in `@affine-fumadocs/publisher`.
+macOS still uses `pnpm publisher:service:install` (LaunchAgent).

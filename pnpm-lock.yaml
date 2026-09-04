@@ -14,8 +14,8 @@ importers:
   .:
     dependencies:
       '@affine-fumadocs/publisher':
-        specifier: github:zubayrali/affine-fumadocs-publisher#6b6d45f47c578ec2b51ee6121b3dbc17161c6917
-        version: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917
+        specifier: github:zubayrali/affine-fumadocs-publisher#6c9123b4f2221c96b321c3befe74f89953214796
+        version: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6c9123b4f2221c96b321c3befe74f89953214796
       '@floating-ui/dom':
         specifier: ^1.7.6
         version: 1.7.6
@@ -211,8 +211,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917':
-    resolution: {gitHosted: true, integrity: sha512-KWSwcwKz1YR1S1+PIe8qBDlPOYT4zChDEXoZLLhWqEWNm9iVxd8xlUlNJZmgNGq7A9+4i5KMumDlOWKM7nUzgQ==, tarball: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917}
+  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6c9123b4f2221c96b321c3befe74f89953214796':
+    resolution: {gitHosted: true, integrity: sha512-PVsD9LkFmA0+gXwOGKdxq1stSo619U//tW+Z41UB/+F9xZbW87KhjhBt6Ubm2xbuaKq7zTcoqDZHXLebmvirWw==, tarball: https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6c9123b4f2221c96b321c3befe74f89953214796}
     version: 0.1.0
 
   '@alcalzone/ansi-tokenize@0.3.0':
@@ -4619,7 +4619,7 @@ snapshots:
       react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       use-sync-external-store: 1.6.0(react@19.2.7)
 
-  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6b6d45f47c578ec2b51ee6121b3dbc17161c6917': {}
+  '@affine-fumadocs/publisher@https://codeload.github.com/zubayrali/affine-fumadocs-publisher/tar.gz/6c9123b4f2221c96b321c3befe74f89953214796': {}
 
   '@alcalzone/ansi-tokenize@0.3.0':
     dependencies:
