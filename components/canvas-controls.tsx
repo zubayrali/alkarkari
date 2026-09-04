@@ -16,13 +16,14 @@ type CanvasControlsProps = {
 
 export function CanvasControls({ fitViewPadding = 0.15 }: CanvasControlsProps) {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const zoom = useStore((state) => state.transform[2]);
   const minZoomReached = useStore((state) => state.transform[2] <= state.minZoom);
   const maxZoomReached = useStore((state) => state.transform[2] >= state.maxZoom);
 
   return (
     <Panel
       position="bottom-left"
-      className="canvas-controls !m-3 flex flex-col gap-1 !bg-transparent !shadow-none"
+      className="canvas-controls !m-3 flex items-center !bg-transparent !shadow-none"
     >
       <button
         type="button"
@@ -44,6 +45,9 @@ export function CanvasControls({ fitViewPadding = 0.15 }: CanvasControlsProps) {
       >
         <Minus />
       </button>
+      <output className="canvas-zoom-readout" aria-label={`Zoom ${Math.round(zoom * 100)} percent`}>
+        {Math.round(zoom * 100)}%
+      </output>
       <button
         type="button"
         className={cn(controlButtonClass)}

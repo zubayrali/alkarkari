@@ -20,6 +20,9 @@ slug: dictionary/wird
 publish: true
 tags: [practice, daily]
 arabic: ورد
+affineProperties:
+  Arabic: ورد
+  Reviewed: true
 ---
 
 # Ignored fallback
@@ -34,6 +37,10 @@ Body`,
     expect(page.metadata.publish).toBe(true);
     expect(page.metadata.tags).toEqual(["practice", "daily"]);
     expect(page.metadata.arabic).toBe("ورد");
+    expect(page.metadata.affineProperties).toEqual({
+      Arabic: "ورد",
+      Reviewed: true,
+    });
   });
 
   it("parses frontmatter after AFFiNE rich-text Markdown normalization", () => {
@@ -117,6 +124,15 @@ sourcePath: dictionary/wird.md
     ).toBe(
       "Read [the Wird](/dictionary/wird) and [Wird](/dictionary/wird#practice).",
     );
+
+    expect(
+      rewriteObsidianWikiLinks(
+        String.raw`Read \[\[Wird\]\].`,
+        [target],
+        diagnostics,
+        "source-doc",
+      ),
+    ).toBe("Read [Wird](/dictionary/wird).");
   });
 
   it("removes retained legacy vault metadata after native AFFiNE metadata is applied", () => {

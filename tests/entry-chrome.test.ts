@@ -39,6 +39,28 @@ describe("entry chrome", () => {
     }
   });
 
+  it("reads native AFFiNE Arabic metadata", () => {
+    const chrome = buildEntryChrome({
+      slugs: ["dictionary", "wird"],
+      data: {
+        title: "Wird",
+        affineProperties: { Arabic: " وِرْد " },
+      },
+    });
+
+    expect(chrome.arabic).toBe("وِرْد");
+  });
+
+  it("recovers an imported Arabic label from the article introduction", () => {
+    const chrome = buildEntryChrome({
+      slugs: ["dictionary", "ism-al-mufrad"],
+      data: { title: "Ism al-Mufrad" },
+      bodyText: '**Ism al-Mufrad** (Arabic: اسم المُفرَد, "the Singular Name")',
+    });
+
+    expect(chrome.arabic).toBe("اسم المُفرَد");
+  });
+
   it("identifies the tags index independently of generated metadata", () => {
     const chrome = buildEntryChrome({
       slugs: ["tags"],

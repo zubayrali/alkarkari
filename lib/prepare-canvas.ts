@@ -13,6 +13,7 @@ import {
 import { parseCanvasData } from '@/lib/load-canvas';
 import { resolveCanvasFileUrl } from '@/lib/resolve-canvas-file';
 import { source } from '@/lib/source';
+import katex from 'katex';
 
 function resolveWikilink(target: string) {
   const segments = target
@@ -27,6 +28,19 @@ async function prepareNode(node: CanvasNode): Promise<RenderableCanvasNode> {
     return {
       ...node,
       textHtml: renderCanvasMarkdown(node.text, resolveWikilink),
+      contentHtml: node.content?.map((segment) => {
+        if (segment.type === 'markdown') return { type: 'markdown' as const, html: renderCanvasMarkdown(segment.text, resolveWikilink) };
+        if (segment.type === 'latex') return {
+          type: 'latex' as const,
+          formula: segment.formula,
+          html: katex.renderToString(segment.formula, { throwOnError: false, displayMode: true }),
+        };
+        if (segment.type === 'table') return {
+          type: 'table' as const,
+          rows: segment.rows.map((row) => row.map((cell) => renderCanvasMarkdown(cell, resolveWikilink))),
+        };
+        return segment;
+      }),
     };
   }
 

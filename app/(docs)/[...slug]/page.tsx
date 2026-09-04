@@ -32,17 +32,79 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getSiteLanguage } from "@/lib/locale";
 import { currentLocale } from "@/lib/locales-manifest";
+import { languageAlternatesForRoute } from "@/lib/affine/multilingual";
+import { readAffineTranslationIndex } from "@/lib/affine/translation-index";
+import {
+  readPublishingPortal,
+} from "@/lib/affine/publishing-snapshot";
 import { getAffineDocumentUrl } from "@/lib/affine/url";
 import { gitConfig } from "@/lib/shared";
 import { Presentation } from "lucide-react";
 import { SlideViewer } from "@/components/slide-viewer";
-import { EntryThreshold } from "@/components/entry-threshold";
-import { NightContents } from "@/components/night-contents";
+import {
+  EntryArabicBackdrop,
+  EntryThreshold,
+} from "@/components/entry-threshold";
+import { GraphPageContent } from "@/components/graph-page";
 import { buildEntryChrome, usesNightThreshold } from "@/lib/entry-chrome";
+import {
+  DocumentViewContent,
+  DocumentViewProvider,
+  DocumentViewToggle,
+} from "@/components/document-view";
+import { CanvasPageContent } from "@/components/canvas-page";
+import { BooksLibrary } from "@/components/books-library";
+import { KnowledgeHub } from "@/components/knowledge-hub";
+import { MediaLibrary } from "@/components/media-library";
+import {
+  OpenIslamMobileToc,
+  OpenIslamToc,
+} from "@/components/openislam-toc";
 import "@/app/slides.css";
+
+function pageProperty(data: Record<string, unknown>, name: string): string | undefined {
+  const direct = data[name];
+  if (typeof direct === "string" && direct.trim()) return direct.trim();
+  const properties = data.affineProperties;
+  if (!properties || typeof properties !== "object" || Array.isArray(properties)) return undefined;
+  const value = (properties as Record<string, unknown>)[name];
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
 
 export default async function Page(props: PageProps<"/[...slug]">) {
   const params = await props.params;
+  const isGraph = params.slug.length === 1 && params.slug[0] === "graph";
+  if (isGraph) {
+    return (
+      <DocsPage
+        full
+        breadcrumb={{ enabled: false }}
+        tableOfContent={{ enabled: false }}
+        tableOfContentPopover={{ enabled: false }}
+        footer={{ enabled: false }}
+      >
+        <div className="flex flex-col gap-4">
+          <DocsTitle>Knowledge graph</DocsTitle>
+          <GraphPageContent />
+        </div>
+      </DocsPage>
+    );
+  }
+  const isStartHere = params.slug.length === 1 && params.slug[0] === "start-here";
+  const isMedia = params.slug.length === 1 && params.slug[0] === "media";
+  if ((isStartHere || isMedia) && currentLocale() === "en") {
+    return (
+      <DocsPage
+        full
+        breadcrumb={{ enabled: false }}
+        tableOfContent={{ enabled: false }}
+        tableOfContentPopover={{ enabled: false }}
+        footer={{ enabled: false }}
+      >
+        {isStartHere ? <KnowledgeHub /> : <MediaLibrary />}
+      </DocsPage>
+    );
+  }
   const isSlides =
     params.slug.length > 1 && params.slug[params.slug.length - 1] === "slides";
   const resolvedSlug = isSlides ? params.slug.slice(0, -1) : params.slug;
@@ -77,6 +139,7 @@ export default async function Page(props: PageProps<"/[...slug]">) {
     {
       slugs: page.slugs,
       data: page.data as Record<string, unknown>,
+      bodyText: await page.data.getText("processed"),
     },
     {
       sectionFallback: siteLanguage.sectionFallback,
@@ -86,12 +149,44 @@ export default async function Page(props: PageProps<"/[...slug]">) {
     },
   );
   const nightThreshold = usesNightThreshold(chrome.kind);
+  const canvasSrc = typeof page.data.canvasSrc === "string" &&
+    /^\/affine-canvas\/[A-Za-z0-9_-]+\.json$/.test(page.data.canvasSrc)
+      ? page.data.canvasSrc
+      : undefined;
 
   // Base pages (incl. tag pages) and full-width pages (the graph) carry no
   // page chrome: no TOC, no actions bar, no prev/next footer.
-  const chromeless = Boolean(page.data.base || page.data.full);
-  const showToc = !chromeless;
+  // A canvas-capable document keeps its title/actions even if an older
+  // snapshot marked it `full`; readers need a visible way into Edgeless mode.
+  const isBooksIndex = page.slugs.length === 1 && page.slugs[0] === "books";
+  const chromeless = Boolean((page.data.base || page.data.full) && !canvasSrc);
+  // The books index is a visual catalog, not a prose document. Reserving the
+  // right-hand outline rail produces a blank column and an unexplained rule.
+  const showToc = !chromeless && !isBooksIndex;
   const structuredData = showToc ? page.data.structuredData : null;
+  const booksPortal = isBooksIndex ? await readPublishingPortal("books") : undefined;
+  const libraryBooks = booksPortal
+    ? booksPortal.pages.map((item) => ({
+        url: item.href,
+        title: item.title,
+        description: item.description,
+        cover: typeof item.properties["Book Cover"] === "string"
+          ? item.properties["Book Cover"]
+          : undefined,
+      }))
+    : isBooksIndex
+    ? source.getPages()
+        .filter((item) => item.slugs[0] === "books" && item.slugs.length > 1 && !item.data.draft && !item.data.unlisted)
+        .map((item) => {
+          const data = item.data as Record<string, unknown>;
+          return {
+            url: item.url,
+            title: item.data.title,
+            description: item.data.description,
+            cover: pageProperty(data, "Book Cover"),
+          };
+        })
+    : [];
   const pageActions = !chromeless ? (
     <div className="page-actions flex flex-row gap-2 items-center shrink-0">
       {page.data.slides && (
@@ -103,6 +198,7 @@ export default async function Page(props: PageProps<"/[...slug]">) {
           Slides
         </Link>
       )}
+      {canvasSrc && <DocumentViewToggle />}
       <ReaderToggle label={siteLanguage.readerModeLabel} exitLabel={siteLanguage.readerExitLabel} />
       <span className="hidden md:contents">
         <MarkdownCopyButton markdownUrl={getPageMarkdownUrl(page).url} />
@@ -124,14 +220,24 @@ export default async function Page(props: PageProps<"/[...slug]">) {
         />
       )}
 
-      <DocsBody>
-        <MDX
-          components={getMDXComponents({
-            a: createRelativeLink(source, page),
-            NoteEmbed,
-          })}
-        />
-      </DocsBody>
+      {isBooksIndex ? (
+        <BooksLibrary books={libraryBooks} />
+      ) : (
+        <DocsBody>
+          {nightThreshold && (
+            <EntryArabicBackdrop
+              arabic={chrome.arabic}
+              className="night-reading-arabic"
+            />
+          )}
+          <MDX
+            components={getMDXComponents({
+              a: createRelativeLink(source, page),
+              NoteEmbed,
+            })}
+          />
+        </DocsBody>
+      )}
 
       {!chromeless && (
         <Backlinks
@@ -167,47 +273,46 @@ export default async function Page(props: PageProps<"/[...slug]">) {
   );
 
   return (
-    <DocsPage
+    <DocumentViewProvider hasCanvas={Boolean(canvasSrc)}>
+      <DocsPage
       className={nightThreshold ? "night-threshold-page" : undefined}
       breadcrumb={{ enabled: !nightThreshold }}
       toc={showToc ? page.data.toc : undefined}
-      // Base/tag pages (data tables) use the full content width, like the graph.
-      full={chromeless}
-      // No fumadocs TOC surface anywhere: night pages carry their own
-      // Contents dropdown in the utility strip, specialized pages are
-      // chromeless. Without #nd-toc the sidenote engine uses margin notes.
-      tableOfContent={{ enabled: false }}
-      tableOfContentPopover={{ enabled: false }}
+      // Base/tag pages and the books catalog use the full content width.
+      full={chromeless || isBooksIndex}
+      // OpenIslam's animated minimap + revealable outline, adapted into the
+      // right-hand Fumadocs slot. The Fumadocs provider still supplies heading
+      // state, while both renderers and interactions are ours.
+      tableOfContent={{
+        enabled: showToc,
+        single: true,
+        component: showToc ? <OpenIslamToc /> : undefined,
+      }}
+      tableOfContentPopover={{
+        enabled: showToc,
+        component: showToc ? <OpenIslamMobileToc /> : undefined,
+      }}
       // Footer is rendered manually below so comments can sit beneath the
       // prev/next cards (and stay decoupled if recommended reading is dropped).
       footer={{ enabled: false }}
     >
       <ViewTransition name="docs-content" share="auto" enter="auto" default="none">
         <div className="reader-shell-stack flex flex-col gap-4 flex-1">
-          {nightThreshold ? (
-            <EntryThreshold
+          <div className="document-page-header">
+            {nightThreshold ? (
+              <EntryThreshold
               chrome={chrome}
               actions={pageActions}
               aliasesLabel={siteLanguage.aliasesLabel}
               tagsAriaLabel={siteLanguage.tagsAriaLabel}
-              contents={
-                showToc ? (
-                  <>
-                    <NightContents
-                      items={page.data.toc}
-                      label={siteLanguage.contentsLabel}
-                    />
-                    {structuredData && (
-                      <ReadingTime
-                        structuredData={structuredData}
-                        label={siteLanguage.readingTimeUnit}
-                        wordsLabel={siteLanguage.wordsUnit}
-                        className="night-reading-time"
-                      />
-                    )}
-                  </>
-                ) : undefined
-              }
+              contents={structuredData ? (
+                <ReadingTime
+                  structuredData={structuredData}
+                  label={siteLanguage.readingTimeUnit}
+                  wordsLabel={siteLanguage.wordsUnit}
+                  className="night-reading-time"
+                />
+              ) : undefined}
             />
           ) : (
             <>
@@ -226,18 +331,21 @@ export default async function Page(props: PageProps<"/[...slug]">) {
 
               {page.data.tags && <PageTags tags={page.data.tags} className="" />}
             </>
-          )}
+            )}
+          </div>
 
-          {nightThreshold ? (
-            <div className="night-reading-field" data-entry-kind={chrome.kind}>
-              {readingField}
-            </div>
-          ) : (
-            readingField
-          )}
+          <DocumentViewContent
+            page={nightThreshold ? (
+              <div className="night-reading-field" data-entry-kind={chrome.kind}>
+                {readingField}
+              </div>
+            ) : readingField}
+            canvas={canvasSrc ? <CanvasPageContent src={canvasSrc} title={page.data.title} /> : undefined}
+          />
         </div>
       </ViewTransition>
-    </DocsPage>
+      </DocsPage>
+    </DocumentViewProvider>
   );
 }
 
@@ -253,13 +361,32 @@ export async function generateStaticParams() {
     .filter((p) => p.data.slides && !p.data.unlisted)
     .map((p) => ({ slug: [...p.slugs, "slides"] }));
 
-  return [...base, ...slides];
+  const shells = currentLocale() === "en"
+    ? [{ slug: ["graph"] }, { slug: ["start-here"] }, { slug: ["media"] }]
+    : [{ slug: ["graph"] }];
+  if (process.env.NODE_ENV !== "production") shells.push({ slug: ["publishing"] });
+  return [...base, ...slides, ...shells];
 }
 
 export async function generateMetadata(
   props: PageProps<"/[...slug]">,
 ): Promise<Metadata> {
   const params = await props.params;
+  if (process.env.NODE_ENV !== "production" && params.slug.length === 1 && params.slug[0] === "publishing") {
+    return { title: "AFFiNE Publishing Studio", description: "Local release readiness and collection diagnostics." };
+  }
+  if (params.slug.length === 1 && params.slug[0] === "graph") {
+    return {
+      title: "Knowledge graph",
+      description: "Explore the pages, tags, and connections in the Karkari Wiki.",
+    };
+  }
+  if (currentLocale() === "en" && params.slug.length === 1 && params.slug[0] === "start-here") {
+    return { title: "Start here", description: "A guided introduction to the Karkariya path, foundations, lineage, and teachings." };
+  }
+  if (currentLocale() === "en" && params.slug.length === 1 && params.slug[0] === "media") {
+    return { title: "Media library", description: "Official Karkariya teachings, practice recordings, questions, and testimonies." };
+  }
   const isSlides =
     params.slug.length > 1 && params.slug[params.slug.length - 1] === "slides";
   const resolvedSlug = isSlides ? params.slug.slice(0, -1) : params.slug;
@@ -288,11 +415,22 @@ export async function generateMetadata(
     };
   }
 
+  const translationIndex = readAffineTranslationIndex();
+  const languages = translationIndex
+    ? languageAlternatesForRoute(
+        translationIndex,
+        currentLocale(),
+        `/${resolvedSlug.join("/")}`,
+        process.env.PAGES_BASE_PATH || "",
+      )
+    : undefined;
+
   return {
     title: page.data.title,
     description: page.data.description,
     openGraph: {
       images: getPageImage(page).url,
     },
+    ...(languages ? { alternates: { languages } } : {}),
   };
 }

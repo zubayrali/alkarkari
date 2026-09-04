@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import type { NoteRecord, PropertyConfig } from '@/lib/base-types'
-import { resolveNoteProperty, isNameColumn, resolveDisplayName, resolveImageUrl } from '@/lib/base-properties'
+import { resolveNoteProperty, isNameColumn, resolveImageUrl } from '@/lib/base-properties'
 import { basesCellContent } from './bases-cell'
 import { DEFAULT_BASES_STRINGS, type BasesStrings } from '@/lib/bases-strings'
 
@@ -43,13 +43,11 @@ function Card({
   imageProperty,
   cardAspect,
   columns,
-  properties,
 }: {
   note: NoteRecord
   imageProperty?: string
   cardAspect?: number
   columns: string[]
-  properties: Record<string, PropertyConfig>
 }) {
   const imageUrl = imageProperty ? resolveImageUrl(note, imageProperty) : ''
   const description = note.frontmatter.description as string | undefined
@@ -101,7 +99,6 @@ function Card({
 
 export function BasesViewGallery({
   notes,
-  properties,
   order,
   cardSize = 280,
   cardAspect,
@@ -136,7 +133,6 @@ export function BasesViewGallery({
                   imageProperty={imageProperty}
                   cardAspect={cardAspect}
                   columns={columns}
-                  properties={properties}
                 />
               ))}
             </div>
@@ -161,7 +157,6 @@ export function BasesViewGallery({
             imageProperty={imageProperty}
             cardAspect={cardAspect}
             columns={columns}
-            properties={properties}
           />
         ))}
       </div>

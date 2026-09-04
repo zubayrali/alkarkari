@@ -28,9 +28,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         // The mockup's "side-foot": utility links + locale live in small
         // type at the bottom of the index, not above the tree.
         footer: (
-          <div className="night-sidebar-foot">
-            <SidebarLinks key="sidebar-links" />
-            <LocaleSwitcher key="locale-switcher" variant="sidebar" />
+          <div key="sidebar-footer" className="night-sidebar-foot">
+            <SidebarLinks />
+            <LocaleSwitcher variant="sidebar" />
           </div>
         ),
       }}

@@ -12,6 +12,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { DEFAULT_LOCALE, LOCALES } from "../lib/locales-manifest.ts";
 
 const root = process.cwd();
 const basePath = process.env.BASE_PATH ?? "";
@@ -19,7 +20,6 @@ const origin = process.env.SITE_ORIGIN ?? "";
 const artifactsDir = path.join(root, process.env.ARTIFACTS_DIR ?? "artifacts");
 const outDir = path.join(root, process.env.OUT_DIR ?? "site");
 const rootAssetsDir = path.join(root, "deploy", "root");
-const DEFAULT_LOCALE = "en";
 
 // ── 1. Discover locale builds ────────────────────────────────────────────────
 const locales = fs
@@ -33,6 +33,26 @@ if (locales.length === 0) {
   process.exit(1);
 }
 console.log(`Stitching locales: ${locales.join(", ")}`);
+
+const escapeHtml = (value: string) => value
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;");
+const configuredLocales = LOCALES.filter(locale => locales.includes(locale.code));
+const localeLinks = configuredLocales.map(locale =>
+  `<a href="./${encodeURIComponent(locale.code)}/" hreflang="${escapeHtml(locale.languageTag)}" data-locale="${escapeHtml(locale.code)}">${escapeHtml(locale.label)}<span class="code">${escapeHtml(locale.code)}</span></a>`,
+).join("\n    ");
+const locale404Links = configuredLocales.map(locale =>
+  `<a href="${basePath}/${encodeURIComponent(locale.code)}/">${escapeHtml(locale.label)}</a>`,
+).join("\n    ");
+const localeLabels = Object.fromEntries(
+  configuredLocales.map(locale => [locale.code, locale.label]),
+);
+const languageMap = Object.fromEntries(configuredLocales.flatMap(locale => {
+  const tag = locale.languageTag.toLowerCase();
+  return [[tag, locale.code], [tag.split("-")[0], locale.code]];
+}));
 
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
@@ -52,7 +72,12 @@ if (fs.existsSync(rootAssetsDir)) {
     if (entry.isDirectory()) {
       fs.cpSync(src, dest, { recursive: true });
     } else if (/\.(html|txt|xml|css|js)$/.test(entry.name)) {
-      const text = fs.readFileSync(src, "utf8").replaceAll("{{BASE_PATH}}", basePath);
+      const text = fs.readFileSync(src, "utf8")
+        .replaceAll("{{BASE_PATH}}", basePath)
+        .replaceAll("{{LOCALE_LINKS}}", localeLinks)
+        .replaceAll("{{LOCALE_404_LINKS}}", locale404Links)
+        .replaceAll("{{LOCALE_LABELS}}", JSON.stringify(localeLabels))
+        .replaceAll("{{LANGUAGE_MAP}}", JSON.stringify(languageMap));
       fs.writeFileSync(dest, text);
     } else {
       fs.copyFileSync(src, dest);

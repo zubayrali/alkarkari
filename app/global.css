@@ -15,6 +15,7 @@
 @import "./code-ledger.css";
 @import "./sewn.css";
 @import "./reader-shell.css";
+@import "./lightbox.css";
 /* Karkari retheme — imported last so its token overrides win the cascade */
 @import "./karkari-theme.css";
 
@@ -28,28 +29,42 @@
   --color-border: var(--color-fd-border);
 }
 
-/* Sidebar banner links (Tags, Graph) */
+/* Sidebar utility navigation. The mobile drawer has enough width for two
+   columns; the narrower desktop rail switches this to one column below. */
 .sidebar-links {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
+  min-width: 0;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
   border-bottom: 1px solid var(--color-fd-border);
 }
 
 .sidebar-link {
-  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 8px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 7px 8px;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
   color: var(--color-fd-muted-foreground);
   text-decoration: none;
   transition: color 0.15s, background 0.15s;
+}
+
+.sidebar-link svg {
+  flex: none;
+}
+
+.sidebar-link span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-link:hover {
@@ -268,56 +283,99 @@ html[data-reader-mode="on"] article#nd-page {
 html[data-reader-mode="on"] .page-actions,
 html[data-reader-mode="on"] .properties-panel,
 html[data-reader-mode="on"] article#nd-page > .\@container,
+html[data-reader-mode="on"] #nd-toc,
+html[data-reader-mode="on"] .kk-mobile-toc,
+html[data-reader-mode="on"] [data-toc-popover],
 html[data-reader-mode="on"] [data-backlinks],
 html[data-reader-mode="on"] #comments,
 html[data-reader-mode="on"] [data-page-footer] {
   display: none !important;
 }
 
-/* ── Scrollbars ─────────────────────────────────────────────────────────
-   Overlay-style: transparent lane, slim rounded thumb, invisible until the
-   scroller is hovered or the page is actively scrolling (html[data-scrolling]
-   set by components/scrollbar-reveal.tsx). The root scrollbar only shows
-   while scrolling — html/body are excluded from the hover reveal since the
-   pointer is always over them. Firefox lacks ::-webkit-scrollbar and gets
-   thin + translucent via @supports; setting scrollbar-width/color outside
-   that guard would disable all the webkit styling in Chromium 121+. */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-  background: transparent;
+html[data-reader-mode="on"] #nd-docs-layout {
+  --fd-toc-width: 0px !important;
+  --fd-toc-popover-height: 0px !important;
 }
 
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-corner {
-  background: transparent;
+/* ── Zero-gutter overlay scrollbars ──────────────────────────────────────
+   Adapted from OpenIslam. Native scrolling remains intact; only the classic
+   layout-consuming scrollbar is hidden on managed regions. A fixed overlay
+   thumb appears while scrolling/hovering and remains draggable + keyboard
+   controllable. Forced-colors mode restores native browser controls. */
+:root {
+  --kk-scrollbar-thumb: color-mix(in srgb, var(--color-fd-foreground) 26%, transparent);
+  --kk-scrollbar-thumb-hover: color-mix(in srgb, var(--color-fd-foreground) 46%, transparent);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  background-clip: padding-box;
-  border: 4px solid transparent;
+.kk-overlay-scroll-target {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.kk-overlay-scroll-target::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.kk-overlay-scrollbars {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  overflow: visible;
+  pointer-events: none;
+}
+.kk-overlay-scrollbar {
+  position: fixed;
+  box-sizing: border-box;
+  border: 0;
   border-radius: 999px;
-  min-height: 3rem;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  touch-action: none;
+  transition: opacity 140ms ease;
+}
+.kk-overlay-scrollbar::before {
+  position: absolute;
+  border-radius: inherit;
+  background: var(--kk-scrollbar-thumb);
+  content: "";
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+.kk-overlay-scrollbar--y::before { inset: 0 3px; }
+.kk-overlay-scrollbar--x::before { inset: 3px 0; }
+.kk-overlay-scrollbar.is-visible,
+.kk-overlay-scrollbar:hover,
+.kk-overlay-scrollbar:focus-visible,
+.kk-overlay-scrollbar.is-dragging {
+  opacity: 1;
+  pointer-events: auto;
+}
+.kk-overlay-scrollbar:hover::before,
+.kk-overlay-scrollbar.is-dragging::before {
+  background: var(--kk-scrollbar-thumb-hover);
+  transform: scale(1.18);
+}
+.kk-overlay-scrollbar:focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: -2px;
 }
 
-/* Reveal only the scroller being used: its own hover, or its own
-   [data-scrolling] mark (set per-element by scrollbar-reveal.tsx). */
-:hover:not(html):not(body)::-webkit-scrollbar-thumb,
-[data-scrolling]::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--color-fd-foreground) 24%, transparent);
+@media (prefers-reduced-motion: reduce) {
+  .kk-overlay-scrollbar,
+  .kk-overlay-scrollbar::before { transition: none; }
 }
 
-::-webkit-scrollbar-thumb:hover,
-::-webkit-scrollbar-thumb:active {
-  background-color: color-mix(in srgb, var(--color-fd-foreground) 45%, transparent) !important;
-}
-
-@supports not selector(::-webkit-scrollbar) {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--color-fd-foreground) 30%, transparent) transparent;
+@media (forced-colors: active) {
+  .kk-overlay-scroll-target {
+    -ms-overflow-style: auto !important;
+    scrollbar-width: auto !important;
   }
+  .kk-overlay-scroll-target::-webkit-scrollbar {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  .kk-overlay-scrollbars { display: none !important; }
 }
 
 /* Floating exit bar — shown in reader mode at the bottom of the viewport */
@@ -462,4 +520,3 @@ html > body[data-scroll-locked] {
 ::view-transition-new(nav-progress) {
   animation: none;
 }
-

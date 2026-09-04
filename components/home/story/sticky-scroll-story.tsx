@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import Image, { type StaticImageData } from 'next/image';
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { LetterStaggerText } from './letter-stagger-text';
 
 // The wandering (siyāḥa) and the khalwa — the Shaykh's story told as

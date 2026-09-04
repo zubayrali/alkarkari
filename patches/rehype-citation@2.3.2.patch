@@ -1,0 +1,26 @@
+diff --git a/dist/node/cite.mjs b/dist/node/cite.mjs
+index d058a8bd930d320c6548313caa7aaf48cb27f248..9a3293aa3f96b5dbc7435831b4d5f7a5f9f52215 100644
+--- a/dist/node/cite.mjs
++++ b/dist/node/cite.mjs
+@@ -4,7 +4,7 @@ import path from 'path';
+ import Url from 'url';
+ import Stream from 'stream';
+ import http from 'http';
+-import punycode from 'punycode';
++import punycode from 'punycode/punycode.js';
+ import https from 'https';
+ import zlib from 'zlib';
+ import { parse as parse$9, format as format$9 } from '@citation-js/date';
+diff --git a/dist/node/rehype-citation.mjs b/dist/node/rehype-citation.mjs
+index 57d48c7008c0a5591efa82bd9c674938365eaa30..6d996f66190dd82044c8218cb7798813b4b0cafb 100644
+--- a/dist/node/rehype-citation.mjs
++++ b/dist/node/rehype-citation.mjs
+@@ -8,7 +8,7 @@ import path from 'path';
+ import Url from 'url';
+ import Stream from 'stream';
+ import http from 'http';
+-import punycode from 'punycode';
++import punycode from 'punycode/punycode.js';
+ import https from 'https';
+ import zlib from 'zlib';
+ import { parse as parse$9, format as format$9 } from '@citation-js/date';

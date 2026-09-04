@@ -18,6 +18,7 @@ interface McpTextContent {
 interface McpToolResult {
   content?: McpTextContent[];
   isError?: boolean;
+  structuredContent?: unknown;
 }
 
 export interface AffineMcpClientOptions {
@@ -61,21 +62,35 @@ export function createAffineMcpClient(options: AffineMcpClientOptions) {
     return payload.result;
   }
 
-  return {
-    async readDocument(docId: string): Promise<string> {
+  async function callTool(name: string, args: Record<string, unknown>): Promise<unknown> {
       const result = await request<McpToolResult>("tools/call", {
-        name: "read_document",
-        arguments: { docId },
+        name,
+        arguments: args,
       });
       if (result.isError) {
-        throw new Error(`AFFiNE read_document failed for ${docId}`);
+        throw new Error(`AFFiNE ${name} failed`);
       }
+      if (result.structuredContent !== undefined) return result.structuredContent;
       const text = result.content
         ?.filter((item): item is McpTextContent => item.type === "text")
         .map((item) => item.text)
         .join("\n");
-      if (!text) throw new Error(`AFFiNE document ${docId} returned no text`);
-      return text;
+      if (!text) throw new Error(`AFFiNE ${name} returned no content`);
+      try {
+        return JSON.parse(text) as unknown;
+      } catch {
+        return text;
+      }
+  }
+
+  return {
+    callTool,
+    async readDocument(docId: string): Promise<string> {
+      const value = await callTool("read_document", { docId });
+      if (typeof value !== "string") {
+        throw new Error(`AFFiNE document ${docId} returned non-text content`);
+      }
+      return value;
     },
   };
 }

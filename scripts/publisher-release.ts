@@ -8,7 +8,8 @@ const root = process.cwd();
 const locale = process.env.AFFINE_LOCALE?.trim() || process.env.SITE_LANGUAGE?.trim() || "en";
 const snapshotRoot = path.resolve(root, process.env.AFFINE_OUTPUT_ROOT?.trim() || path.join("affine", locale));
 const releasesRoot = path.resolve(root, process.env.PUBLISHER_RELEASE_ROOT?.trim() || path.join(".affine-publisher", "releases"));
-const outRoot = path.join(root, "out");
+const multilingual = process.env.PUBLISHER_MULTILINGUAL !== "0";
+const outRoot = path.join(root, multilingual ? "site" : "out");
 const releaseId = new Date().toISOString().replace(/[:.]/g, "-");
 const temporary = path.join(releasesRoot, `.building-${releaseId}`);
 const destination = path.join(releasesRoot, releaseId);
@@ -57,10 +58,17 @@ async function main() {
   await run(process.execPath, ["--env-file=.env.publisher", "scripts/publisher-doctor.ts"]);
   await run(pnpm, ["test"]);
   await run(pnpm, ["lint"]);
-  await run(pnpm, ["build"]);
+  await run(pnpm, [multilingual ? "build:all" : "build"]);
 
   const htmlFiles = await assertBuildOutput();
   const manifest = JSON.parse(await fs.readFile(path.join(snapshotRoot, "manifest.json"), "utf8")) as AffineSnapshotManifest;
+  const localeManifests = multilingual
+    ? await Promise.all((await fs.readdir(path.join(root, "affine"), { withFileTypes: true }))
+        .filter((entry) => entry.isDirectory())
+        .map(async (entry) => JSON.parse(
+          await fs.readFile(path.join(root, "affine", entry.name, "manifest.json"), "utf8"),
+        ) as AffineSnapshotManifest))
+    : [manifest];
   await fs.mkdir(releasesRoot, { recursive: true, mode: 0o700 });
   await fs.rm(temporary, { recursive: true, force: true });
   await fs.cp(outRoot, temporary, { recursive: true });
@@ -69,10 +77,11 @@ async function main() {
     status: "ok",
     releaseId,
     createdAt: new Date().toISOString(),
-    locale,
-    snapshotGeneratedAt: manifest.generatedAt,
+    locale: multilingual ? "all" : locale,
+    locales: localeManifests.map((item) => item.locale),
+    snapshotGeneratedAt: localeManifests.map((item) => item.generatedAt).sort().at(-1),
     workspaceId: manifest.workspaceId,
-    pages: manifest.pages.length,
+    pages: localeManifests.reduce((total, item) => total + item.pages.length, 0),
     htmlFiles,
   };
   await fs.writeFile(path.join(temporary, "release.json"), `${JSON.stringify(release, null, 2)}\n`);
@@ -85,7 +94,11 @@ async function main() {
   for (const obsolete of releasesToPrune(releaseIds, releaseId, positiveInteger(process.env.PUBLISHER_RELEASE_KEEP, 3))) {
     await fs.rm(path.join(releasesRoot, obsolete), { recursive: true, force: true });
   }
-  console.log(`[release] ${releaseId} is current (${manifest.pages.length} pages, ${htmlFiles} HTML files).`);
+  if (multilingual) {
+    await run(process.execPath, ["scripts/stage.ts", locale]);
+    await run(pnpm, ["exec", "fumadocs-mdx"]);
+  }
+  console.log(`[release] ${releaseId} is current (${release.pages} pages across ${release.locales.join(", ")}, ${htmlFiles} HTML files).`);
 }
 
 void main().catch(async (error) => {

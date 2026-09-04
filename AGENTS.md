@@ -1,83 +1,77 @@
-# VaultPress — Agent Context
+# Alkarkari AFFiNE Publisher — Agent Context
 
-VaultPress publishes an Obsidian vault as a documentation site. Stack: Next.js + Fumadocs + React Flow.
+This repository publishes a collaborative AFFiNE workspace as a multilingual
+Next.js + Fumadocs knowledge base. AFFiNE is the editable source of truth;
+generated snapshots are immutable build inputs. The old Obsidian trees are
+rollback/import material only.
 
-## Before you start
+## Skills
 
-- Read `CONTEXT.md` for canonical domain vocabulary (vault, note, canvas, page, generation, wikilink, etc.).
-- Read any `docs/adr/` files that touch the area you're working in.
+- Use `.agents/skills/affine-publisher/SKILL.md` for AFFiNE content, homepage,
+  locale, generation, staging, publishing, and stale-content tasks.
+- Use `.agents/skills/visual-qa/SKILL.md` for visual regression work.
+- Use `.agents/skills/ship/SKILL.md` for release/deployment work.
 
 ## Commands
 
 | Command | Purpose |
-|---|---|
-| `pnpm generate` | Convert vault → site content (must run before dev if `content/` is stale) |
-| `pnpm dev` | Local dev server at http://localhost:3000 |
-| `pnpm build` | Production build |
-| `pnpm types:check` | MDX codegen + TypeScript — run after any schema or content change |
-| `pnpm lint` | Oxlint |
+| --- | --- |
+| `pnpm dev` | Stage the active locale and start Next on the first free port |
+| `pnpm generate:affine:all` | Refresh every configured AFFiNE locale snapshot |
+| `pnpm stage` | Stage one generated locale into `content/` and `public/` |
+| `pnpm publisher:watch` | Run the continuous read-only publisher |
+| `pnpm publisher:sync-site` | Safely create missing AFFiNE homepage controls |
+| `pnpm publisher:sync-locales` | Reconcile language collections and metadata |
+| `pnpm build:all` | Build and stitch every configured locale |
+| `pnpm test` | Run Vitest |
+| `pnpm types:check` | Stage, generate Fumadocs types, and run TypeScript |
+| `pnpm lint` | Run Oxlint |
 
-**Verify changes with:** `pnpm types:check && pnpm lint`
-
-## Directory layout
-
-| Path | What lives here |
-|---|---|
-| `content/` | Generated MDX. Fully deleted and rebuilt by `pnpm generate`. Only `index.mdx` and `graph.mdx` are hand-maintained. |
-| `public/` | Generated static assets. Fully deleted and rebuilt by `pnpm generate`. No hand-maintained files. |
-| `app/` | Next.js routes (`(home)/[[...slug]]/` catch-all; `api/` for auth and search) |
-| `components/` | React components (`canvas-*.tsx`, `graph-*.tsx`, `protected-gate.tsx`) |
-| `lib/` | Domain logic, no React |
-| `scripts/` | Generation pipeline and vault opener |
-| `docs/adr/` | Architecture Decision Records |
+Before handoff, run `pnpm test`, `pnpm types:check`, `pnpm lint`, and
+`git diff --check` in proportion to the change.
 
 ## Architecture
 
+```text
+AFFiNE workspace
+  → loopback MCP bridge
+  → affine/<locale>/ atomic snapshots
+  → scripts/stage.ts
+  → content/ + public/
+  → Next.js/Fumadocs
 ```
-Obsidian vault
-  ├── notes (.md)        → content/**/*.mdx
-  └── canvases (.canvas) → content/canvas/*.mdx  (MDX wrapper, routed by Fumadocs)
-                         → public/canvas/*.canvas (raw JSON, fetched by canvas viewer at runtime)
-                                        ↓
-                               Next.js + Fumadocs site
-```
 
-Generation (`pnpm generate`) is read-only on the vault.
+- `affine/locales.config.json` is the single locale registry.
+- `lib/affine/` owns the publication, homepage, canvas, database, and snapshot
+  contracts.
+- `scripts/generate-affine.ts` creates one locale snapshot;
+  `scripts/generate-affine-all.ts` creates all locales and translation routes.
+- `scripts/run-affine-authoring.ts` provides a short-lived write-capable bridge
+  for explicit sync/seed commands. The long-running publisher remains read-only.
+- `content/`, `public/`, and `affine/<locale>/` are generated. Never hand-edit
+  them or store durable assets there.
+- Visitors must never query AFFiNE directly or receive its credentials.
 
-## Key files
+## Environment and secrets
 
-| File | Role |
-|---|---|
-| `source.config.ts` | Content schema: `tags`, `protected` fields; MDX plugins (wikilinks, Mermaid, math) |
-| `lib/source.ts` | Page loader; `resolvePage` (slug resolution); `getLLMText` |
-| `lib/protected.ts` | Page gating: `pageRequiresAuth`, `hasProtectedAccess`, `filterPageTree` |
-| `lib/build-graph.ts` | Builds graph data from pages and wikilink references |
-| `lib/remark-wikilinks.ts` | Transforms `[[wikilinks]]` into internal links at build time |
-| `lib/canvas-types.ts` | Canvas data types (`CanvasNode`, `CanvasEdge`, `CanvasData`) |
-| `scripts/generate.ts` | Generation entry point |
-| `scripts/generate-canvas-pages.ts` | Canvas-specific generation (copies raw JSON, writes MDX wrappers) |
-
-## Environment variables
-
-| Variable | Purpose |
-|---|---|
-| `OBSIDIAN_VAULT_PATH` | Absolute path to the vault. Required for generation, not used at runtime. |
-| `SITE_LANGUAGE` | UI locale: `en` (default) or `cn` |
-| `GENERATE_INCLUDE` | Comma-separated top-level vault folders/files to include in generation |
-| `SITE_PROTECT_PASSWORD` | Shared password for protected pages. Do not commit. |
+Runtime publishing configuration lives in ignored `.env.publisher`. Never
+print or commit cookies, MCP tokens, session identifiers, or bearer tokens.
+`.env.publisher.example` documents supported variable names.
 
 ## Fumadocs reference
 
-When working on anything Fumadocs-related, fetch:
+For Fumadocs-specific behavior, consult the current official documentation:
 
-- `https://fumadocs.dev/llms.txt` — page index (start here)
-- `https://fumadocs.dev/llms-full.txt` — full docs (~700KB; search for the relevant section)
-- `https://fumadocs.dev/llms.mdx/docs/<slug>/content.md` — individual page Markdown
+- `https://fumadocs.dev/llms.txt`
+- `https://fumadocs.dev/llms-full.txt`
+- `https://fumadocs.dev/llms.mdx/docs/<slug>/content.md`
 
 ## Critical footguns
 
-- `content/` and `public/` are **fully wiped** at the start of every `pnpm generate` run. Never put hand-maintained files in `public/`; only `content/index.mdx` and `content/graph.mdx` survive.
-- Run `pnpm generate` before `pnpm types:check` if `content/` is empty — the type checker depends on generated artefacts.
-- `protected: true` gates the body only. Title, description, and tags are always public. This is intentional — see `docs/adr/0001-shared-password-protection.md`.
-- Canvas pages need both the MDX wrapper in `content/` and the raw `.canvas` JSON in `public/`. Both are produced together — see `docs/adr/0002-canvas-dual-output.md`.
-- Wikilink resolution runs at build time. Links to notes excluded from `GENERATE_INCLUDE` silently become dead links.
+- A successful AFFiNE edit is not a staged site update. Distinguish AFFiNE
+  source, generated locale snapshot, and staged tree when diagnosing staleness.
+- `Publish=true` and `Draft=false` are both required for a public document.
+- `_site/*` control documents must never become reader routes.
+- Never broaden the permanent bridge to authoring merely to make a sync command
+  pass; use or repair the short-lived authoring wrapper.
+- Do not use overwrite/reset flags without explicit user authorization.

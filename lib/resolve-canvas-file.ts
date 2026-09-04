@@ -19,6 +19,10 @@ export function resolveCanvasFileUrl(filePath: string, subpath?: string) {
     return `${page.url}${subpath ?? ''}`;
   }
 
+  if (normalized.startsWith('/')) {
+    return `${normalized}${subpath ?? ''}`;
+  }
+
   if (/\.(md|mdx)$/i.test(normalized)) {
     const fallback = `/${stripMarkdownExtension(normalized)}`;
     return `${fallback}${subpath ?? ''}`;

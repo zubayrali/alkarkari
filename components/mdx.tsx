@@ -1,14 +1,14 @@
-import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import * as ObsidianComponents from "fumadocs-obsidian/ui";
 import { Mermaid } from "@/components/mermaid";
 import { ReviewBlock } from "@/components/review-block";
 import type { MDXComponents } from "mdx/types";
-import type { ComponentProps, ImgHTMLAttributes } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { BasesInlineView } from "@/components/bases-inline-view";
 import { basesStringsFrom, type BasesStrings } from "@/lib/bases-strings";
 import { getSiteLanguage } from "@/lib/locale";
+import { ArticleImage } from "@/components/article-image";
 
 const basesStrings: BasesStrings = basesStringsFrom(getSiteLanguage());
 
@@ -16,18 +16,6 @@ function LocalizedBasesInlineView(
   props: Omit<ComponentProps<typeof BasesInlineView>, "strings">,
 ) {
   return <BasesInlineView strings={basesStrings} {...props} />;
-}
-
-function FigureImage(props: ImgHTMLAttributes<HTMLImageElement>) {
-  const { alt, ...rest } = props;
-  return (
-    // Use <span> instead of <figure> to avoid invalid <p><figure> nesting
-    // when MDX wraps inline images in paragraphs. CSS handles the display.
-    <span className="figure-image" role="figure">
-      <ImageZoom {...(rest as any)} alt={alt} />
-      {alt && <span className="figcaption">{alt}</span>}
-    </span>
-  );
 }
 
 // Obsidian callouts, painted in the reader-shell idiom: the raw type lands as
@@ -60,7 +48,7 @@ function KarkariCalloutTitle({
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
-    img: (props) => <FigureImage {...props} />,
+    img: (props) => <ArticleImage {...props} />,
     Mermaid,
     ReviewBlock,
     ...ObsidianComponents,

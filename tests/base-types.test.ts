@@ -1,5 +1,5 @@
 import { describe, it, expectTypeOf } from 'vitest'
-import type { NoteRecord, BaseConfig, CompiledBase } from '../lib/base-types'
+import type { NoteRecord } from '../lib/base-types'
 
 describe('NoteRecord', () => {
   it('has required shape', () => {

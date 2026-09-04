@@ -3,13 +3,25 @@ import { i18nProvider } from "fumadocs-ui/i18n";
 import { getSiteLanguage } from "@/lib/locale";
 import { currentLocale, getLocaleEntry } from "@/lib/locales-manifest";
 import { NavProgress } from "@/components/nav-progress";
-import { ScrollbarReveal } from "@/components/scrollbar-reveal";
+import { OverlayScrollbars } from "@/components/overlay-scrollbars";
 import "./global.css";
 import "./canvas-flow.css";
+import "./affine-database.css";
 import "./excalidraw.css";
 import "katex/dist/katex.css";
 import { Inter, Spectral, IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import type { Metadata } from "next";
+import { PublishingLiveRefresh } from "@/components/publishing-live-refresh";
+
+const siteUrl = process.env.SITE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "https://zubayrali.github.io/alkarkari"
+    : "http://localhost:3000");
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,7 +84,8 @@ export default function Layout({ children }: LayoutProps<"/">) {
           }}
         >
           <NavProgress />
-          <ScrollbarReveal />
+          <OverlayScrollbars />
+          {process.env.NODE_ENV !== "production" && <PublishingLiveRefresh />}
           {children}
         </RootProvider>
       </body>

@@ -6,6 +6,25 @@ import {
 import type { EntryChromeModel } from "@/lib/entry-chrome";
 import { PageTags } from "@/components/page-tags";
 
+function backdropText(value: string) {
+  return value.replace(/[\u0640\u064B-\u065F\u0670]/g, "");
+}
+
+export function EntryArabicBackdrop({
+  arabic,
+  className,
+}: {
+  arabic?: string;
+  className: string;
+}) {
+  if (!arabic) return null;
+  return (
+    <p className={`${className} kk-arabic`} dir="rtl" lang="ar" aria-hidden>
+      {backdropText(arabic)}
+    </p>
+  );
+}
+
 export function EntryThreshold({
   chrome,
   actions,
@@ -32,20 +51,12 @@ export function EntryThreshold({
       </div>
 
       <div className="night-threshold-main">
-        {chrome.arabic && (
-          <p
-            className="night-threshold-arabic kk-arabic"
-            dir="rtl"
-            lang="ar"
-            aria-hidden
-          >
-            {/* Bare letterforms, like the mockup's hero glyph \u2014 harakat add
-                noise at backdrop size. The pointed form stays in
-                Properties/prose (self-hosted Amiri anchors marks correctly;
-                the Google-served subset didn't). */}
-            {chrome.arabic.replace(/[\u0640\u064B-\u065F\u0670]/g, "")}
-          </p>
-        )}
+        {/* Bare letterforms: harakat add noise at backdrop size. The pointed
+            form remains in the prose and native AFFiNE metadata. */}
+        <EntryArabicBackdrop
+          arabic={chrome.arabic}
+          className="night-threshold-arabic"
+        />
 
         <DocsTitle className="night-threshold-title">{chrome.title}</DocsTitle>
 

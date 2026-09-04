@@ -66,6 +66,12 @@
   background: color-mix(in srgb, var(--color-fd-foreground) 4%, var(--color-fd-background));
 }
 
+.graph-btn[data-active] {
+  color: var(--color-fd-primary);
+  border-color: color-mix(in srgb, var(--color-fd-primary) 45%, var(--color-fd-border));
+  background: color-mix(in srgb, var(--color-fd-primary) 10%, var(--color-fd-background));
+}
+
 .graph-btn:focus-visible,
 .graph-select:focus-visible {
   outline: 2px solid var(--color-fd-ring);
@@ -85,8 +91,197 @@
 
 .graph-tooltip {
   border: 1px solid var(--color-fd-border);
-  background: var(--color-fd-popover);
+  width: max-content;
+  max-width: min(20rem, calc(100% - 1.25rem));
+  background: color-mix(in srgb, var(--color-fd-popover) 94%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, black 16%, transparent);
+  backdrop-filter: blur(10px);
   color: var(--color-fd-popover-foreground);
+  will-change: transform;
+}
+
+.graph-tooltip > :last-child {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.graph-node-card {
+  position: absolute;
+  z-index: 25;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  width: min(20rem, calc(100% - 1.5rem));
+  border: 1px solid color-mix(in srgb, var(--color-fd-primary) 30%, var(--color-fd-border));
+  background: color-mix(in srgb, var(--color-fd-popover) 94%, transparent);
+  box-shadow: 0 16px 44px color-mix(in srgb, black 20%, transparent);
+  backdrop-filter: blur(14px);
+  color: var(--color-fd-popover-foreground);
+  padding: 0.8rem 0.9rem 0.85rem;
+  animation: graph-card-in 160ms ease-out;
+  pointer-events: none;
+}
+
+.graph-node-card__actions {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
+  pointer-events: auto;
+}
+
+.graph-node-card__close {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-fd-muted-foreground);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.graph-node-card__close:hover {
+  color: var(--color-fd-foreground);
+}
+
+.graph-node-card__eyebrow,
+.graph-node-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.55rem;
+  font-family: var(--font-mono-plex), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.625rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+.graph-node-card__eyebrow {
+  min-height: 1.5rem;
+  align-items: center;
+  padding-right: 3.25rem;
+}
+
+.graph-node-card__title {
+  margin-top: 0.35rem;
+  padding-right: 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.graph-node-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0.4rem 0 0;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.graph-node-card__stats {
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--color-fd-border);
+}
+
+.graph-node-card__open {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-fd-primary);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.graph-node-card__open:hover {
+  background: color-mix(in srgb, var(--color-fd-primary) 10%, transparent);
+}
+
+.graph-node-card--local {
+  width: min(15rem, calc(100% - 1.5rem));
+  padding: 0.55rem 0.7rem 0.6rem;
+}
+
+.graph-node-card--local .graph-node-card__description {
+  margin-top: 0.2rem;
+  font-size: 0.6875rem;
+  -webkit-line-clamp: 1;
+}
+
+.graph-node-card--local .graph-node-card__title {
+  margin-top: 0.2rem;
+  font-size: 0.875rem;
+}
+
+.graph-node-card--local .graph-node-card__stats {
+  margin-top: 0.3rem;
+}
+
+.graph-node-card--local .graph-node-card__actions {
+  top: 0.5rem;
+  right: 0.3rem;
+}
+
+.graph-node-card--local .graph-node-card__stats {
+  padding-top: 0.3rem;
+}
+
+.graph-node-card__close:focus-visible,
+.graph-node-card__open:focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: 2px;
+}
+
+@keyframes graph-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .graph-node-card {
+    position: absolute;
+    inset: auto 0 0;
+    width: 100%;
+    max-height: min(82%, 18rem);
+    overflow-y: auto;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    padding: 0.85rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+  }
+
+  .graph-node-card__description {
+    margin-top: 0.25rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .graph-node-card__stats {
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph-node-card {
+    animation: none;
+  }
 }
 
 .graph-legend {

@@ -7,6 +7,8 @@ export type EntryChromeKind =
 export interface EntryChromeInput {
   slugs: string[];
   data: Record<string, unknown>;
+  /** Processed Markdown, used only as a fallback when AFFiNE has no Arabic property. */
+  bodyText?: string;
 }
 
 export interface EntryChromeLabels {
@@ -48,6 +50,31 @@ function cleanStringList(value: unknown): string[] {
   });
 }
 
+function objectValue(value: unknown, key: string): unknown {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  return (value as Record<string, unknown>)[key];
+}
+
+/**
+ * Resolve the decorative Arabic title without coupling the reader shell to an
+ * Obsidian frontmatter shape. Native AFFiNE metadata wins; imported articles
+ * can fall back to the conventional `(Arabic: …)` introduction in their body.
+ */
+export function resolveEntryArabic(input: EntryChromeInput): string | undefined {
+  const metadata =
+    cleanString(input.data.arabic) ??
+    cleanString(input.data.Arabic) ??
+    cleanString(objectValue(input.data.affineProperties, "Arabic")) ??
+    cleanString(objectValue(input.data.affineProperties, "arabic"));
+  if (metadata) return metadata;
+
+  if (!input.bodyText) return undefined;
+  const match = input.bodyText.match(
+    /\bArabic:\s*([\p{Script=Arabic}\p{Mark}\u0640]+(?:\s+[\p{Script=Arabic}\p{Mark}\u0640]+){0,7})/u,
+  );
+  return cleanString(match?.[1]);
+}
+
 function titleCaseSlug(slug: string | undefined, fallback: string): string {
   if (!slug) return fallback;
   return slug
@@ -83,7 +110,7 @@ export function buildEntryChrome(
   labels: EntryChromeLabels = DEFAULT_LABELS,
 ): EntryChromeModel {
   const kind = pageKind(input);
-  const arabic = kind === "specialized" ? undefined : cleanString(input.data.arabic);
+  const arabic = kind === "specialized" ? undefined : resolveEntryArabic(input);
   const aliases = cleanStringList(input.data.aliases);
   const promotedPropertyKeys = new Set<string>();
   if (arabic) promotedPropertyKeys.add("arabic");

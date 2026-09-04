@@ -37,7 +37,7 @@ export function ThresholdHero({ home, tagline }: ThresholdHeroProps) {
         </p>
 
         <Link
-          href="#the-way"
+          href="#explore"
           className="kk-link-stitch mt-12 w-fit text-sm no-underline"
           style={{ color: 'var(--kk-ember)' }}
         >

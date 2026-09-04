@@ -69,7 +69,8 @@ as a rollback copy; it is not the source used for bridge-mode publishing.
 For a new document to appear on the website, set these native properties in
 AFFiNE: `Slug`, `Locale` (usually `en`), and `Publish` (checked). Optional
 properties include `Description`, `Draft`, `Unlisted`, `Featured`, `Order`,
-`Aliases`, `Created`, and `Modified`. Use native AFFiNE tags for tags.
+`Aliases`, `Created`, `Modified`, and `Homepage Section`. Use native
+AFFiNE tags for tags.
 
 `Draft` prevents publication even when `Publish` is checked.
 The internal import manifest is deliberately not published as a reader-facing
@@ -88,6 +89,21 @@ page.
 Use AFFiNE's native tags for topical classification. Do not add YAML metadata to
 the body of new documents: legacy YAML from the Obsidian import is ignored by
 bridge publishing and removed from the public article.
+
+### Curating the homepage
+
+The homepage is generated from the same immutable public snapshot as the reader
+pages. Set `Featured` on a published document to place it in the featured
+selection. For more explicit control, set `Homepage Section` to:
+
+- `Featured` to include the document in the featured selection.
+- `Start Here` to make it the primary introductory route.
+- `Hidden` to exclude it from all automatic homepage selections.
+
+`Order` controls the order of featured documents. Recently updated content
+uses AFFiNE's document modification time automatically, and key terms are drawn
+from published `dictionary/*` routes. Draft and private documents can never
+enter homepage data.
 
 ## Serving updates
 

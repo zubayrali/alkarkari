@@ -3,7 +3,15 @@ import { CanvasMdxPreview } from '@/components/canvas-mdx-preview';
 import { CanvasView } from '@/components/canvas-view';
 import { prepareCanvasFromPublic } from '@/lib/prepare-canvas';
 
-export async function CanvasPageContent({ src }: { src: string }) {
+export async function CanvasPageContent({
+  src,
+  title,
+  fullBleed = true,
+}: {
+  src: string;
+  title?: string;
+  fullBleed?: boolean;
+}) {
   const data = await prepareCanvasFromPublic(src);
   const mdxPreviews: Record<string, ReactNode> = {};
 
@@ -15,5 +23,5 @@ export async function CanvasPageContent({ src }: { src: string }) {
     );
   }
 
-  return <CanvasView data={data} mdxPreviews={mdxPreviews} />;
+  return <CanvasView data={data} title={title} mdxPreviews={mdxPreviews} fullBleed={fullBleed} />;
 }

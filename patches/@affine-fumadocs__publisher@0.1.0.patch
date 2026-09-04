@@ -1,0 +1,39 @@
+diff --git a/packages/publisher/src/bridge-client.d.ts b/packages/publisher/src/bridge-client.d.ts
+index 7b3f43aadce1517fa505fe52e08aec5746059aff..db68cd9f2c5e0037c08dcd1f83feef2a39c38a93 100644
+--- a/packages/publisher/src/bridge-client.d.ts
++++ b/packages/publisher/src/bridge-client.d.ts
+@@ -1,5 +1,5 @@
+ export interface AffineBridgeMcpClientOptions { endpoint: string; token?: string; fetch?: typeof globalThis.fetch; }
+-export interface AffineBridgeDocument { id: string; title: string | null; updatedAt: string | null; inTrash: boolean; }
++export interface AffineBridgeDocument { id: string; title: string | null; updatedAt: string | null; sourceRevision: string | null; inTrash: boolean; }
+ export interface AffineBridgeMcpClient {
+   callTool(name: string, args: Record<string, unknown>): Promise<unknown>;
+   readDocumentProperties(workspaceId: string, docId: string): Promise<Record<string, unknown>>;
+diff --git a/packages/publisher/src/bridge-client.mjs b/packages/publisher/src/bridge-client.mjs
+index d4660185b9bd3488e16195f1e203497ba9b4cc8e..266cd968430090b2a6e30a9d2df433b2aa088882 100644
+--- a/packages/publisher/src/bridge-client.mjs
++++ b/packages/publisher/src/bridge-client.mjs
+@@ -51,10 +51,21 @@ export function createAffineBridgeMcpClient(options) {
+     async listDocuments(workspaceId) {
+       const documents = []; let after;
+       do {
+-        const value = record(await callTool("list_docs", { workspaceId, first: 200, ...(after ? { after } : {}) }));
++        const value = record(await callTool("list_docs", {
++          workspaceId,
++          first: 200,
++          includeRevisions: true,
++          ...(after ? { after } : {}),
++        }));
+         for (const edge of Array.isArray(value?.edges) ? value.edges : []) {
+           const node = record(record(edge)?.node);
+-          if (typeof node?.id === "string") documents.push({ id: node.id, title: typeof node.title === "string" ? node.title : null, updatedAt: typeof node.updatedAt === "string" || typeof node.updatedAt === "number" ? String(node.updatedAt) : null, inTrash: node.inTrash === true });
++          if (typeof node?.id === "string") documents.push({
++            id: node.id,
++            title: typeof node.title === "string" ? node.title : null,
++            updatedAt: typeof node.updatedAt === "string" || typeof node.updatedAt === "number" ? String(node.updatedAt) : null,
++            sourceRevision: typeof node.sourceRevision === "string" ? node.sourceRevision : null,
++            inTrash: node.inTrash === true,
++          });
+         }
+         const pageInfo = record(value?.pageInfo); after = pageInfo?.hasNextPage === true && typeof pageInfo.endCursor === "string" ? pageInfo.endCursor : undefined;
+       } while (after);

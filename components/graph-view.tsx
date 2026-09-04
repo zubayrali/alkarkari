@@ -16,8 +16,15 @@ import type {
   NodeObject,
 } from 'react-force-graph-2d';
 import { forceCollide, forceLink, forceManyBody, forceRadial } from 'd3-force';
-import { useRouter } from 'fumadocs-core/framework';
-import { Crosshair, Maximize2, Minimize2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Crosshair,
+  Maximize2,
+  Minimize2,
+  X,
+} from 'lucide-react';
 import { patchOf } from '@/lib/patch';
 
 // Graph rendering behaviors (degree-sized nodes, zoom-faded labels,
@@ -68,6 +75,14 @@ const VISITED_KEY = `graph-visited:${process.env.NEXT_PUBLIC_SITE_LANGUAGE || 'e
 const LABEL_OPACITY_SCALE = { local: 0.6, global: 1.4 };
 const LABEL_FONT_PX = 11;
 const DIM_ALPHA = 0.12;
+const TOOLTIP_EDGE_PADDING = 10;
+
+interface LabelBox {
+  bottom: number;
+  left: number;
+  right: number;
+  top: number;
+}
 
 function getVisited(): Set<string> {
   try {
@@ -126,6 +141,27 @@ function resolveColor(value: string): Rgb {
 
 function rgba([r, g, b]: Rgb, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function endpointId(endpoint: Link['source'] | Link['target']): string {
+  return typeof endpoint === 'object' ? String(endpoint.id) : String(endpoint);
+}
+
+function displayGroup(group?: string): string | undefined {
+  if (!group) return undefined;
+  return group
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function boxesOverlap(a: LabelBox, b: LabelBox, padding: number): boolean {
+  return !(
+    a.right + padding < b.left ||
+    a.left - padding > b.right ||
+    a.bottom + padding < b.top ||
+    a.top - padding > b.bottom
+  );
 }
 
 interface ThemeColors {
@@ -206,6 +242,7 @@ export function GraphView({
   const ref = useRef<HTMLDivElement>(null);
   const [mount, setMount] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [showDirections, setShowDirections] = useState(false);
   const size = useContainerSize(ref);
 
   useEffect(() => {
@@ -235,10 +272,23 @@ export function GraphView({
           containerRef={ref}
           size={size}
           fitRef={fitRef}
+          showDirections={showDirections}
         />
       )}
-      <div className="absolute right-2 top-2 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+      <div className="absolute right-2 top-2 z-30 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
         {extraControls}
+        {variant === 'local' && (
+          <button
+            type="button"
+            aria-label="Show link directions"
+            aria-pressed={showDirections}
+            className="graph-btn"
+            data-active={showDirections || undefined}
+            onClick={() => setShowDirections((value) => !value)}
+          >
+            <ArrowRight className="size-3.5" />
+          </button>
+        )}
         <button
           type="button"
           aria-label="Zoom to fit"
@@ -284,6 +334,7 @@ function ClientOnly({
   currentUrl,
   size,
   fitRef,
+  showDirections,
 }: {
   graph: Graph;
   variant: 'global' | 'local';
@@ -291,9 +342,12 @@ function ClientOnly({
   containerRef: RefObject<HTMLDivElement | null>;
   size: { width: number; height: number };
   fitRef: RefObject<(() => void) | null>;
+  showDirections: boolean;
 }) {
   const graphRef = useRef<ForceGraphMethods<Node, Link> | undefined>(undefined);
   const hoveredRef = useRef<Node | null>(null);
+  const selectedRef = useRef<Node | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const colorsRef = useRef<ThemeColors | null>(null);
   const visitedRef = useRef<Set<string>>(new Set());
   const baselineZoomRef = useRef<number | null>(null);
@@ -306,6 +360,15 @@ function ClientOnly({
   const linkAlphas = useRef(new Map<string, number>());
   const router = useRouter();
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipMeasureRaf = useRef<number | null>(null);
+  const hoverRaf = useRef<number | null>(null);
+  const pendingHoverRef = useRef<Node | null>(null);
+  const prefetchedRef = useRef(new Set<string>());
+  const draggingRef = useRef(false);
+  const suppressClickRef = useRef(false);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const coarsePointerRef = useRef(false);
+  const visibleLabelIdsRef = useRef(new Set<string>());
 
   // d3 mutates node objects (x/y/vx/vy); never hand it the RSC-owned props.
   const data = useMemo(() => structuredClone(graph), [graph]);
@@ -341,7 +404,29 @@ function ClientOnly({
   useEffect(() => {
     return () => {
       if (hoverClearTimer.current) clearTimeout(hoverClearTimer.current);
+      if (hoverRaf.current !== null) cancelAnimationFrame(hoverRaf.current);
+      if (tooltipMeasureRaf.current !== null) cancelAnimationFrame(tooltipMeasureRaf.current);
     };
+  }, []);
+
+  useEffect(() => {
+    selectedRef.current = selectedNode;
+  }, [selectedNode]);
+
+  useEffect(() => {
+    setSelectedNode(null);
+  }, [data]);
+
+  useEffect(() => {
+    coarsePointerRef.current = window.matchMedia('(pointer: coarse)').matches;
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedNode(null);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
 
   useEffect(() => {
@@ -387,6 +472,37 @@ function ClientOnly({
     return () => {
       container.removeEventListener('wheel', release, opts);
       container.removeEventListener('pointerdown', release, opts);
+    };
+  }, [containerRef]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      pointerStartRef.current = { x: event.clientX, y: event.clientY };
+      suppressClickRef.current = false;
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      const start = pointerStartRef.current;
+      if (!start) return;
+      if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 7) {
+        suppressClickRef.current = true;
+      }
+    };
+    const onPointerUp = () => {
+      pointerStartRef.current = null;
+    };
+
+    container.addEventListener('pointerdown', onPointerDown, true);
+    container.addEventListener('pointermove', onPointerMove, true);
+    container.addEventListener('pointerup', onPointerUp, true);
+    container.addEventListener('pointercancel', onPointerUp, true);
+    return () => {
+      container.removeEventListener('pointerdown', onPointerDown, true);
+      container.removeEventListener('pointermove', onPointerMove, true);
+      container.removeEventListener('pointerup', onPointerUp, true);
+      container.removeEventListener('pointercancel', onPointerUp, true);
     };
   }, [containerRef]);
 
@@ -441,7 +557,7 @@ function ClientOnly({
   }
 
   const isActive = useCallback((node: Node): boolean => {
-    const hovered = hoveredRef.current;
+    const hovered = hoveredRef.current ?? selectedRef.current;
     if (!hovered) return true;
     return (
       hovered.id === node.id || (hovered.neighbors ?? []).includes(node.id as string)
@@ -450,8 +566,57 @@ function ClientOnly({
 
   const hoverClearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const positionTooltip = useCallback(() => {
+    const node = hoveredRef.current;
+    const el = tooltipRef.current;
+    const fg = graphRef.current;
+    const container = containerRef.current;
+    if (!node || !el || !fg || !container || draggingRef.current) return;
+    if (node.x == null || node.y == null) return;
+
+    const coords = fg.graph2ScreenCoords(node.x, node.y);
+    const width = el.offsetWidth;
+    const height = el.offsetHeight;
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    const gap = 12;
+
+    let left = coords.x - width / 2;
+    let top = coords.y + gap;
+    if (top + height > containerHeight - TOOLTIP_EDGE_PADDING) {
+      top = coords.y - height - gap;
+    }
+    left = Math.min(
+      Math.max(left, TOOLTIP_EDGE_PADDING),
+      Math.max(TOOLTIP_EDGE_PADDING, containerWidth - width - TOOLTIP_EDGE_PADDING),
+    );
+    top = Math.min(
+      Math.max(top, TOOLTIP_EDGE_PADDING),
+      Math.max(TOOLTIP_EDGE_PADDING, containerHeight - height - TOOLTIP_EDGE_PADDING),
+    );
+    el.style.transform = `translate3d(${Math.round(left)}px, ${Math.round(top)}px, 0)`;
+  }, [containerRef]);
+
+  const hideTooltip = useCallback(() => {
+    const el = tooltipRef.current;
+    if (el) el.style.display = 'none';
+  }, []);
+
   const applyHover = useCallback(
     (node: Node | null) => {
+      // react-force-graph can briefly emit `null` and then the same node again
+      // while its throttled pointer-area canvas catches up. The clear timer
+      // below absorbs the null, but rebuilding the same tooltip still toggled
+      // visibility off for a measurement frame on every recovery — perceived
+      // as flicker while the pointer moved inside one node. Same-node updates
+      // only need a position refresh; keep the already measured tooltip visible.
+      if (node && hoveredRef.current?.id === node.id) {
+        const container = containerRef.current;
+        if (container) container.style.cursor = 'pointer';
+        positionTooltip();
+        return;
+      }
+
       hoveredRef.current = node;
       const container = containerRef.current;
       if (container) container.style.cursor = node ? 'pointer' : '';
@@ -460,46 +625,71 @@ function ClientOnly({
       if (!el) return;
 
       if (node) {
-        const fg = graphRef.current;
-        if (fg) {
-          const coords = fg.graph2ScreenCoords(node.x!, node.y!);
-          el.style.top = `${coords.y + 8}px`;
-          el.style.left = `${coords.x + 8}px`;
-          el.style.display = '';
-          const titleEl = el.firstElementChild as HTMLElement | null;
-          const descEl = el.lastElementChild as HTMLElement | null;
-          if (titleEl) titleEl.textContent = node.text;
-          if (descEl) {
-            descEl.textContent = node.description ?? '';
-            descEl.style.display = node.description ? '' : 'none';
-          }
+        const titleEl = el.firstElementChild as HTMLElement | null;
+        const descEl = el.lastElementChild as HTMLElement | null;
+        if (titleEl) titleEl.textContent = node.text;
+        if (descEl) {
+          descEl.textContent = node.description ?? '';
+          descEl.style.display = node.description ? '' : 'none';
+        }
+        el.style.display = '';
+        el.style.visibility = 'hidden';
+        if (tooltipMeasureRaf.current !== null) {
+          cancelAnimationFrame(tooltipMeasureRaf.current);
+        }
+        tooltipMeasureRaf.current = requestAnimationFrame(() => {
+          tooltipMeasureRaf.current = null;
+          if (hoveredRef.current?.id !== node.id || draggingRef.current) return;
+          positionTooltip();
+          el.style.visibility = '';
+        });
+
+        if (!prefetchedRef.current.has(node.url)) {
+          prefetchedRef.current.add(node.url);
+          router.prefetch(node.url);
         }
       } else {
-        el.style.display = 'none';
+        hideTooltip();
       }
     },
-    [containerRef],
+    [containerRef, hideTooltip, positionTooltip, router],
   );
 
   const handleNodeHover = useCallback(
     (node: Node | null) => {
-      if (hoverClearTimer.current) {
-        clearTimeout(hoverClearTimer.current);
-        hoverClearTimer.current = null;
-      }
+      pendingHoverRef.current = node;
+      if (hoverRaf.current !== null) return;
+      hoverRaf.current = requestAnimationFrame(() => {
+        hoverRaf.current = null;
+        const next = pendingHoverRef.current;
 
-      if (node) {
-        applyHover(node);
-      } else {
-        // The shadow canvas used for hit detection refreshes on an 800ms
-        // throttle, so stale pixels can briefly report "nothing hovered"
-        // while the cursor is still over a node. Delay the clear so these
-        // false nulls don't flicker the UI.
-        hoverClearTimer.current = setTimeout(() => applyHover(null), 120);
-      }
+        if (hoverClearTimer.current) {
+          clearTimeout(hoverClearTimer.current);
+          hoverClearTimer.current = null;
+        }
+
+        if (next) {
+          applyHover(next);
+        } else {
+          // The shadow canvas used for hit detection refreshes on an 800ms
+          // throttle, so stale pixels can briefly report "nothing hovered"
+          // while the cursor is still over a node. Delay the clear so these
+          // false nulls don't flicker the UI.
+          hoverClearTimer.current = setTimeout(() => applyHover(null), 120);
+        }
+      });
     },
     [applyHover],
   );
+
+  const clearHover = useCallback(() => {
+    pendingHoverRef.current = null;
+    if (hoverClearTimer.current) {
+      clearTimeout(hoverClearTimer.current);
+      hoverClearTimer.current = null;
+    }
+    applyHover(null);
+  }, [applyHover]);
 
   const nodeRadius = useCallback(
     (node: Node) => {
@@ -510,6 +700,19 @@ function ClientOnly({
       return 2 + Math.sqrt(degree) * 1.8 + (isCurrent ? 1.5 : 0);
     },
     [currentUrl],
+  );
+
+  const hubDegree = Math.max(4, Math.ceil(Math.log2(Math.max(data.nodes.length, 2))));
+
+  const labelPriority = useCallback(
+    (node: Node) => {
+      const focus = hoveredRef.current ?? selectedRef.current;
+      if (node.url === currentUrl || node.id === focus?.id) return 6;
+      if ((focus?.neighbors ?? []).includes(String(node.id))) return 5;
+      if (node.kind === 'tag' || (node.neighbors?.length ?? 0) >= hubDegree) return 3;
+      return 1;
+    },
+    [currentUrl, hubDegree],
   );
 
   const nodeCanvasObject: ForceGraphProps<Node, Link>['nodeCanvasObject'] = (
@@ -523,13 +726,14 @@ function ClientOnly({
     const id = node.id as string;
     const isCurrent = currentUrl !== undefined && node.url === currentUrl;
     const isHovered = hoveredRef.current?.id === node.id;
+    const isSelected = selectedRef.current?.id === node.id;
     const radius = nodeRadius(node) * visualScaleRef.current;
     const dt = frameDtRef.current;
 
     const active = isActive(node);
     const alpha = tween(nodeAlphas.current, id, active ? 1 : DIM_ALPHA, dt);
 
-    const fill = isCurrent || isHovered
+    const fill = isCurrent || isHovered || isSelected
       ? colors.current
       : node.kind === 'tag'
         ? colors.tag
@@ -539,17 +743,19 @@ function ClientOnly({
     // dim instead of the old dedicated visited hue, which would erase the
     // section colouring for every page the reader has seen.
     const visitedDim =
-      !isCurrent && !isHovered && visitedRef.current.has(node.url) ? 0.55 : 1;
+      !isCurrent && !isHovered && !isSelected && visitedRef.current.has(node.url)
+        ? 0.55
+        : 1;
 
     ctx.beginPath();
     ctx.arc(node.x!, node.y!, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = rgba(fill, alpha * visitedDim);
     ctx.fill();
 
-    if (isCurrent) {
+    if (isCurrent || isSelected) {
       ctx.beginPath();
       ctx.arc(node.x!, node.y!, radius + 1.5 / globalScale + 1, 0, 2 * Math.PI, false);
-      ctx.strokeStyle = rgba(colors.current, 0.45 * alpha);
+      ctx.strokeStyle = rgba(colors.current, (isSelected ? 0.7 : 0.45) * alpha);
       ctx.lineWidth = 1.5 / globalScale;
       ctx.stroke();
     }
@@ -561,12 +767,17 @@ function ClientOnly({
       Math.max(0, Math.log2(relativeZoom) + 1 - labelOpacityScale),
     );
 
-    const hovered = hoveredRef.current !== null;
-    const labelTarget = hovered
+    const focused = hoveredRef.current !== null || selectedRef.current !== null;
+    const priority = labelPriority(node);
+    const visible = visibleLabelIdsRef.current.has(id);
+    const baseTarget = priority >= 5 ? 1 : priority >= 3 ? Math.max(zoomAlpha, 0.7) : zoomAlpha;
+    const labelTarget = !visible
+      ? 0
+      : focused
       ? active
-        ? 1
-        : zoomAlpha * DIM_ALPHA
-      : zoomAlpha;
+        ? baseTarget
+        : baseTarget * DIM_ALPHA
+      : baseTarget;
     const labelAlpha = tween(labelAlphas.current, id, labelTarget, dt);
 
     if (labelAlpha > 0.01) {
@@ -585,7 +796,7 @@ function ClientOnly({
     const colors = colorsRef.current;
     if (!colors) return 'rgba(128,128,128,0.3)';
 
-    const hovered = hoveredRef.current;
+    const hovered = hoveredRef.current ?? selectedRef.current;
     const source = link.source as Node;
     const target = link.target as Node;
     const key = `${source.id}|${target.id}`;
@@ -622,12 +833,30 @@ function ClientOnly({
 
     const ux = dx / dist;
     const uy = dy / dist;
-    ctx.strokeStyle = linkColor(link);
+    const color = linkColor(link);
+    const endX = target.x - ux * targetRadius;
+    const endY = target.y! - uy * targetRadius;
+    ctx.strokeStyle = color;
     ctx.lineWidth = 1.5 / globalScale;
     ctx.beginPath();
     ctx.moveTo(source.x + ux * sourceRadius, source.y! + uy * sourceRadius);
-    ctx.lineTo(target.x - ux * targetRadius, target.y! - uy * targetRadius);
+    ctx.lineTo(endX, endY);
     ctx.stroke();
+
+    if (variant === 'local' && showDirections) {
+      const arrowSize = 4.5 / globalScale;
+      const baseX = endX - ux * arrowSize * 2;
+      const baseY = endY - uy * arrowSize * 2;
+      const px = -uy * arrowSize;
+      const py = ux * arrowSize;
+      ctx.beginPath();
+      ctx.moveTo(endX, endY);
+      ctx.lineTo(baseX + px, baseY + py);
+      ctx.lineTo(baseX - px, baseY - py);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
   };
 
   // Label-fade baseline = the zoom zoomToFit lands on, derived from the node
@@ -656,6 +885,39 @@ function ClientOnly({
     didAutoFitRef.current = false;
   }, [data]);
 
+  const selectedStats = useMemo(() => {
+    if (!selectedNode) return null;
+    const id = String(selectedNode.id);
+    let incoming = 0;
+    let outgoing = 0;
+    for (const link of data.links) {
+      if (endpointId(link.source) === id) outgoing++;
+      if (endpointId(link.target) === id) incoming++;
+    }
+    return {
+      incoming,
+      outgoing,
+      connections: selectedNode.neighbors?.length ?? new Set(
+        data.links.flatMap((link) => {
+          const source = endpointId(link.source);
+          const target = endpointId(link.target);
+          if (source === id) return [target];
+          if (target === id) return [source];
+          return [];
+        }),
+      ).size,
+    };
+  }, [data.links, selectedNode]);
+
+  const openNode = useCallback(
+    (node: Node) => {
+      recordVisited(node.url);
+      visitedRef.current.add(node.url);
+      router.push(node.url);
+    },
+    [router],
+  );
+
   return (
     <>
       <ForceGraph2D<NodeType, LinkType>
@@ -663,7 +925,7 @@ function ClientOnly({
         height={size.height}
         ref={fgRefObject.current}
         graphData={data}
-        onRenderFramePre={(_ctx, globalScale) => {
+        onRenderFramePre={(ctx, globalScale) => {
           const now = performance.now();
           frameDtRef.current = lastFrameRef.current
             ? Math.min(now - lastFrameRef.current, 100)
@@ -674,6 +936,49 @@ function ClientOnly({
           const rz = Math.max(globalScale / baseline, 1e-4);
           relativeZoomRef.current = rz;
           visualScaleRef.current = Math.min(Math.max(1 / Math.sqrt(rz), 0.25), 4);
+
+          // Build a priority-ordered label layout before nodes paint. Important
+          // labels claim space first; peripheral labels appear only as zoom
+          // creates room, which prevents the global graph becoming text soup.
+          const zoomAlpha = Math.min(
+            1,
+            Math.max(0, Math.log2(rz) + 1 - labelOpacityScale),
+          );
+          const fontSize = (LABEL_FONT_PX * Math.min(Math.sqrt(rz), 1.5)) / globalScale;
+          ctx.font = `${fontSize}px ${colorsRef.current?.font ?? 'monospace'}`;
+          const candidates = data.nodes
+            .filter((node) => node.x != null && node.y != null)
+            .map((node) => ({
+              node,
+              priority: labelPriority(node),
+              degree: node.neighbors?.length ?? 0,
+            }))
+            .filter(({ priority }) => priority >= 3 || zoomAlpha > 0.04)
+            .sort((a, b) => b.priority - a.priority || b.degree - a.degree);
+          const boxes: LabelBox[] = [];
+          const visible = new Set<string>();
+          for (const { node, priority } of candidates) {
+            const radius = nodeRadius(node) * visualScaleRef.current;
+            const width = ctx.measureText(node.text).width;
+            const top = node.y! + radius + 3 / globalScale;
+            const box: LabelBox = {
+              left: node.x! - width / 2,
+              right: node.x! + width / 2,
+              top,
+              bottom: top + fontSize,
+            };
+            const overlaps = boxes.some((other) =>
+              boxesOverlap(box, other, 3 / globalScale),
+            );
+            // Current/selected/hovered titles remain legible even in a knot;
+            // every other label participates in collision suppression.
+            if (!overlaps || priority >= 6) {
+              boxes.push(box);
+              visible.add(String(node.id));
+            }
+          }
+          visibleLabelIdsRef.current = visible;
+          positionTooltip();
         }}
         nodeCanvasObject={nodeCanvasObject}
         nodePointerAreaPaint={(node, color, ctx) => {
@@ -686,9 +991,32 @@ function ClientOnly({
         linkCanvasObject={linkCanvasObject}
         onNodeHover={handleNodeHover}
         onNodeClick={(node) => {
-          recordVisited(node.url);
-          router.push(node.url);
+          if (suppressClickRef.current || draggingRef.current) {
+            suppressClickRef.current = false;
+            return;
+          }
+          if (selectedRef.current?.id === node.id) {
+            openNode(node);
+            return;
+          }
+          setSelectedNode(node);
+          // Touch always previews first. Desktop also retains the selection so
+          // the reading card is useful; a second click or its action opens it.
+          if (!coarsePointerRef.current) clearHover();
         }}
+        onBackgroundClick={() => {
+          setSelectedNode(null);
+          clearHover();
+        }}
+        onNodeDrag={() => {
+          draggingRef.current = true;
+          suppressClickRef.current = true;
+          clearHover();
+        }}
+        onNodeDragEnd={() => {
+          draggingRef.current = false;
+        }}
+        onZoom={clearHover}
         onEngineTick={() => {
           // Keep the view fitted *while* the layout expands during warmup, so
           // it reads as centered from the first frame instead of snapping into
@@ -713,12 +1041,59 @@ function ClientOnly({
       />
       <div
         ref={tooltipRef}
-        className="graph-tooltip pointer-events-none absolute z-10 max-w-xs p-2 text-sm"
+        className="graph-tooltip pointer-events-none absolute left-0 top-0 z-20 max-w-xs p-2 text-sm"
         style={{ display: 'none' }}
       >
         <div className="font-medium" />
         <div className="mt-0.5 text-xs text-fd-muted-foreground" />
       </div>
+      {selectedNode && selectedStats && (
+        <aside
+          className={`graph-node-card graph-node-card--${variant}`}
+          aria-label={`Selected node: ${selectedNode.text}`}
+        >
+          <div className="graph-node-card__actions">
+            <button
+              type="button"
+              className="graph-node-card__open"
+              aria-label="Open page"
+              title="Open page"
+              onClick={() => openNode(selectedNode)}
+            >
+              <ArrowUpRight className="size-3.5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              className="graph-node-card__close"
+              aria-label="Clear selected node"
+              title="Close preview"
+              onClick={() => setSelectedNode(null)}
+            >
+              <X className="size-3.5" />
+            </button>
+          </div>
+          <div className="graph-node-card__eyebrow">
+            <span>
+              {selectedNode.kind === 'tag'
+                ? 'Tag'
+                : displayGroup(selectedNode.group) ?? 'Page'}
+            </span>
+          </div>
+          <div className="graph-node-card__title">{selectedNode.text}</div>
+          {selectedNode.description && (
+            <p className="graph-node-card__description">{selectedNode.description}</p>
+          )}
+          <div className="graph-node-card__stats" aria-label="Connection statistics">
+            <span>{selectedStats.connections} links</span>
+            <span aria-label={`${selectedStats.incoming} incoming links`}>
+              ↓ {selectedStats.incoming}
+            </span>
+            <span aria-label={`${selectedStats.outgoing} outgoing links`}>
+              ↑ {selectedStats.outgoing}
+            </span>
+          </div>
+        </aside>
+      )}
     </>
   );
 }

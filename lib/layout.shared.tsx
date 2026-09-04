@@ -19,7 +19,7 @@ export function baseOptions(): BaseLayoutProps {
       { text: lang.navStartHere,  url: '/start-here', active: 'url',        on: 'nav' },
       { text: lang.navDictionary, url: '/dictionary', active: 'nested-url', on: 'nav' },
       { text: lang.navBooks,      url: '/books',      active: 'nested-url', on: 'nav' },
-      { text: lang.navPodcasts,   url: '/podcasts',   active: 'nested-url', on: 'nav' },
+      { text: 'Media',             url: '/media',       active: 'url',        on: 'nav' },
     ],
   };
 }

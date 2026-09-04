@@ -1,0 +1,49 @@
+{
+  "locales": [
+    {
+      "code": "en",
+      "label": "English",
+      "languageTag": "en",
+      "dir": "ltr",
+      "searchLanguage": "english",
+      "tag": "lang:en",
+      "collection": "Language · English",
+      "sourceEnv": "OBSIDIAN_VAULT_PATH",
+      "import": false
+    },
+    {
+      "code": "fr",
+      "label": "Français",
+      "languageTag": "fr",
+      "dir": "ltr",
+      "searchLanguage": "french",
+      "tag": "lang:fr",
+      "collection": "Language · Français",
+      "sourceEnv": "OBSIDIAN_VAULT_PATH_FR",
+      "import": true
+    },
+    {
+      "code": "cn",
+      "label": "简体中文",
+      "languageTag": "zh-CN",
+      "dir": "ltr",
+      "searchLanguage": "chinese",
+      "tag": "lang:cn",
+      "collection": "Language · 简体中文",
+      "sourceEnv": "OBSIDIAN_VAULT_PATH_CN",
+      "import": true
+    }
+  ],
+  "translations": {
+    "articles/what-is-the-tariqa": {
+      "en": "articles/what-is-the-tariqa",
+      "fr": "articles/quest-ce-que-la-tariqa",
+      "cn": "articles/shenme-shi-daocheng"
+    },
+    "dictionary/zikr": {
+      "en": "dictionary/zikr",
+      "fr": "dictionary/dhikr",
+      "cn": "dictionary/dhikr"
+    }
+  }
+}

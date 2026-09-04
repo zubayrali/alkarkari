@@ -55,12 +55,27 @@ collaborative edits continuously, run the separate bridge and poller described i
 when document metadata changes, and stages the new snapshot every 45 seconds by
 default. This is near-real-time publishing, not browser-level Yjs collaboration.
 
+### Publishing Studio
+
+In development, open `/publishing` for snapshot freshness, published/draft totals,
+collection coverage, portal counts, and actionable editorial diagnostics. The route
+is deliberately omitted from production static exports. Public collection surfaces
+are configured in [`affine/publishing.config.json`](./affine/publishing.config.json):
+each portal maps an AFFiNE collection to a route and explicitly allow-lists the
+native properties that may enter `public/affine-publishing.json`. Draft documents
+never enter that public contract. See the
+[Publishing Studio spec](./docs/specs/affine-publishing-studio.md) for invariants
+and extension points.
+
 ## Commands
 
 | Command | Description |
 | --- | --- |
 | `pnpm generate` | Manual official-MCP snapshot fallback |
 | `pnpm generate:affine` | Explicit alias for the manual snapshot fallback |
+| `pnpm generate:affine:all` | Refresh every configured language and rebuild the translation route index |
+| `pnpm publisher:sync-locales` | Idempotently create language metadata, tags, collections, and import missing legacy locale notes |
+| `pnpm publisher:sync-site` | Create missing AFFiNE-managed homepage documents and the Site · Homepage collection |
 | `pnpm publisher:watch` | Poll the bridge MCP and refresh the snapshot when AFFiNE changes |
 | `pnpm publisher:doctor` | Verify bridge access, snapshot freshness, diagnostics, and required configuration |
 | `pnpm publisher:release` | Validate and atomically promote an immutable static release |
@@ -73,16 +88,72 @@ default. This is near-real-time publishing, not browser-level Yjs collaboration.
 | `pnpm types:check` | Run MDX generation, Next.js typegen, and TypeScript |
 | `pnpm lint` | Run Oxlint |
 
-## Site language
+## Multilingual publishing
 
-Set `SITE_LANGUAGE` in the shell or deployment environment:
+All languages now live in the same collaborative AFFiNE workspace. Do not create
+another workspace or vault for a translation. Every publishable document uses:
+
+- `Locale`: the document language (`en`, `fr`, or `cn`)
+- `Translation Key`: the stable identity shared by every translation
+- `Slug`: that language's public route; it may differ between translations
+- `Publish`: checked when the page may appear publicly
+- `Draft`: unchecked when the page is ready
+
+The `lang:en`, `lang:fr`, and `lang:cn` tags feed the rule-backed collections
+**Language · English**, **Language · Français**, and **Language · 简体中文**.
+Collections are editorial views; `Locale` remains the publisher's authoritative
+filter. A note can safely belong to other thematic collections as well.
+
+To translate a page, duplicate it in AFFiNE, change `Locale` and `Slug`, and keep
+the original `Translation Key`. The language switcher then links the exact
+localized routes. A missing translation is simply omitted from that page's SEO
+language alternates and the switcher retains its same-path fallback.
+
+Refresh and preview the entire site with:
 
 ```bash
-SITE_LANGUAGE=en   # English (default)
-SITE_LANGUAGE=cn   # 简体中文
+pnpm generate:affine:all
+pnpm build:all
+npx --yes serve site -l 3000
 ```
 
-Restart the dev server after changing it. This changes the site UI only — your note content is not translated.
+Open `/` for the language chooser or `/en/`, `/fr/`, and `/cn/` directly. The
+first legacy import has already been completed; rerunning
+`pnpm publisher:sync-locales` is safe and imports only missing source documents.
+See [the multilingual publishing specification](./docs/specs/affine-multilingual-publishing.md)
+for the complete content model and operating workflow.
+
+### Manage the homepage in AFFiNE
+
+Open the **Site · Homepage** collection and edit the `Homepage · <Language>`
+document. Its native two-column `Field | Value` table controls that locale's
+homepage. Nested values use dot paths such as `home.pathways.books.title`; list
+items use numeric segments such as `home.story.mishkat.quran.0.text`.
+
+The publisher reads this control document into `affine/<locale>/site.json`. It
+is never emitted as a reader route. Missing rows inherit the bundled fallback,
+so an incomplete edit cannot blank the homepage. Changes appear on the next
+publisher refresh, or immediately after:
+
+```bash
+pnpm generate:affine:all
+pnpm stage
+```
+
+### Add another language
+
+Add one entry to `affine/locales.config.json`, then run:
+
+```bash
+pnpm publisher:sync-site
+pnpm publisher:sync-locales
+pnpm generate:affine:all
+```
+
+That registry entry drives the generator, development switcher, static root
+chooser, and GitHub Actions build matrix. A new language uses the English
+application UI as a safe fallback until a complete `content-site/<code>.json`
+bundle is deliberately added; AFFiNE homepage content can be localized at once.
 
 ## Page features
 
@@ -159,6 +230,9 @@ After a correct password, the browser stores an HttpOnly cookie for about 30 day
 
 - `.env.affine` — Uncommitted AFFiNE MCP endpoint and token
 - `affine/import-map.en.json` — Verified source-path → AFFiNE document mapping
+- `affine/import-map.<locale>.json` — Audit map for each one-time legacy import
+- `affine/locales.config.json` — Language, collection, tag, and translated-slug configuration
+- `affine/translations.json` — Generated cross-language route index
 - `affine/<locale>/` — Atomic AFFiNE content snapshots and diagnostics
 - `content/`, `public/` — Gitignored live trees staged from the AFFiNE snapshot
 - `app/` — Next.js pages and routes
@@ -178,20 +252,36 @@ stale routes behind.
 
 ### Draft exclusion
 
-Pages with `draft: true` or without `publish: true` in their publication metadata are
+Pages with `Draft` checked or without `Publish` checked in their native AFFiNE properties are
 excluded from generation:
-
-```yaml
-draft: true
-```
 
 This is the primary way to keep collaborative drafts out of the public site.
 
 ### Document discovery
 
-AFFiNE's current MCP does not enumerate workspace documents, so imports use the
-checked-in verified map. Newly created AFFiNE pages can be added to that map or
-reached through native AFFiNE document links from an existing seed page.
+The local bridge enumerates the workspace, reads native publication properties first,
+and exports Markdown only for publishable documents. Newly published documents appear
+without editing a checked-in map.
+
+### Native AFFiNE canvases
+
+Every published AFFiNE document that contains an Edgeless canvas automatically gets a
+**Page / Canvas** switch in its page toolbar. The normal document remains the canonical
+page and readers can enter the full-screen interactive canvas without changing URLs.
+Set the usual publication properties:
+
+- `Publish`: checked
+- `Draft`: unchecked
+- `Slug`: its public route
+- `Locale`: the active site locale (for example, `en`)
+
+The local bridge probes publishable documents with `get_edgeless_canvas`, then snapshots
+frames, notes, edgeless text, shapes, groups, and bound connectors into
+`public/affine-canvas/`. Readers receive the existing pan/zoom React Flow viewer; AFFiNE
+remains the authoring source, and no Obsidian `.canvas` file is required. Light/dark
+surface colors and connector endpoint arrows are preserved. The legacy `Canvas` checkbox
+is still accepted as a strict assertion: if it is checked and the canvas cannot be read,
+publishing fails instead of silently dropping that view.
 
 ## Graph View
 
@@ -200,11 +290,8 @@ and normalized internal links. Protected pages appear only after unlocking.
 
 ## AFFiNE rich-object status
 
-The original `.base` and `.canvas` files were uploaded and preserved during the
-migration, but AFFiNE's MCP currently exposes only document Markdown—not database
-records, Edgeless geometry, or blob bytes. The cutover never fabricates those
-objects. Native databases, Edgeless canvases, and attachment extraction remain
-explicit adapter work as AFFiNE exposes suitable read APIs.
+Native AFFiNE Edgeless canvases and blob-backed Markdown attachments are supported by
+the local publishing bridge. Native AFFiNE databases remain separate adapter work.
 
 ## Reading affordances
 
@@ -311,17 +398,22 @@ SITE_URL=https://your-domain.com
 - **Content**: AFFiNE workspace MCP → atomic MDX snapshot → Fumadocs
 - **Features**: Full-text search, knowledge graph, page tags, shared-password page
   gating, AFFiNE/GitHub/Markdown actions, Mermaid, math, sidenotes, link popovers,
-  annotations, backlinks, slides, reader mode, RSS, and masonry layout
+  annotations, backlinks, slides, reader mode, RSS, masonry layout, native AFFiNE
+  canvases, and native AFFiNE table/kanban database views
 
 ## TODO
 
-Canvas and follow-up items:
+Canvas follow-up items:
 
 - [ ] Support `![[path/to/canvas.canvas]]` embeds inside notes
 - [ ] Render text nodes with the full MDX pipeline (match file-node preview fidelity)
 - [ ] Scroll file-node preview to `subpath` heading anchors
-- [ ] Add automated tests for canvas parsing and asset sync
 - [ ] Document remote image URLs in canvas file nodes (Next.js `images` config)
+
+Database follow-up items:
+
+- [ ] Render AFFiNE filter and sort rules when the bridge exposes their evaluated order
+- [ ] Add gallery-mode rendering when AFFiNE exports cover-image configuration
 
 ## Contributing
 

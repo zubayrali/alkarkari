@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "editorial": {
+    "recommendedProperties": ["Description", "Translation Key"]
+  },
+  "portals": [
+    {
+      "id": "books",
+      "route": "books",
+      "label": "Library",
+      "description": "Books and longer teachings published from the shared AFFiNE workspace.",
+      "collection": "Language · English",
+      "slugPrefix": "books",
+      "layout": "library",
+      "locales": ["en"],
+      "properties": ["Book Cover", "Author"]
+    },
+    {
+      "id": "media",
+      "route": "media",
+      "label": "Media library",
+      "description": "Reviewed recordings and transcripts published from AFFiNE.",
+      "collection": "Media · Transcript review queue",
+      "slugPrefix": "media",
+      "layout": "media",
+      "locales": ["en"],
+      "properties": ["YouTube ID", "Series", "Topics", "Transcript Status"]
+    }
+  ]
+}

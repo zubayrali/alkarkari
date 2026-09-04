@@ -24,9 +24,7 @@
   <h1>Page not found</h1>
   <p id="msg">The page may have moved, or it lives in another language.</p>
   <nav>
-    <a href="{{BASE_PATH}}/en/">English</a>
-    <a href="{{BASE_PATH}}/fr/">Français</a>
-    <a href="{{BASE_PATH}}/cn/">简体中文</a>
+    {{LOCALE_404_LINKS}}
     <a href="{{BASE_PATH}}/">Choose language</a>
   </nav>
   <script>
@@ -36,7 +34,7 @@
     // first so the redirect isn't disorienting. Keep the locale list in sync
     // with lib/locales-manifest.ts.
     (function () {
-      var labels = { en: 'English', fr: 'Français', cn: '简体中文' };
+      var labels = {{LOCALE_LABELS}};
       var rest = location.pathname.slice(('{{BASE_PATH}}' + '/').length);
       var seg = rest.split('/')[0];
       if (!labels[seg]) return;

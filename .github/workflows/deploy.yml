@@ -15,13 +15,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      locales: ${{ steps.locales.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: locales
+        shell: bash
+        run: |
+          echo "value=$(node -e \"const c=require('./affine/locales.config.json'); process.stdout.write(JSON.stringify(c.locales.map((locale) => locale.code)))\")" >> "$GITHUB_OUTPUT"
+
   # One isolated build per locale (see docs/superpowers/specs/2026-07-02-i18n-design.md).
-  # Keep the matrix in sync with lib/locales-manifest.ts.
   build:
+    needs: configure
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        locale: [en, fr, cn]
+        locale: ${{ fromJSON(needs.configure.outputs.locales) }}
     env:
       SITE_LANGUAGE: ${{ matrix.locale }}
     steps:

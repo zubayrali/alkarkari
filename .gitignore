@@ -9,6 +9,8 @@
 /content
 /public
 /.staged-locale
+/.dev-locale-request
+/.affine-dev-session.json
 
 # test & build
 /coverage
@@ -36,9 +38,14 @@ yarn-error.log*
 .env.affine
 .env.publisher
 .affine-publisher-state.json
+.affine-publisher-state.json.before-*
+.affine-publisher-runtime.json
 .affine-publisher/
-/affine/
+/affine/*
+!/affine/publishing.config.json
+!/affine/locales.config.json
 /.scratch/
+/var/
 
 # others
 .env*.local
@@ -48,7 +55,13 @@ next-env.d.ts
 # agent tooling / skill caches (local-only) — but project skills are shared
 /.claude/*
 !/.claude/skills/
-/.agents/
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/affine-publisher/
+!/.agents/skills/affine-publisher/**
+!/.agents/skills/add-locale/
+!/.agents/skills/add-locale/**
 /.superpowers/
 /skills-lock.json
 /.recall/

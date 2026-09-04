@@ -91,6 +91,10 @@ if (fs.existsSync(sourcePublic)) {
   fs.mkdirSync(livePublic, { recursive: true });
 }
 if (contentSource === "affine") {
+  const translations = path.join(root, "affine", "translations.json");
+  if (fs.existsSync(translations)) {
+    fs.copyFileSync(translations, path.join(livePublic, "affine-translations.json"));
+  }
   ensureFolderIndexes(liveContent);
 }
 fs.writeFileSync(marker, `${contentSource}:${locale}\n`);

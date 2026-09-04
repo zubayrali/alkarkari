@@ -4,12 +4,14 @@ import { createPortal } from 'react-dom';
 import { BookOpen, BookOpenCheck, X } from 'lucide-react';
 import { useSidebar } from 'fumadocs-ui/components/sidebar/base';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDocumentView } from '@/components/document-view';
 
 export function ReaderToggle({ label, exitLabel }: { label: string; exitLabel: string }) {
   const [active, setActive] = useState(false);
   const { collapsed, setCollapsed } = useSidebar();
   const prevCollapsed = useRef(collapsed);
   const activeRef = useRef(false);
+  const documentView = useDocumentView();
 
   const applyCSS = useCallback((on: boolean) => {
     document.documentElement.dataset.readerMode = on ? 'on' : '';
@@ -23,11 +25,16 @@ export function ReaderToggle({ label, exitLabel }: { label: string; exitLabel: s
   }, [setCollapsed, applyCSS]);
 
   const activate = useCallback(() => {
+    documentView?.showPage();
     prevCollapsed.current = collapsed;
     setCollapsed(true);
     applyCSS(true);
     setActive(true);
-  }, [collapsed, setCollapsed, applyCSS]);
+  }, [collapsed, documentView, setCollapsed, applyCSS]);
+
+  useEffect(() => {
+    if (documentView?.mode === 'canvas' && activeRef.current) deactivate();
+  }, [deactivate, documentView?.mode]);
 
   useEffect(() => {
     if (activeRef.current && !collapsed) {
@@ -51,6 +58,7 @@ export function ReaderToggle({ label, exitLabel }: { label: string; exitLabel: s
           applyCSS(false);
           setActive(false);
         } else {
+          documentView?.showPage();
           prevCollapsed.current = document.getElementById('nd-sidebar')?.dataset.collapsed === 'true';
           setCollapsed(true);
           applyCSS(true);
@@ -64,7 +72,7 @@ export function ReaderToggle({ label, exitLabel }: { label: string; exitLabel: s
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [setCollapsed, applyCSS]);
+  }, [documentView, setCollapsed, applyCSS]);
 
   return (
     <>

@@ -34,6 +34,13 @@ const HIDDEN_KEYS = new Set([
   "info",
   "path",
   "fullPath",
+  // publisher transport fields: needed by page actions and diagnostics, but
+  // never authored as reader-facing AFFiNE properties
+  "affineDocId",
+  "contentSource",
+  "generatedIndex",
+  "canvasSrc",
+  "affineProperties",
 ]);
 
 const WIKILINK = /^\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]$/;
@@ -171,7 +178,18 @@ function PropertyValue({ value }: { value: unknown }) {
  * note carries no displayable properties, so ordinary notes are unaffected.
  */
 export function PropertiesPanel({ data, excludeKeys = [] }: PropertiesPanelProps) {
+  // The ledger is an editorial/debugging aid. Page metadata still powers
+  // routing, search, Bases, and publication in production, but readers never
+  // receive the visual inspector.
+  if (process.env.NODE_ENV !== "development") return null;
+
   const excluded = new Set([...HIDDEN_KEYS, ...excludeKeys]);
+  const nativeProperties =
+    data.affineProperties &&
+    typeof data.affineProperties === "object" &&
+    !Array.isArray(data.affineProperties)
+      ? (data.affineProperties as Record<string, unknown>)
+      : undefined;
   // Aliases are hidden from the generic loop (they're a schema field) but worth
   // surfacing as a friendly "Also known as" row — the alternate names a reader
   // might search for or recognise.
@@ -181,13 +199,19 @@ export function PropertiesPanel({ data, excludeKeys = [] }: PropertiesPanelProps
         (a): a is string => typeof a === "string" && a.trim() !== "",
       );
 
-  const entries = Object.entries(data).filter(
+  const fallbackEntries = Object.entries(data).filter(
     ([key, value]) =>
       !key.startsWith("_") &&
       !excluded.has(key) &&
       !isEmpty(value) &&
       isDisplayable(value),
   );
+  const entries = nativeProperties
+    ? Object.entries(nativeProperties).filter(
+        ([key, value]) =>
+          !key.startsWith("_") && !isEmpty(value) && isDisplayable(value),
+      )
+    : fallbackEntries;
 
   const count = entries.length + (aliases.length > 0 ? 1 : 0);
   if (count === 0) return null;

@@ -92,18 +92,8 @@ function normalizeMetadata(
 ): AffinePublicationMetadata {
   const metadata: AffinePublicationMetadata = {};
   for (const [key, value] of Object.entries(raw)) {
-    if (
-      value === null ||
-      typeof value === "boolean" ||
-      typeof value === "number" ||
-      typeof value === "string"
-    ) {
-      metadata[key] = value as AffineFrontmatterValue;
-    } else if (Array.isArray(value)) {
-      metadata[key] = value.map(String);
-    } else if (value instanceof Date) {
-      metadata[key] = value.toISOString();
-    }
+    const normalized = normalizeFrontmatterValue(value);
+    if (normalized !== undefined) metadata[key] = normalized;
   }
 
   metadata.tags = asStringArray(raw.tags);
@@ -117,6 +107,34 @@ function normalizeMetadata(
     if (Number.isFinite(order)) metadata.order = order;
   }
   return metadata;
+}
+
+function normalizeFrontmatterValue(
+  value: unknown,
+): AffineFrontmatterValue | undefined {
+  if (
+    value === null ||
+    typeof value === "boolean" ||
+    typeof value === "number" ||
+    typeof value === "string"
+  ) {
+    return value;
+  }
+  if (value instanceof Date) return value.toISOString();
+  if (Array.isArray(value)) {
+    return value
+      .map(normalizeFrontmatterValue)
+      .filter((item): item is AffineFrontmatterValue => item !== undefined);
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).flatMap(([key, item]) => {
+        const normalized = normalizeFrontmatterValue(item);
+        return normalized === undefined ? [] : [[key, normalized]];
+      }),
+    );
+  }
+  return undefined;
 }
 
 export function findLinkedDocumentIds(markdown: string): string[] {
@@ -261,7 +279,11 @@ export function rewriteObsidianWikiLinks(
     }
   }
 
-  return markdown.replace(
+  // AFFiNE's Markdown importer escapes legacy wiki brackets (`\\[\\[Page\\]\\]`).
+  // Normalize those escapes in the derived snapshot so the original importer
+  // documents do not need a destructive content rewrite.
+  const normalizedMarkdown = markdown.replace(/\\(\[|\])/g, "$1");
+  return normalizedMarkdown.replace(
     /(!?)\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]/g,
     (original, embed: string, rawTarget: string, heading: string, label: string) => {
       const target = rawTarget.trim().replace(/\.md$/i, "").toLocaleLowerCase();

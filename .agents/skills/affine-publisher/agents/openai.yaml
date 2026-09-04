@@ -1,0 +1,4 @@
+interface:
+  display_name: "AFFiNE Publisher"
+  short_description: "Operate AFFiNE-to-Fumadocs publishing safely"
+  default_prompt: "Use $affine-publisher to manage or troubleshoot this AFFiNE publishing workflow."

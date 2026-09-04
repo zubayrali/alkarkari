@@ -1425,7 +1425,7 @@ const evalFileMethod = (
   receiver: FileValue,
   method: string,
   args: Value[],
-  ctx: EvalContext,
+  _ctx: EvalContext,
 ): Value => {
   const file = receiver.value
   if (method === 'asLink') {
@@ -1569,8 +1569,6 @@ const isValueType = (value: Value, typeName: string): boolean => {
   if (typeName === 'link') return value.kind === 'link'
   return false
 }
-
-const resolveFileSlug = (record: NoteRecord): string => record.slug
 
 const normalizeLinkText = (value: string): string => value.trim()
 

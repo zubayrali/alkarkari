@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'fumadocs-core/link';
-import { Tags, Waypoints } from 'lucide-react';
+import { CirclePlay, Route, Tags, Waypoints } from 'lucide-react';
 
 const btnClass =
   'inline-flex items-center justify-center rounded-md p-2 text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground [&_svg]:size-4.5';
@@ -30,6 +30,8 @@ export function NavMobileLinks() {
 
   return createPortal(
     <>
+      <Link href="/start-here" className={btnClass} aria-label="Start here" title="Start here"><Route /></Link>
+      <Link href="/media" className={btnClass} aria-label="Media library" title="Media library"><CirclePlay /></Link>
       <Link href="/tags" className={btnClass} aria-label="Tags" title="Tags">
         <Tags />
       </Link>
