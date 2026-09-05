@@ -18,6 +18,15 @@ function positiveSeconds(value: string | undefined): number {
   return seconds;
 }
 
+/** 0 = release immediately; default 180s coalesces bursty AFFiNE edits. */
+function debounceSeconds(value: string | undefined): number {
+  const seconds = Number(value ?? "180");
+  if (!Number.isInteger(seconds) || seconds < 0) {
+    throw new Error("PUBLISHER_RELEASE_DEBOUNCE_SECONDS must be an integer of at least 0.");
+  }
+  return seconds;
+}
+
 function runNode(script: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [script], {
@@ -61,6 +70,7 @@ async function refreshDevelopmentSite(): Promise<boolean> {
 async function main() {
   const workspaceId = requiredEnv("AFFINE_WORKSPACE_ID");
   const pollSeconds = positiveSeconds(process.env.PUBLISHER_POLL_SECONDS);
+  const releaseDebounce = debounceSeconds(process.env.PUBLISHER_RELEASE_DEBOUNCE_SECONDS);
   const statePath = path.resolve(process.cwd(), process.env.PUBLISHER_STATE_PATH ?? ".affine-publisher-state.json");
   const runtimePath = path.resolve(process.cwd(), process.env.PUBLISHER_RUNTIME_PATH ?? ".affine-publisher-runtime.json");
   const writeRuntime = async (value: Record<string, unknown>) => {
@@ -83,6 +93,64 @@ async function main() {
         token: process.env.AFFINE_BRIDGE_MCP_TOKEN?.trim(),
       })
     : undefined;
+
+  let releaseTimer: ReturnType<typeof setTimeout> | undefined;
+  let releaseRunning = false;
+  let releaseAgain = false;
+  let pendingReleaseStartedAt: string | undefined;
+
+  const runRelease = async () => {
+    if (releaseRunning) {
+      releaseAgain = true;
+      return;
+    }
+    releaseRunning = true;
+    try {
+      do {
+        releaseAgain = false;
+        const startedAt = pendingReleaseStartedAt ?? new Date().toISOString();
+        pendingReleaseStartedAt = undefined;
+        await writeRuntime({ state: "releasing", startedAt });
+        try {
+          await runNode("scripts/publisher-release.ts");
+          await writeRuntime({ state: "idle", startedAt, completedAt: new Date().toISOString() });
+        } catch (error) {
+          await writeRuntime({
+            state: "failed",
+            startedAt,
+            failedAt: new Date().toISOString(),
+            message: error instanceof Error ? error.message : String(error),
+          });
+          throw error;
+        }
+      } while (releaseAgain);
+    } finally {
+      releaseRunning = false;
+    }
+  };
+
+  const scheduleRelease = async () => {
+    pendingReleaseStartedAt = new Date().toISOString();
+    if (releaseDebounce === 0) {
+      await runRelease();
+      return;
+    }
+    if (releaseTimer) clearTimeout(releaseTimer);
+    console.log(`[publisher] Release debounced for ${releaseDebounce}s (coalescing further AFFiNE edits).`);
+    await writeRuntime({
+      state: "release-scheduled",
+      startedAt: pendingReleaseStartedAt,
+      releaseAt: new Date(Date.now() + releaseDebounce * 1000).toISOString(),
+      debounceSeconds: releaseDebounce,
+    });
+    releaseTimer = setTimeout(() => {
+      releaseTimer = undefined;
+      void runRelease().catch((error) => {
+        console.error("[publisher] Debounced release failed:", error instanceof Error ? error.message : error);
+      });
+    }, releaseDebounce * 1000);
+  };
+
   const poller = createSnapshotPoller({
     client: bridgeClient!, workspaceId, statePath, pollSeconds,
     refresh: async () => {
@@ -95,11 +163,13 @@ async function main() {
           await runNode("scripts/stage.ts");
         }
         if (process.env.PUBLISHER_RELEASE_ON_CHANGE === "1" && !developmentActive) {
-          await runNode("scripts/publisher-release.ts");
+          await scheduleRelease();
         } else if (process.env.PUBLISHER_RELEASE_ON_CHANGE === "1") {
           console.log("[publisher] Static release deferred while the development site is running.");
         }
-        await writeRuntime({ state: "idle", startedAt, completedAt: new Date().toISOString() });
+        if (!releaseTimer && !releaseRunning) {
+          await writeRuntime({ state: "idle", startedAt, completedAt: new Date().toISOString() });
+        }
       } catch (error) {
         await writeRuntime({
           state: "failed",
