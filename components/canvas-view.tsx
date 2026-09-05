@@ -15,6 +15,9 @@ import { CanvasControls } from '@/components/canvas-controls';
 import { canvasEdgeTypes } from '@/components/canvas-flow-edge';
 import { canvasNodeTypes } from '@/components/canvas-flow-nodes';
 import type { Edge, Node } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import '@/app/canvas-flow.css';
+import '@/app/affine-database.css';
 
 export type CanvasViewProps = {
   data: RenderableCanvasData;

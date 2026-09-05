@@ -13,8 +13,6 @@ import {
   PageFooter,
 } from "fumadocs-ui/layouts/docs/page";
 import { Backlinks } from "@/components/backlinks";
-import { CusdisComments } from "@/components/cusdis-comments";
-import { LocalGraph } from "@/components/local-graph";
 import { ReadingTime } from "@/components/reading-time";
 import { PageTags } from "@/components/page-tags";
 import { buildGraph } from "@/lib/build-graph";
@@ -23,6 +21,7 @@ import { ReaderToggle } from "@/components/reader-toggle";
 import { getBacklinks } from "@/lib/backlinks";
 import { resolveAliasUrl } from "@/lib/alias-index";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ViewTransition } from "react";
 import { getMDXComponents } from "@/components/mdx";
@@ -52,7 +51,6 @@ import {
   DocumentViewProvider,
   DocumentViewToggle,
 } from "@/components/document-view";
-import { CanvasPageContent } from "@/components/canvas-page";
 import { BooksLibrary } from "@/components/books-library";
 import { KnowledgeHub } from "@/components/knowledge-hub";
 import { MediaLibrary } from "@/components/media-library";
@@ -60,7 +58,15 @@ import {
   OpenIslamMobileToc,
   OpenIslamToc,
 } from "@/components/openislam-toc";
-import "@/app/slides.css";
+
+const LocalGraph = dynamic(
+  () => import("@/components/local-graph").then((m) => m.LocalGraph),
+  { ssr: false },
+);
+const CusdisComments = dynamic(
+  () => import("@/components/cusdis-comments").then((m) => m.CusdisComments),
+  { ssr: false },
+);
 
 function pageProperty(data: Record<string, unknown>, name: string): string | undefined {
   const direct = data[name];
@@ -153,6 +159,12 @@ export default async function Page(props: PageProps<"/[...slug]">) {
     /^\/affine-canvas\/[A-Za-z0-9_-]+\.json$/.test(page.data.canvasSrc)
       ? page.data.canvasSrc
       : undefined;
+  const canvasContent = canvasSrc
+    ? await (async () => {
+        const { CanvasPageContent } = await import("@/components/canvas-page");
+        return <CanvasPageContent src={canvasSrc} title={page.data.title} />;
+      })()
+    : undefined;
 
   // Base pages (incl. tag pages) and full-width pages (the graph) carry no
   // page chrome: no TOC, no actions bar, no prev/next footer.
@@ -340,7 +352,7 @@ export default async function Page(props: PageProps<"/[...slug]">) {
                 {readingField}
               </div>
             ) : readingField}
-            canvas={canvasSrc ? <CanvasPageContent src={canvasSrc} title={page.data.title} /> : undefined}
+            canvas={canvasContent}
           />
         </div>
       </ViewTransition>

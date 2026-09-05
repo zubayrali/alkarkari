@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import '@/app/slides.css';
 
 export function SlideViewer({
   children,

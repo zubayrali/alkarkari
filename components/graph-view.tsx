@@ -17,6 +17,7 @@ import type {
 } from 'react-force-graph-2d';
 import { forceCollide, forceLink, forceManyBody, forceRadial } from 'd3-force';
 import { useRouter } from 'next/navigation';
+import '@/app/graph-ledger.css';
 import {
   ArrowRight,
   ArrowUpRight,

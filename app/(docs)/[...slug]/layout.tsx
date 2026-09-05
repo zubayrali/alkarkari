@@ -14,6 +14,8 @@ import { LocaleSwitcher } from '@/components/locale-switcher';
 import { NightSidebarItem } from '@/components/night-sidebar-item';
 import { NightSidebarFolder } from '@/components/night-sidebar-folder';
 import { SiteIdentity } from '@/components/site-identity';
+// Math lives on docs routes only — keep katex off the home shell.
+import 'katex/dist/katex.css';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const options = baseOptions();

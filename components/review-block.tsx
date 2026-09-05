@@ -12,6 +12,7 @@ import {
 } from "@/lib/spaced-repetition";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { registerPrompts } from "@/lib/review-store";
+import "@/app/review.css";
 
 interface Prompt {
   id: string;

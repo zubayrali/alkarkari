@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { AffineDatabaseView } from '@/components/affine-database-view';
 import type { AffineDatabaseSnapshot } from '@/lib/affine/database-types';
+import '@/app/affine-database.css';
 
 export async function AffineDatabase({ src }: { src: string }) {
   if (!src.startsWith('/affine-database/') || src.includes('..')) {

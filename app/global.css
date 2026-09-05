@@ -1,23 +1,22 @@
 @import "tailwindcss";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
-@import "@xyflow/react/dist/style.css";
 @import "./link-popover.css";
 @import "./sidenotes.css";
 @import "./note-embed.css";
 @import "./properties-ledger.css";
 @import "./citations.css";
 @import "./search.css";
-@import "./review.css";
 @import "./tag-ledger.css";
 @import "./base-ledger.css";
-@import "./graph-ledger.css";
 @import "./code-ledger.css";
 @import "./sewn.css";
 @import "./reader-shell.css";
 @import "./lightbox.css";
 /* Karkari retheme — imported last so its token overrides win the cascade */
 @import "./karkari-theme.css";
+/* Rare feature CSS (xyflow, review, graph-ledger, canvas, excalidraw, katex)
+   loads from the components that need them — not on every route. */
 
 @theme inline {
   --color-background: var(--color-fd-background);

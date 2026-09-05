@@ -5,10 +5,6 @@ import { currentLocale, getLocaleEntry } from "@/lib/locales-manifest";
 import { NavProgress } from "@/components/nav-progress";
 import { OverlayScrollbars } from "@/components/overlay-scrollbars";
 import "./global.css";
-import "./canvas-flow.css";
-import "./affine-database.css";
-import "./excalidraw.css";
-import "katex/dist/katex.css";
 import { Inter, Spectral, IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import type { Metadata } from "next";
@@ -39,11 +35,14 @@ const amiri = localFont({
     { path: "./fonts/Amiri-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-amiri",
+  // Arabic is rare on interior EN/FR pages — avoid ~290KB preload on every route.
+  preload: false,
 });
 
 const spectral = Spectral({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  // Drop 500: site headings use 400/600/700.
+  weight: ["400", "600", "700"],
   variable: "--font-spectral",
 });
 

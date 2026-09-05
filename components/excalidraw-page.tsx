@@ -3,6 +3,7 @@ import path from "node:path";
 import type { ExcalidrawData } from "@/lib/excalidraw-types";
 import { renderToSvg } from "@/lib/excalidraw-renderer";
 import { ExcalidrawViewer } from "./excalidraw-view";
+import "@/app/excalidraw.css";
 
 interface ExcalidrawPageContentProps {
   src: string;

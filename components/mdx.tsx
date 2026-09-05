@@ -1,14 +1,23 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import * as ObsidianComponents from "fumadocs-obsidian/ui";
 import { Mermaid } from "@/components/mermaid";
-import { ReviewBlock } from "@/components/review-block";
+import dynamic from "next/dynamic";
 import type { MDXComponents } from "mdx/types";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ComponentType } from "react";
 import { cn } from "@/lib/cn";
-import { BasesInlineView } from "@/components/bases-inline-view";
 import { basesStringsFrom, type BasesStrings } from "@/lib/bases-strings";
 import { getSiteLanguage } from "@/lib/locale";
 import { ArticleImage } from "@/components/article-image";
+
+const ReviewBlock = dynamic(
+  () => import("@/components/review-block").then((m) => m.ReviewBlock),
+) as ComponentType<{ configBase64: string; color?: string }>;
+
+const BasesInlineView = dynamic(
+  () => import("@/components/bases-inline-view").then((m) => m.BasesInlineView),
+) as ComponentType<
+  ComponentProps<typeof import("@/components/bases-inline-view").BasesInlineView>
+>;
 
 const basesStrings: BasesStrings = basesStringsFrom(getSiteLanguage());
 
@@ -45,7 +54,7 @@ function KarkariCalloutTitle({
   );
 }
 
-export function getMDXComponents(components?: MDXComponents) {
+export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
     img: (props) => <ArticleImage {...props} />,
@@ -56,7 +65,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ObsidianCalloutTitle: KarkariCalloutTitle,
     BasesInlineView: LocalizedBasesInlineView,
     ...components,
-  } satisfies MDXComponents;
+  } as MDXComponents;
 }
 
 export const useMDXComponents = getMDXComponents;
