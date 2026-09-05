@@ -45,11 +45,40 @@ import {
 import type { SiteStrings } from "../lib/site-strings.ts";
 
 const DEFAULT_DISCOVERY_LIMIT = 500;
+const DEFAULT_EXPORT_CONCURRENCY = 6;
 
 function requiredEnv(name: string): string {
   const value = process.env[name]?.trim();
   if (!value) throw new Error(`${name} is required`);
   return value;
+}
+
+function positiveIntegerEnv(name: string, fallback: number, minimum = 1): number {
+  const raw = process.env[name]?.trim();
+  if (!raw) return fallback;
+  const parsed = Number(raw);
+  if (!Number.isInteger(parsed) || parsed < minimum) {
+    throw new Error(`${name} must be an integer >= ${minimum}.`);
+  }
+  return parsed;
+}
+
+/** Run async work over items with a fixed concurrency ceiling. */
+async function mapPool<T>(
+  items: readonly T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<void>,
+): Promise<void> {
+  if (items.length === 0) return;
+  const limit = Math.max(1, Math.min(concurrency, items.length));
+  let nextIndex = 0;
+  await Promise.all(Array.from({ length: limit }, async () => {
+    while (true) {
+      const index = nextIndex++;
+      if (index >= items.length) return;
+      await worker(items[index]!, index);
+    }
+  }));
 }
 
 async function bridgeToken(): Promise<string> {
@@ -502,17 +531,20 @@ async function main() {
     ),
   ];
   const visited = new Set<string>();
+  const exportConcurrency = positiveIntegerEnv(
+    "AFFINE_EXPORT_CONCURRENCY",
+    DEFAULT_EXPORT_CONCURRENCY,
+  );
 
-  while (queue.length > 0) {
-    const docId = queue.shift()!;
-    if (visited.has(docId)) continue;
+  async function ingestDocument(docId: string): Promise<string[]> {
+    if (visited.has(docId)) return [];
     if (visited.size >= discoveryLimit) {
       diagnostics.push({
         level: "error",
         code: "AFFINE_DISCOVERY_LIMIT",
         message: `Discovery stopped at ${discoveryLimit} documents. Raise AFFINE_DISCOVERY_LIMIT only after checking the manifest graph.`,
       });
-      break;
+      return [];
     }
     visited.add(docId);
 
@@ -533,7 +565,7 @@ async function main() {
       // The bridge can enumerate the whole workspace. Read publication controls
       // first so unpublished scratch documents never incur a Markdown export or
       // block a snapshot because their content happens to resemble malformed YAML.
-      if (bridgeClient && bridgeMetadata?.publish !== true) continue;
+      if (bridgeClient && bridgeMetadata?.publish !== true) return [];
       const rawMarkdown = bridgeClient
         ? await bridgeClient.readDocument(workspaceId, docId)
         : await client!.readDocument(docId);
@@ -543,9 +575,7 @@ async function main() {
       const result = parseAffinePublicationPage({ id: docId, markdown }, locale);
       diagnostics.push(...result.diagnostics);
       discovered.set(docId, result.page);
-      for (const linkedId of result.page.linkedDocumentIds) {
-        if (!visited.has(linkedId)) queue.push(linkedId);
-      }
+      return result.page.linkedDocumentIds.filter((linkedId) => !visited.has(linkedId));
     } catch (error) {
       diagnostics.push({
         level: "error",
@@ -553,7 +583,21 @@ async function main() {
         docId,
         message: error instanceof Error ? error.message : String(error),
       });
+      return [];
     }
+  }
+
+  // Bridge mode already lists every workspace doc, so one concurrent wave is
+  // enough. Official MCP seed mode still BFS-expands linked docs in waves.
+  let frontier = queue.slice(0, discoveryLimit);
+  while (frontier.length > 0) {
+    const linked: string[] = [];
+    await mapPool(frontier, exportConcurrency, async (docId) => {
+      linked.push(...await ingestDocument(docId));
+    });
+    if (bridgeClient) break;
+    frontier = [...new Set(linked)].filter((id) => !visited.has(id));
+    if (visited.size >= discoveryLimit) break;
   }
 
   const generatedAt = new Date().toISOString();
@@ -647,40 +691,28 @@ async function main() {
   }
 
   const canvasSnapshots = new Map<string, CanvasData>();
-  for (const page of pages) {
-    if (!bridgeClient && !isCanvasPage(page)) continue;
+  const canvasPages = pages.filter((page) => isCanvasPage(page));
+  await mapPool(canvasPages, exportConcurrency, async (page) => {
     try {
       const rawCanvas = await (bridgeClient ?? client!).callTool("get_edgeless_canvas", {
         workspaceId,
         docId: page.id,
       }) as AffineEdgelessCanvas;
       if (rawCanvas.exists === false) {
-        if (isCanvasPage(page)) {
-          throw new Error("document does not expose an edgeless canvas");
-        }
-        continue;
+        throw new Error("document does not expose an edgeless canvas");
       }
       if (bridgeClient) await hydrateCanvasDatabases(rawCanvas, bridgeClient, workspaceId, page.id, pagesById);
       const canvas = affineCanvasToCanvasData(rawCanvas);
       if (canvas.nodes.length === 0) {
-        if (isCanvasPage(page)) throw new Error("document exposes an empty edgeless canvas");
-        continue;
+        throw new Error("document exposes an empty edgeless canvas");
       }
       canvasSnapshots.set(page.id, canvas);
     } catch (error) {
-      if (isCanvasPage(page)) {
-        throw new Error(
-          `Could not publish AFFiNE canvas ${page.title} (${page.id}): ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-      diagnostics.push({
-        level: "warning",
-        code: "AFFINE_CANVAS_UNAVAILABLE",
-        docId: page.id,
-        message: error instanceof Error ? error.message : String(error),
-      });
+      throw new Error(
+        `Could not publish AFFiNE canvas ${page.title} (${page.id}): ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
-  }
+  });
 
   const allSlugs = new Set(pages.map((page) => page.slug));
   const outputPaths = new Map(

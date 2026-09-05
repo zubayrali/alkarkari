@@ -121,6 +121,11 @@ successful AFFiNE refresh. The same flow can be run manually:
 pnpm publisher:release
 ```
 
+On a small VPS, set `PUBLISHER_RELEASE_SKIP_GATES=1` so auto-releases skip
+`pnpm test` / `pnpm lint` (doctor + static build still run). Keep
+`PUBLISHER_RELEASE_KEEP=2` and `AFFINE_EXPORT_CONCURRENCY=6` (default) for
+faster bridge exports without probing every page for a canvas.
+
 The command requires a healthy publisher, then runs tests, lint, and the static
 production build. Only a successful build becomes an immutable release under
 `.affine-publisher/releases/<release-id>`. The `current` symlink switches
