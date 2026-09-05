@@ -57,12 +57,35 @@ const languageMap = Object.fromEntries(configuredLocales.flatMap(locale => {
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
 
+/** Copy sibling `name.html` → `name/index.html` when the directory lacks an index. */
+function ensureDirectoryIndexes(dir: string): number {
+  let fixed = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    if (entry.name === "_next" || entry.name.startsWith(".")) continue;
+    const child = path.join(dir, entry.name);
+    const indexPath = path.join(child, "index.html");
+    const siblingHtml = path.join(dir, `${entry.name}.html`);
+    if (!fs.existsSync(indexPath) && fs.existsSync(siblingHtml)) {
+      fs.copyFileSync(siblingHtml, indexPath);
+      fixed += 1;
+    }
+    fixed += ensureDirectoryIndexes(child);
+  }
+  return fixed;
+}
+
 // ── 2. Place each locale build under its subpath ────────────────────────────
 for (const locale of locales) {
   fs.cpSync(path.join(artifactsDir, `out-${locale}`), path.join(outDir, locale), {
     recursive: true,
   });
+  // Next App Router static export emits both `page.html` and a `page/` folder of
+  // RSC payloads (no index.html). GitHub Pages serves `/page/` from the folder
+  // and 404s. Mirror the HTML into `page/index.html` so trailing-slash URLs work.
+  ensureDirectoryIndexes(path.join(outDir, locale));
 }
+console.log(`Ensured directory index.html mirrors for trailing-slash GitHub Pages URLs.`);
 
 // ── 3. Root assets (locale chooser, 404, favicon…) with placeholder substitution
 if (fs.existsSync(rootAssetsDir)) {
