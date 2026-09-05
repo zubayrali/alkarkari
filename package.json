@@ -55,7 +55,7 @@
     "stage:obsidian": "CONTENT_SOURCE=obsidian node scripts/stage.ts"
   },
   "dependencies": {
-    "@affine-fumadocs/publisher": "github:zubayrali/affine-fumadocs-publisher#6c9123b4f2221c96b321c3befe74f89953214796",
+    "@affine-fumadocs/publisher": "github:zubayrali/affine-fumadocs-publisher#b0aca6f8601c65e4fdd85a6df4aa78c178355337",
     "@floating-ui/dom": "^1.7.6",
     "@types/lz-string": "^1.5.0",
     "@xyflow/react": "^12.11.0",
