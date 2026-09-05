@@ -1,0 +1,2223 @@
+# Slides Demo (/slides-demo)
+
+
+
+
+
+
+
+
+
+This is the title slide — content before the first heading. It tests that pre-heading content renders as its own slide.
+
+## The Seven Pillars [#the-seven-pillars]
+
+<img alt="image" src="__img0" />
+
+The Tariqa Karkariya is built upon **seven foundational practices**, each serving a distinct role in the spiritual journey of the *murid*.
+
+> "Whoever does not have a wird has no warid."
+> — Sufi maxim
+
+## Wird — The Daily Litany [#wird--the-daily-litany]
+
+The first obligation of the murid and the foundation upon which all other practices rest.
+
+The Wird consists of:
+
+1. **Quranic verses** — selected by the Shaykh
+2. **Prayers upon the Prophet** — salawat
+3. **Divine names** — specific adhkar
+4. **Supplication** — personal du'a
+
+It is recited at *specific times* — typically after Fajr and after Maghrib.
+
+## Hadra — The Gathering [#hadra--the-gathering]
+
+<img alt="image" src="__img1" />
+
+The collective spiritual gathering combining dhikr, poetry, and presence.
+
+* Recitation of litanies
+* Qasidas (spiritual poetry)
+* Standing dhikr with movement
+* Collective supplication
+
+## Code & Technical Content [#code--technical-content]
+
+Slides can include code blocks:
+
+```python
+def dhikr(name: str, count: int = 100):
+    """Perform remembrance of a divine name."""
+    for i in range(count):
+        invoke(name)
+    return "peace"
+```
+
+And inline code like `bismillah` renders normally too.
+
+## Tables in Slides [#tables-in-slides]
+
+| Pillar        | Domain    | Practice         |
+| ------------- | --------- | ---------------- |
+| Wird          | Tongue    | Daily litany     |
+| Hadra         | Community | Collective dhikr |
+| Ism al-Mufrad | Heart     | Personal name    |
+| Muraqqa'      | Mind      | Self-observation |
+| Siyaha        | Body      | Spiritual travel |
+| Khalwa        | Spirit    | Retreat          |
+| Sirr          | Essence   | The secret       |
+
+## Math & Formulas [#math--formulas]
+
+The relationship between the pillars follows a pattern:
+
+{/* unsupported: flavour=affine:latex blockId=oVI8nRBpU_ */}
+
+Where each   represents the degree of realization in each pillar.
+
+## Nested Lists & Emphasis [#nested-lists--emphasis]
+
+### The Three Stages [#the-three-stages]
+
+* **Shari'a** (Law)
+  * Outward compliance
+  * The body's station
+* **Tariqa** (Path)
+  * Inward refinement
+  * The heart's station
+* **Haqiqa** (Reality)
+  * Direct witnessing
+  * The spirit's station
+
+> The three are not sequential but simultaneous — like the shell, the kernel, and the oil of a nut.
+
+## A Slide with Only an Image [#a-slide-with-only-an-image]
+
+<img alt="image" src="__img2" />
+
+## Summary [#summary]
+
+Together, these seven pillars create a **complete framework** for spiritual development.
+
+Each practice addresses a different dimension:
+
+| Dimension | Pillars        |
+| --------- | -------------- |
+| Tongue    | Wird, Hadra    |
+| Heart     | Ism al-Mufrad  |
+| Mind      | Muraqqa'       |
+| Body      | Siyaha, Khalwa |
+| Spirit    | Sirr           |
+
+Visit the [dictionary](/dictionary) to explore each term in depth.
+
+***
+
+*End of presentation*
+
+
+# Articles (/articles)
+
+
+
+# Articles [#articles]
+
+* [On Faqr: The Secret of the Path](/articles/on-faqr)
+* [On the Wird: Why It Cannot Be Skipped](/articles/on-the-wird)
+* [Style Test](/articles/style-test)
+* [What is the Tariqa?](/articles/what-is-the-tariqa)
+
+
+# On Faqr: The Secret of the Path (/articles/on-faqr)
+
+
+
+*From a public lecture, Fes. Translated from Arabic.*
+
+***
+
+People come to the Tariqa for different reasons. Some come because they are suffering and seek relief. Some come because they are curious about the spiritual life. Some come because they heard something beautiful and want more of it. Some come because someone they love is in the path and they followed out of love.
+
+All of these are fine reasons. God uses every door.
+
+But the Tariqa has one destination, and that destination is [Faqr](/dictionary/faqr).
+
+Faqr is not poverty of money. Do not misunderstand me. A rich man can be a faqir. A poor man can be far from faqr. Faqr is poverty of the self before God — the recognition, down to the bone, that you own nothing, that you are nothing without Him, that every breath is a gift, every moment sustained from beyond you.
+
+***
+
+## Why this is not depressing [#why-this-is-not-depressing]
+
+When people hear "you are nothing," they become sad. But the one who has tasted faqr does not weep over it — he rejoices in it. Because the one who is nothing before God becomes filled with God. The empty cup receives. The full cup — full of itself, full of its own importance — has no room.
+
+The Prophet ﷺ said: "How wonderful is the affair of the believer! All of it is good." This is the experience of the faqir: even difficulty becomes a gift, because even difficulty is the action of the Beloved.
+
+***
+
+## Faqr and the seven pillars [#faqr-and-the-seven-pillars]
+
+Each of the seven pillars — [Wird](/dictionary/wird), [Hadra](/dictionary/hadra), [Muraqqa'](/dictionary/muraqqa), [Ism al-Mufrad](/dictionary/ism-al-mufrad), [Siyaha](/dictionary/siyaha), [Khalwa](/dictionary/khalwa), [Sirr](/dictionary/sirr) — serves faqr. Each one, in its own way, removes something of the ego's pretension. The wird humbles the morning. The hadra shows you that you are not alone. The muraqaba reveals the ego's movements. The Ism al-Mufrad replaces the ego's voice with the divine name. The siyaha loosens the ego's attachment to place. The khalwa strips the ego of social support. And the sirr — the innermost — is where the ego finally becomes transparent.
+
+At the end of all of this is faqr. And faqr, it turns out, is where you always were — you simply did not know it.
+
+***
+
+*See also: [Faqr](/dictionary/faqr) (Dictionary)*
+
+
+# On the Wird: Why It Cannot Be Skipped (/articles/on-the-wird)
+
+
+
+*From a teaching circle, translated from Arabic.*
+
+***
+
+A student came to the Shaykh and said: "My days are very full. I am working, raising children, there is much pressure. Can I do the wird every other day?"
+
+The Shaykh was quiet for a moment. Then he said:
+
+"Do you eat every other day?"
+
+"No, Shaykh."
+
+"Do you sleep every other day?"
+
+"No."
+
+"Then why should the wird be different? The body needs food and rest every day. The heart needs its sustenance every day. If you stop feeding it, it becomes ill — slowly, without you noticing, until one day you look and find it empty."
+
+***
+
+## The two times [#the-two-times]
+
+The wird of the Karkariya is prescribed for morning and evening — *bushra wa ashiyya*. This mirrors the Quranic command: "Remember your Lord much, and glorify Him morning and evening" (3:41).
+
+Morning and evening are the hinges of the day. The wird at Fajr orients the whole waking day toward God. The wird at Maghrib seals the day and prepares the heart for the night.
+
+## When life intervenes [#when-life-intervenes]
+
+The Shaykh is not harsh about the rare missed occasion due to genuine circumstance. What he addresses is the attitude of negotiating with the wird — treating it as optional, as something to fit in when convenient. That attitude is the illness, not the occasional miss.
+
+> \[!orbit]- color=orange
+> Q: What analogy does the Shaykh use when a student asks to do the wird every other day?
+> A: "Do you eat every other day? Do you sleep every other day?" — the heart needs daily sustenance just like the body.
+> Q: What are the two prescribed times for the wird?
+> A: Morning (Fajr) and evening (Maghrib) — bushra wa ashiyya, mirroring the Quranic command in 3:41.
+> Q: What does the Shaykh say is the real illness regarding the wird?
+> A: The attitude of negotiating with it — treating it as optional or something to fit in when convenient. The attitude is the illness, not the occasional miss.
+
+## See also [#see-also]
+
+* [Wird](/dictionary/wird) (Dictionary)
+* [First Pillar: Wird](/dictionary/wird)
+
+
+# Style Test (/articles/style-test)
+
+
+
+This page exercises the reading affordances. Delete it when everything checks out.
+
+## Sidenotes & marginalia [#sidenotes--marginalia]
+
+The simplest form is a bare note in double braces.[^_sn_2] The text flows on as if nothing happened.
+
+Notes support inline markdown: emphasis, links, code.[^_sn_3] They can be as short[^_sn_4] or as long as a small paragraph.[^_sn_5]
+
+The labeled form keeps a phrase in the prose and hangs the note off it. The doctrine of spiritual poverty faqr[^_sn_1] is central to the path.
+
+Classic GFM footnotes render exactly the same way, so all three syntaxes coexist in one note.
+
+###### Sources [#sources]
+
+This one was written as a standard `[^classic]` footnote — same rendering, no bottom footnote section.
+
+Double braces inside code are left alone:
+
+```txt
+Handlebars templates use {{variables}} — this is not a sidenote.
+```
+
+And neither is inline code like `{{date}}`.
+
+A final paragraph with one more note to test stacking near the end of the article.[^_sn_6] That's the whole tour.
+
+## Inline annotations [#inline-annotations]
+
+Here is a <span className="rough-ann" data-ann-type="highlight">highlighted phrase</span> inside a sentence. This one is <span className="rough-ann" data-ann-type="underline">underlined by hand</span>, and this is <span className="rough-ann" data-ann-type="box">boxed in orange</span>. The engine can also draw a <span className="rough-ann" data-ann-type="circle">circle</span> around words, or put <span className="rough-ann" data-ann-type="bracket">brackets around a phrase</span> like an editor's note.
+
+Two in one line: <span className="rough-ann" data-ann-type="highlight">first mark</span> and then <span className="rough-ann" data-ann-type="circle">second mark</span> right after.
+
+An unclosed ==delimiter should render as plain text without breaking anything.
+
+## Annotations in headings are ==ignored== [#annotations-in-headings-are-ignored]
+
+The heading above must render its `==` literally — annotations are skipped inside headings.
+
+## Block annotation [#block-annotation]
+
+<p className="rough-ann" data-ann-type="highlight">
+  This entire sentence gets one continuous multiline highlight drawn over it.
+</p>
+
+## Sidenotes [#sidenotes]
+
+Standard footnotes become margin sidenotes on wide screens, and collapse to click-to-expand inline notes on narrow ones. A second reference tests multi-paragraph footnote content, and the same note can even be referenced twice.
+
+The [Wird](/dictionary/wird) is recited daily.
+
+A short sidenote. It should appear in the margin next to its reference number.
+
+A longer footnote with two paragraphs.
+
+The second paragraph should render as a separate block inside the sidenote, not break the page layout.
+
+Sidenotes can contain *formatting* and `code` too.
+
+## Callouts [#callouts]
+
+> \[!note] Note
+> In the vault this is authored as `> [!note]`. The title is a small ledger label; the thread bar and hairline carry the type colour — gold for notes and quotes.
+
+> \[!question] Question
+> Questions, help, and FAQ callouts take the violet patch from the muraqqaʿa spectrum.
+
+> \[!warning] Warning
+> Warnings keep the Fumadocs warning token so they read consistently with the rest of the UI.
+
+> \[!danger] Danger
+> Danger, bug, and failure callouts take the crimson patch. In dark mode every patch swaps to its luminous ray variant.
+
+[^_sn_1]: From the Arabic root ف-ق-ر — the recognition that one possesses nothing before God.
+
+[^_sn_2]: This is a bare marginal note — unlabeled, auto-numbered, sitting in the margin when there's room.
+
+[^_sn_3]: A note with **bold**, *italics*, and a [link to the Tariqa](https://en.wikipedia.org/wiki/Tariqa) — even `inline code` works.
+
+[^_sn_4]: like this
+
+[^_sn_5]: A longer note: the margin engine stacks notes vertically and lets them drift downward a little to avoid collisions. When both margins are free, consecutive notes alternate between the right and left side of the article.
+
+[^_sn_6]: The engine adds bottom padding when a margin note extends past the article, so the prev/next footer never overlaps it.
+
+
+# What is the Tariqa? (/articles/what-is-the-tariqa)
+
+
+
+*Excerpt from a gathering in Fes. Lightly edited for clarity.*
+
+***
+
+**Q: Shaykh, what exactly is the Tariqa Karkariya? Is it a new order or part of something older?**
+
+**A:** The Tariqa is not new. Nothing in it is invented. The [Silsila](/dictionary/silsila) goes back to the Prophet ﷺ, and every practice we do comes from that chain. What is "new," if anything, is the name and the particular form in which this heritage is expressed in our time. A river is always the same river even if it carves a new channel.
+
+**Q: So is it the same as the Alawiyya?**
+
+**A:** The mother is the Alawiyya, and the mother of the Alawiyya is the Shadhiliyya. We do not deny our lineage. But each master receives something and expresses it through his own light. [Ahmad al-Alawi](/history/ahmad-al-alawi) expressed the path through his light. What I have been given, I express through mine. The differences are in form, not in essence.
+
+**Q: Who can enter?**
+
+**A:** Anyone who sincerely desires God and is willing to do the work. The door is not closed to anyone — man or woman, scholar or illiterate, Moroccan or European. What matters is the sincerity of the intention and the willingness to be guided.
+
+**Q: What is the first requirement?**
+
+**A:** Tawba. Repentance. Without a genuine turning toward God, nothing that comes after will have roots. We do not build houses in the air.
+
+***
+
+```
+Q: Is the Tariqa Karkariya a new order?
+A: No — the Silsila goes back to the Prophet ﷺ. What is new is the name and the particular form in which the heritage is expressed in our time.
+
+Q: What is the lineage of the Tariqa Karkariya?
+A: Its mother is the Alawiyya, and the mother of the Alawiyya is the Shadhiliyya.
+
+Q: What is the first requirement for entering the Tariqa?
+A: Tawba (repentance) — without a genuine turning toward God, nothing that follows will have roots.
+```
+
+*See also: [Bay'a](/dictionary/baya), [Murid](/dictionary/murid), [Tariqa Origins](/tariqa-origins)*
+
+
+# Base Test (/base-test)
+
+
+
+# Base Test [#base-test]
+
+* [The Science of the Letters](/base-test/note-001)
+* [Stations of the Seekers](/base-test/note-002)
+* [The Niche of Lights](/base-test/note-003)
+* [The Alchemy of Happiness](/base-test/note-004)
+* [The Bezels of Wisdom](/base-test/note-005)
+* [Revival of the Religious Sciences](/base-test/note-006)
+* [The Conference of the Birds](/base-test/note-007)
+* [The Masnavi](/base-test/note-008)
+* [Principles of Sufism](/base-test/note-009)
+* [The Book of Assistance](/base-test/note-010)
+* [The Kashf al-Mahjub](/base-test/note-011)
+* [The Divan of Hafiz](/base-test/note-012)
+
+
+# The Science of the Letters (/base-test/note-001)
+
+
+
+A foundational treatise on the mystical significance of the Arabic alphabet.
+
+
+# Stations of the Seekers (/base-test/note-002)
+
+
+
+One hundred stations on the spiritual path, from repentance to annihilation.
+
+
+# The Niche of Lights (/base-test/note-003)
+
+
+
+Al-Ghazali's mystical commentary on the Light Verse of the Quran.
+
+
+# The Alchemy of Happiness (/base-test/note-004)
+
+
+
+A Persian summary of the Ihya Ulum al-Din, focused on practical spirituality.
+
+
+# The Bezels of Wisdom (/base-test/note-005)
+
+
+
+Each chapter presents a facet of divine wisdom through the lens of a prophet.
+
+
+# Revival of the Religious Sciences (/base-test/note-006)
+
+
+
+The magnum opus, covering outward acts of worship, inner vices, and the stations of the heart.
+
+
+# The Conference of the Birds (/base-test/note-007)
+
+
+
+An allegorical poem where thirty birds journey to find the Simurgh.
+
+
+# The Masnavi (/base-test/note-008)
+
+
+
+Six books of rhyming couplets — called "the Quran in Persian" by Jami.
+
+
+# Principles of Sufism (/base-test/note-009)
+
+
+
+A systematic introduction to Sufi terminology and the biographies of early masters.
+
+
+# The Book of Assistance (/base-test/note-010)
+
+
+
+A concise manual of spiritual practice from the Ba-Alawi tradition of Hadramaut.
+
+
+# The Kashf al-Mahjub (/base-test/note-011)
+
+
+
+The oldest Persian treatise on Sufism, covering doctrines and sects.
+
+
+# The Divan of Hafiz (/base-test/note-012)
+
+
+
+The collected ghazals of the "tongue of the unseen" — the supreme lyric poet of Persian.
+
+
+# At the Service of Destiny (/books/at-the-service-of-destiny)
+
+
+
+God exalted says, "I have fashioned thee for Myself." In His infinite wisdom, God willed for His Prophets and saints to assume the form of His command. He fashioned their lives as spiritual allusions to guide pure hearts to the disclosures of His direct knowledge. Nothing falls outside of His all-subjugating power, including destiny. This destiny turned a young orphan into the lord of both worlds, the gem of gnosis, Sayyidunā Muḥammad ﷺ. The saints of the Muḥammadan community are upon the heart of the Messenger of God ﷺ. That is, their lives and their states follow the example of the Prophet.
+
+Our Shaykh Sayyidī Mohamed Faouzi al-Karkari, may God sanctify his secret, tells us frequently, "Before you read a book, know its author." We thus invite you to discover the life of a man who, after having been absorbed in the Divine Presence, occupies himself with the purification of hearts until they are pierced by pre-eternal Lights. Love and fervor made him a blacksmith of hearts. Approach this biography as a guide to divine knowledge.
+
+
+# Candles on the Path (/books/candles-on-the-path)
+
+
+
+Excerpts from the teachings of Shaykh Mohamed Faouzi al-Karkari. This book brings together notes from Sidi Shaykh's illuminating responses to questions posed by his disciples regarding their visions of Light and spiritual experiences.
+
+Translated with meticulous care to preserve the essence and authenticity of Sidi Shaykh's teachings, this book captures the rhythm and profound wisdom of his words, ensuring clarity and resonance for readers. Across thirty chapters, each a beacon of spiritual guidance, discover timeless insights that inspire and uplift.
+
+
+# Etiquette of Spiritual Companionship (/books/etiquette-of-spiritual-companionship)
+
+
+
+It is crucial for those who seek to reach the Divine Presence to carefully study the conditions for embarking on the journey with the divinely connected righteous walī. Through this preparation, one gains insight into their own self and the true aim of their heart when placing their foot in the presence of the Cupbearer (as-Sāqī), i.e., the Shaykh. One should not approach impulsively, driven by a fleeting desire for discovery or a wish for seclusion to escape worldly troubles. Indeed, this station is not an ordinary one; it is the holy assembly (hadra) of the intermediate world, subsisting between the highest heavens and the lowest earths — a great, noble, powerful, and dangerous station, crowned with the holder of the secret of transcendence (tanzīh) in the realm of comparability (tashbīh) without a comparable (shabīh). It is the gateway to salvation for those who revere it, and a path to downfall for those who belittle it.
+
+
+# Guided By The Divine Light (/books/guided-by-the-divine-light)
+
+
+
+Embark on an enlightening journey guided by the luminous lectures of Sidi Shaykh Mohamed Faouzi al-Karkari, may Allah sanctify his secret. This book brings together notes from Sidi Shaykh's illuminating responses to questions posed by his disciples regarding their visions of Light and spiritual experiences.
+
+Translated with meticulous care to preserve the essence and authenticity of Sidi Shaykh's teachings, this book captures the rhythm and profound wisdom of his words, ensuring clarity and resonance for readers. Across thirty chapters, each a beacon of spiritual guidance, discover timeless insights that inspire and uplift.
+
+
+# In the Footsteps of Moses (/books/in-the-footsteps-of-moses)
+
+
+
+Moses is one of the most revered Prophets in Islam. The fact that he is mentioned in the Qurʾān more than any other figure bespeaks his eminence and the significance of his prophetic narrative to spiritual wayfaring. His election by God and the unfolding events of his prophetic mission have served as a model for Sufi wayfaring. To this effect, God proclaims: *I cast upon you a love from Me, that you might be trained under My eye* (Q Ṭāhā 20:39).
+
+In the Footsteps of Moses is a compilation of spiritual discourses (sing. mudhākara) by the contemporary Moroccan Sufi Shaykh Mohamed Faouzi al-Karkari. This book offers insights into the key events of the life of God's Confidant through the first reading of the divine Name.
+
+Describing his life, the Shaykh states: "When the Hidden Alif or the staff of Moses appears, union discloses itself in separation, and dry land appears in the ocean. The Pharaoh of the lower self drowns in the ocean of esoteric reality, and the Moses of the heart is delivered."
+
+Key events covered include the spiritual significance of Moses' birth; his mother's casting him into the river; being adopted by the Pharaoh's wife; his years of training under the direction of Shuʿayb in the desert of Midian; communing with God at Mount Ṭūr; the encounter with Pharaoh and his sorcerers; the splitting of the Red Sea; the golden calf; and his encounter with al-Khiḍr.
+
+
+# Books (/books)
+
+
+
+# Books [#books]
+
+* [At the Service of Destiny](/books/at-the-service-of-destiny)
+* [Candles on the Path](/books/candles-on-the-path)
+* [Etiquette of Spiritual Companionship](/books/etiquette-of-spiritual-companionship)
+* [Guided By The Divine Light](/books/guided-by-the-divine-light)
+* [In the Footsteps of Moses](/books/in-the-footsteps-of-moses)
+* [Introduction to Islamic Metaphysics](/books/introduction-to-islamic-metaphysics)
+* [Sufism Revived](/books/sufism-revived)
+* [The Foundations of the Karkariya Order](/books/the-foundations-of-the-karkariya-order)
+* [The Sufi Path of Light](/books/the-sufi-path-of-light)
+* [Wisdoms of the Heart](/books/wisdoms-of-the-heart)
+* [Zamzam of Spiritual Knowledge](/books/zamzam-of-spiritual-knowledge)
+
+
+# Introduction to Islamic Metaphysics (/books/introduction-to-islamic-metaphysics)
+
+
+
+In this masterful treatise of Sufi spirituality and metaphysics, Shaykh Mohamed Faouzi al-Karkari maps out the mystical journey to God as an initiatic progression through seven degrees of realization, or readings, of the divine Name Allāh.
+
+
+# Sufism Revived (/books/sufism-revived)
+
+
+
+In this compilation of spiritual discourses (sing. mudhākara), Shaykh Mohamed Faouzi al-Karkari offers a Sufi commentary on the functions, degrees and implications of prophethood (nubūwa), messengerhood (risāla), and sainthood (wilāya). Major themes include the identification of the Prophet Muhammad with "the supreme intellect" (al-ʿaql al-akbar); the manifestation of the all-encompassing Muhammadan Reality through the different prophetic figures; the notion of prophetic inerrancy (ʿiṣma); the doctrine of the Perfect Man (al-insān al-kāmil); and the universality of the Muḥammadan nation.
+
+In his discussion on sainthood, the Shaykh offers a commentary on the Path to God as expressed in the well-known Holy Tradition (ḥadīth qudsī), narrated in Ṣaḥīḥ Bukhārī, in which God proclaims: "Whoever aggresses against one of My friends, I declare war on them… My servant continues to draw near unto Me with supererogatory devotions until I love him; and when I love him, I am his hearing by which he hears, his sight by which he sees, his hand by which he clutches, and his foot by which he walks."
+
+Throughout these discourses, the Shaykh offers practical advice for seekers regarding the complementarity between the exoteric Law (sharīʿa) and esoteric Truth (ḥaqīqa); the love of the Prophet and his descendents; and the attainment of unmediated knowledge of God (maʿrifa).
+
+
+# The Foundations of the Karkariya Order (/books/the-foundations-of-the-karkariya-order)
+
+
+
+The Foundations of the Karkariya Order articulates the seven foundational principles of the Spiritual Path as enshrined in the sacred Qurʾān and Hadith of the holy Prophet. These foundations consist of the Pact (al-ʿahd), the Sacred Dance (al-hadra), the Patched Cloak (al-muraqqa'a), the Singular Name (al-ism al-mufrad), Wandering (al-siyāha), the Spiritual Retreat (al-khalwa), and the Innermost Secret (al-sirr).
+
+They are, moreover, embedded in an aphorism that we bequeath unto you as a guiding lantern, lest you lose your way and veer off the Path. We say: "abase yourself and exalt others."
+
+If you are seeking a remedy for your illness, come to us. If you wish to know God, stop reading books about knowledge of God. Instead, let us teach you to read the book of your own soul until you come to know who you really are. Do not skip a single line, till you behold the secret of your vicegerency, and know your Lord through your Lord.
+
+
+# The Sufi Path of Light (/books/the-sufi-path-of-light)
+
+
+
+"Our Lord is Light; our holy Prophet is Light; our unswerving Islamic faith is Light; our Holy Qurʾān is Light; and our prayer is Light. Why then do you wish to live in darkness? Why do you aloofly imagine, with your delimited and narrow mind, that the Light is merely an abstract concept that cannot be seen?" inquires Shaykh Mohamed Faouzi al-Karkari.
+
+Divine Light, luminous vision (mushāhada), and mystical experience are central to the Qurʾānic revelation, the Hadith corpus, and the Sufi tradition. In this major contemporary treatise on Islamic spirituality, Shaykh al-Karkari provides a detailed esoteric commentary on the Light Verse (āyat al-nūr) as well as other verses concerning Light in the Qurʾān. He then highlights the centrality of luminous vision in the teachings of renowned Sufis of the Shādhiliyya order and beyond, including Abū Madyan and Abū Ḥāmid al-Ghazālī. The book concludes with a commentary on [Ibn ʿAṭāʾ Illāh al-Iskandarī](/the-book-of-wisdoms-\(kitab-al-hikam\))'s aphorisms on luminous vision.
+
+He proclaims, "Come with me, then, upon a voyage into the depths of pure meaning. Let us travel from one verse to another, until you come to know that the road has been one from the Messenger of God until today — the road named the Radiant Path, whose night is as bright as its day, from which none stray but those bound for ruin."
+
+
+# Wisdoms of the Heart (/books/wisdoms-of-the-heart)
+
+
+
+Have you ever wondered about the world around you? Have you ever wondered about the reason of your existence? Have you ever wondered about Allah? Have you ever wondered about yourself?
+
+"The one who knows his nafs knows his Lord."
+
+The goal is to know our nafs, to face its reality and to perfect it. However, if you want to be sure of the right direction, you need to find the person who will know how to help you on this path full of pitfalls. Someone who has walked the path himself and who can tell you about the shortcomings of the nafs, who can tell you about Allah and who can communicate his love for our Creator.
+
+This book is a collection of preaching by our sheikh Sidi Mohamed Fawzi Al Karkari, may Allah sanctify his secret, which will give you a taste of the reality of his science.
+
+"The one who has no Shaykh, Shaytan is his Shaykh."
+
+
+# Zamzam of Spiritual Knowledge (/books/zamzam-of-spiritual-knowledge)
+
+
+
+To understand how the Shaykh guides a disciple through their body, it is essential to know that all points of the body are interconnected through blood vessels, which, in turn, are all connected to the heart. The task of the accomplished Shaykh is to navigate the disciple through their body via these vessels until they reach their heart. Once there, they can experience the secret that Allah has instilled in them. This secret is indeed the source for the disciple. This secret is their Zamzam.
+
+
+# Getting Started (/canvas/getting-started)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Welcome to AFFiNE!
+
+You can start with a normal page, with richly formatted text, *markdown support*, [links](https://github.com/toeverything/AFFiNE), and a lot of other blocks.
+
+* [ ] Click anywhere to start typing
+* [ ] Click to edit this line, and then drag the handle on the left to reorder blocks
+* [ ] `/ `for more blocks
+* [ ] `@ ` for linking and mentioning （`docs | users | dates`）
+  * [ ] e.g.
+  * [ ] select a date to leave a note for that day, view by date in Journals
+* [ ] nested lists can be toggled
+  * [ ] to expand and collapse
+    * [ ] So is headings
+* [ ] Click `+` in left navigation for new docs
+
+## Data-intensive blocks [#data-intensive-blocks]
+
+**Table**
+
+|     | Column |   |   | Expandable                         |
+| --- | ------ | - | - | ---------------------------------- |
+| Row |        |   |   | Hover **here** to see drag handles |
+
+{/* unsupported: flavour=affine:database blockId=FAkaEXSo1c */}
+
+## Examples for advanced blocks [#examples-for-advanced-blocks]
+
+* For example, Latex math. To explore more, type ` /`
+  * To solve the equation  , follow these steps:
+    1. Start by simplifying the equation:
+
+{/* unsupported: flavour=affine:latex blockId=ok4&#45;s7l44M */}
+
+1. Add 1 to both sides to isolate the   term:
+
+{/* unsupported: flavour=affine:latex blockId=k4lmMkRPHG */}
+
+1. Take the square root of both sides to solve for  :
+
+{/* unsupported: flavour=affine:latex blockId=NPPUlrDndj */}
+
+Therefore, the solutions to the equation are   and  .
+
+## Continue with the rabbit hole [#continue-with-the-rabbit-hole]
+
+Toggle the switch next to the title, to continue into the rabbit hole of intuitive organizational prowess \~ !
+
+<img alt="image" src="__img0" />
+
+## And one more thing: [#and-one-more-thing]
+
+Links and Backlink support, they will assemble in their own section👇
+
+# Organize [#organize]
+
+* folder
+  * sub-doc as well
+* tag
+
+# Invite and collaborate [#invite-and-collaborate]
+
+* invite
+* mention
+* comment(soon)
+* share, co-edit or read only
+
+# AI [#ai]
+
+* Login to give it a try
+* Chat with your doc and workspace, and search with reasoning across the internet
+* free 7-day trial !
+
+# Selfhost, check [#selfhost-check]
+
+* Easy solution based on Docker Compose
+* Google SSO ,etc supported in admin panel
+* [https://docs.affine.pro/docs/self-host-affine](https://docs.affine.pro/docs/self-host-affine)
+
+Rich link and embedding supported
+
+# GitHub and Discord [#github-and-discord]
+
+* [Code available](https://github.com/toeverything/AFFiNE) (Consider Starring🌟)
+* [Discord channel](https://affine.pro/redirect/discord)
+
+# Cloud [#cloud]
+
+Sign in and enable cloud service to sync across devices
+
+# Importing Content? [#importing-content]
+
+[Import](https://affine.pro/blog/import-your-data-from-notion-into-affine) from generic markdown files, or Notion
+
+[Web Clipper](https://chromewebstore.google.com/detail/affine-web-clipper/mpbbkmbdpleomiogkbkkpfoljjpahmoi)
+
+[Readwise integration](https://x.com/AFFiNEOfficial/status/1909756452815925555)
+
+<img alt="image" src="__img1" />
+
+<img alt="image" src="__img2" />
+
+<img alt="image" src="__img3" />
+
+<img alt="image" src="__img4" />
+
+<img alt="image" src="__img5" />
+
+<img alt="image" src="__img6" />
+
+<img alt="image" src="__img7" />
+
+<img alt="image" src="__img8" />
+
+<img alt="image" src="__img9" />
+
+<img alt="image" src="__img10" />
+
+<img alt="image" src="__img11" />
+
+{/* unsupported: flavour=affine:embed&#45;synced&#45;doc blockId=DCV5K2InYs */}
+
+[https://www.youtube.com/watch?v=WqOe9HgpsDY](https://www.youtube.com/watch?v=WqOe9HgpsDY)
+
+<img alt="image" src="__img12" />
+
+<img alt="image" src="__img13" />
+
+{/* unsupported: flavour=affine:edgeless&#45;text blockId=9w4cKx2BxA */}
+
+{/* unsupported: flavour=affine:frame blockId=seMvV&#45;UVYf */}
+
+{/* unsupported: flavour=affine:frame blockId=lFr31YCoRU */}
+
+[https://affine.pro/](https://affine.pro/)
+
+<img alt="image" src="__img14" />
+
+<img alt="image" src="__img15" />
+
+<img alt="image" src="__img16" />
+
+
+# Canvas (/canvas)
+
+
+
+# Canvas [#canvas]
+
+* [Getting Started](/canvas/getting-started)
+
+
+# Bay'a (/dictionary/baya)
+
+
+
+**Bay'a** (Arabic: بَيْعَة, "pledge" or "allegiance") is the formal act of initiation into the Tariqa Karkariya, in which the aspirant takes the hand of the Shaykh (or his representative) and pledges to follow the path under his guidance.
+
+## Meaning [#meaning]
+
+The word *bay'a* is the same used for the historical pledge of allegiance to the Prophet ﷺ. In the hadith of the tree (bay'at al-ridwan), companions pledged with the Prophet under a tree before the treaty of Hudaybiya. The Sufi bay'a is understood as a continuation of this covenant — each bay'a in the chain connecting back to that original pledge.
+
+## What happens in bay'a [#what-happens-in-baya]
+
+1. The aspirant states their intention
+2. The Shaykh (or authorized representative) takes their hand
+3. The Fatiha is recited
+4. The Shaykh breathes the wird formula (or its transmission) into the murid's heart
+5. The murid receives the [Wird](/dictionary/wird) and instructions
+
+## Who can give bay'a [#who-can-give-baya]
+
+In the Karkariya, bay'a is given by Shaykh Mohamed Faouzi al-Karkari or by authorized representatives (*muqaddams*) who have been granted this permission. Bay'a given by an unauthorized person is considered without effect.
+
+## Renewal [#renewal]
+
+Bay'a can be renewed — particularly when a murid visits the Shaykh in person — deepening the initial connection.
+
+## See also [#see-also]
+
+* [Murid](/dictionary/murid)
+* [Silsila](/dictionary/silsila)
+* [Muqaddam](/muqaddam)
+
+
+# Faqr (/dictionary/faqr)
+
+
+
+**Faqr** (Arabic: فَقْر, "poverty") is one of the most celebrated stations of the Sufi path. It refers not to material poverty but to the spiritual state of total emptiness before God — the recognition that one possesses nothing, is nothing, and needs nothing except the divine.
+
+## Quranic basis [#quranic-basis]
+
+> "O mankind, you are the poor (&#x2A;fuqara'*) toward God, and God — He is the Rich, the Praiseworthy." (Quran 35:15)
+
+The Sufi masters took this verse as a description of ultimate reality, not merely a metaphor.
+
+## The Shaykh on faqr [#the-shaykh-on-faqr]
+
+Shaykh Mohamed Faouzi al-Karkari has spoken extensively on faqr as the very identity of the path:
+
+> "The tariqa is faqr — and faqr is the tariqa."
+
+In this understanding, the goal of all practice (wird, hadra, khalwa, etc.) is to arrive at this station of utter spiritual nakedness before God, which paradoxically becomes fullness.
+
+## Faqr and fana' [#faqr-and-fana]
+
+Faqr is intimately related to &#x2A;*fana'** (annihilation) — the dissolution of the ego-self in the divine presence. Where fana' describes the *event*, faqr describes the *station*: the permanent abiding in poverty-before-God.
+
+## The fuqara' [#the-fuqara]
+
+Members of Sufi orders are traditionally called &#x2A;*fuqara'** (pl. of *faqir*, "poor one") — not as an insult but as a title of honor, marking their commitment to this path.
+
+## See also [#see-also]
+
+* [Murid](/dictionary/murid)
+* [Khalwa](/dictionary/khalwa)
+* [Sirr](/dictionary/sirr)
+
+
+# Hadra (/dictionary/hadra)
+
+
+
+The **hadra** (Arabic: حَضْرَة, "presence") is the communal gathering of the Tariqa in which murids collectively perform dhikr, recite poetry in praise of the Prophet ﷺ, and enter states of spiritual presence (hudur). It is one of the seven foundational pillars of the Karkariya.
+
+## Form [#form]
+
+The hadra typically unfolds in stages:
+
+1. **Opening recitations** — Fatiha and salawat
+2. **Collective dhikr** — rhythmic remembrance, beginning slow and increasing in tempo
+3. **Inshad** — devotional poetry (qasaid), often from the Burda, Hamziyya, or compositions of the Shaykh
+4. **Hal** — the spiritual states that may arise among participants
+
+## Setting [#setting]
+
+Hadras are held in the zawiya or designated meeting spaces. The Shaykh or a designated representative (muqaddam) leads the gathering. Men and women may gather separately or in designated arrangements depending on local custom.
+
+## Inner meaning [#inner-meaning]
+
+The word *hadra* itself points to the purpose: the "presence" refers not only to the gathering of people but to the sought-for spiritual presence of the Prophet ﷺ and, ultimately, the divine presence. The Shaykh teaches that the hadra is a school of the heart, not merely a ritual.
+
+## See also [#see-also]
+
+* [Wird](/dictionary/wird)
+* [Zikr](/dictionary/zikr)
+* [Inshad](/inshad)
+
+
+# Dictionary (/dictionary)
+
+
+
+# Dictionary [#dictionary]
+
+* [Bay'a](/dictionary/baya)
+* [Faqr](/dictionary/faqr)
+* [Hadra](/dictionary/hadra)
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad)
+* [Khalwa](/dictionary/khalwa)
+* [Muraqqa'](/dictionary/muraqqa)
+* [Murid](/dictionary/murid)
+* [Silsila](/dictionary/silsila)
+* [Sirr](/dictionary/sirr)
+* [Siyaha](/dictionary/siyaha)
+* [Wird](/dictionary/wird)
+* [Zikr](/dictionary/zikr)
+
+
+# Ism al-Mufrad (/dictionary/ism-al-mufrad)
+
+
+
+change
+
+**Ism al-Mufrad** (Arabic: اسم المُفرَد, "the Singular Name") refers to the dhikr of the divine name **Allah** (الله) alone — not as a phrase, but as a single name repeated with full presence of heart. It is one of the seven foundational pillars of the Tariqa Karkariya.
+
+## Distinction from other dhikr [#distinction-from-other-dhikr]
+
+Where the formula *La ilaha illa Allah* (the negation-affirmation) is the dhikr of the [Wird](/dictionary/wird), the Ism al-Mufrad is a more concentrated practice. It consists solely of the name **Allah**, breathed or spoken inwardly with each breath, until the name occupies the whole of the inner space.
+
+Shaykh al-Alawi, a major influence on the Karkariya's method, considered this dhikr the summit of the tariqas he had encountered.
+
+## Method [#method]
+
+The murid is instructed in the proper technique by the Shaykh or his representative. Generally:
+
+* The name is pronounced with the lips, then increasingly with the heart alone
+* Breath is coordinated with the name
+* The gaze of the heart (basar al-qalb) is directed toward the meaning, not the letters
+
+## Significance [#significance]
+
+The Ism al-Mufrad is considered the most direct path to fana' (annihilation) and baqa' (subsistence in God). The Shaykh has described it as "the key that opens the lock of the heart."
+
+## See also [#see-also]
+
+* [Wird](/dictionary/wird)
+* [Muraqqa'](/dictionary/muraqqa)
+* [Fana wa Baqa](/fana-wa-baqa)
+
+
+# Khalwa (/dictionary/khalwa)
+
+
+
+**Khalwa** (Arabic: خَلْوَة, "seclusion" or "solitude") is the practice of withdrawing from ordinary social life for a defined period to devote oneself entirely to worship, dhikr, and purification of the heart. It is one of the seven foundational pillars of the Tariqa Karkariya.
+
+## Historical roots [#historical-roots]
+
+Khalwa has roots in prophetic practice — the Prophet ﷺ would withdraw to the Cave of Hira before his prophethood. It became a central element of Sufi training across all major orders, including the Shadhiliyya lineage from which the Karkariya descends.
+
+## The Karkariya khalwa [#the-karkariya-khalwa]
+
+The Shaykh prescribes khalwa individually, based on the readiness and state of the murid. Key elements:
+
+* A designated space (often the zawiya or a room prepared for the purpose)
+* Minimal food and sleep
+* Continuous dhikr, particularly the [Ism al-Mufrad](/dictionary/ism-al-mufrad)
+* Recitation of the [Wird](/dictionary/wird)
+* Minimal speech with others
+* Regular reporting to the Shaykh about visions and inner states
+
+## Duration [#duration]
+
+Khalwas in the Karkariya may last from a few days to forty days (the traditional *arba'in*), depending on the murid's state and the Shaykh's guidance.
+
+## Caution [#caution]
+
+The Shaykh emphasizes that khalwa undertaken without proper guidance or preparation is dangerous. The isolation can amplify not only spiritual openings but also the play of the ego and illusion. The presence of the Shaykh's guidance is essential.
+
+## See also [#see-also]
+
+* [Muraqqa'](/dictionary/muraqqa)
+* [Sirr](/dictionary/sirr)
+* [Siyaha](/dictionary/siyaha)
+
+
+# Muraqqa' (/dictionary/muraqqa)
+
+
+
+**Muraqqa'** (Arabic: مُرَاقَبَة, *muraqaba*) means watchfulness, vigilance, or contemplative awareness. In the Karkariya, it is one of the seven foundational pillars and refers to the sustained inward attention of the heart to the divine presence.
+
+## Meaning [#meaning]
+
+The root *r-q-b* carries the sense of watching over, guarding, and being observed. Muraqaba is the practice of being aware that one is always under divine observation — and of orienting the heart continuously toward that reality.
+
+> "Worship Allah as though you see Him; if you do not see Him, He sees you." — Hadith Jibril
+
+## Practice [#practice]
+
+Muraqaba in the Karkariya is not passive. It involves:
+
+* Sitting in stillness with closed eyes
+* Directing the heart toward a specific divine name or attribute, as instructed by the Shaykh
+* Observing thoughts, images, and inner states without attachment
+* Sustaining the connection (rabita) with the Shaykh inwardly
+
+Advanced muraqaba may involve specific contemplations (mushahada) assigned individually by the Shaykh.
+
+## Relation to other practices [#relation-to-other-practices]
+
+Muraqaba deepens the fruits of the [Wird](/dictionary/wird) and [Hadra](/dictionary/hadra). Where dhikr moves the tongue and heart, muraqaba stills both to receive what dhikr has opened.
+
+## See also [#see-also]
+
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad)
+* [Khalwa](/dictionary/khalwa)
+* [Sirr](/dictionary/sirr)
+
+
+# Murid (/dictionary/murid)
+
+
+
+**Murid** (Arabic: مُريد, "one who desires" or "one who wills") is the term for a person who has formally entered the Tariqa through the act of initiation ([Bay'a](/dictionary/baya)). The word derives from *irada* — will or intention — signifying that the murid has made a deliberate choice to travel the path under the guidance of a Shaykh.
+
+## The murid's obligations [#the-murids-obligations]
+
+Upon taking bay'a, the murid undertakes:
+
+* Daily recitation of the [Wird](/dictionary/wird)
+* Attendance at the [Hadra](/dictionary/hadra) when possible
+* Obedience to the Shaykh's guidance (*ta'a*)
+* Sincere repentance (*tawba*) and avoidance of major sins
+* Regular spiritual accounting (*muhasaba*)
+
+## The murid's relationship with the Shaykh [#the-murids-relationship-with-the-shaykh]
+
+The Karkariya teaching places great emphasis on the inner connection (rabita) between murid and Shaykh. The Shaykh serves as a spiritual physician — diagnosing the diseases of the soul and prescribing remedies from the treasury of the Tariqa. The murid's trust (*tawakkul*) in this relationship is foundational.
+
+> "The murid before his Shaykh is like the body in the hands of the washer." — classical Sufi saying
+
+## Levels [#levels]
+
+Not all murids are at the same stage. The Tariqa distinguishes between the beginning murid (&#x2A;mubtadi'*), the intermediate (*mutawassit*), and the advanced (*muntahi*) — though these are internal states, not formal ranks.
+
+## See also [#see-also]
+
+* [Bay'a](/dictionary/baya)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+* [Wird](/dictionary/wird)
+
+
+# Silsila (/dictionary/silsila)
+
+
+
+**Silsila** (Arabic: سِلسِلَة, "chain") is the unbroken chain of spiritual transmission linking each master of the Tariqa to his predecessor, and ultimately to the Prophet Muhammad ﷺ. It is the guarantee of the authenticity and living power of the path.
+
+## The Karkariya silsila [#the-karkariya-silsila]
+
+The Tariqa Karkariya traces its lineage through the following principal links:
+
+1. **The Prophet Muhammad ﷺ**
+2. **Sayyidna Ali ibn Abi Talib** (and via Abu Bakr al-Siddiq)
+3. ... &#x2A;(continuous chain through the centuries)*
+4. **Abd al-Salam ibn Mashish** (d. 1228) — the Moroccan pole
+5. **Abu al-Hasan al-Shadhili** (d. 1258) — founder of the Shadhiliyya
+6. **Abu al-Abbas al-Mursi** (d. 1287)
+7. **Ibn Ata Allah al-Iskandari** (d. 1309)
+8. ... &#x2A;(Shadhili chain continues)*
+9. **Sidi Ahmad ibn Idris al-Fasi** (d. 1837)
+10. **Sidi Muhammad al-Fasi**
+11. **Shaykh Ahmad al-Alawi** (d. 1934) — via the Alawiyya branch
+12. **Shaykh Mohamed Faouzi al-Karkari** (b. 1974) — present guide of the Karkariya
+
+## Significance [#significance]
+
+The silsila is not merely biographical. In the Sufi understanding, the baraka (spiritual blessing) of the Prophet ﷺ flows through these human channels like light through a chain of lamps. Taking the hand of the Shaykh (*bay'a*) connects the murid to this living current.
+
+## See also [#see-also]
+
+* [Bay'a](/dictionary/baya)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+* [Ahmad al-Alawi](/history/ahmad-al-alawi)
+* [Abd al-Salam ibn Mashish](/history/abd-al-salam-ibn-mashish)
+
+
+# Sirr (/dictionary/sirr)
+
+
+
+**Sirr** (Arabic: سِرّ, "secret" or "innermost") refers to the most inward faculty of the human being — deeper than the *qalb* (heart) and *ruh* (spirit). It is in the sirr that divine disclosure (*kashf*) and intimate conversation (*munajat*) with the divine occur. It is one of the seven foundational pillars of the Tariqa Karkariya.
+
+## The subtle centers (lata'if) [#the-subtle-centers-lataif]
+
+Classical Sufi anthropology describes the human being as having several subtle spiritual centers (*lata'if*, sing. *latifa*):
+
+| Center | Arabic | Locus           |
+| ------ | ------ | --------------- |
+| Nafs   | نفس    | Lower self      |
+| Qalb   | قلب    | Heart           |
+| Ruh    | روح    | Spirit          |
+| Sirr   | سرّ    | Innermost       |
+| Khafi  | خفي    | The hidden      |
+| Akhfa  | أخفى   | The most hidden |
+
+The Karkariya's method involves the progressive illumination of these centers through dhikr and the guidance of the Shaykh.
+
+## Sirr as a pillar [#sirr-as-a-pillar]
+
+As a foundational practice, "Sirr" in the context of the Karkariya's seven pillars refers to the cultivation and guarding of this innermost faculty — keeping it sealed from the world and open only toward God. The murid is taught to recognize and protect the sirr from dispersion through excessive speech, sensory indulgence, and attachment.
+
+## See also [#see-also]
+
+* [Muraqqa'](/dictionary/muraqqa)
+* [Khalwa](/dictionary/khalwa)
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad)
+
+
+# Siyaha (/dictionary/siyaha)
+
+
+
+**Siyaha** (Arabic: سِيَاحَة, "wandering" or "traveling") is one of the seven foundational pillars of the Tariqa Karkariya. It refers to spiritual travel undertaken for the sake of God — visiting the Shaykh, attending hadras in distant places, or undertaking journeys of sacred pilgrimage and spiritual intent.
+
+## Meaning [#meaning]
+
+The root *s-y-h* suggests flowing water and wide movement. In the Sufi context, siyaha is the outward correlate of the inward journey: just as the heart must leave behind its attachments to travel toward God, the body may be called to leave behind familiar comfort.
+
+The Prophet ﷺ said: "Travel, for you will be healthy and provided for." The Sufi tradition read this on multiple levels.
+
+## Forms [#forms]
+
+* **Visiting the Shaykh** — the murid's journey to be in the physical presence of the guide
+* **Attending gatherings** — traveling to a hadra or ziyara (visit to a saint's tomb)
+* **Khalwa travel** — relocating to a new place for a period of spiritual retreat ([Khalwa](/dictionary/khalwa))
+* **Siyaha of the heart** — the inward dimension: detachment from the world's pull
+
+## In the Karkariya today [#in-the-karkariya-today]
+
+Murids of the Karkariya travel to Morocco — particularly to Fes and the Shaykh's zawiya — for the major annual gatherings and to renew their connection. These journeys are considered a form of siyaha.
+
+## See also [#see-also]
+
+* [Khalwa](/dictionary/khalwa)
+* [Hadra](/dictionary/hadra)
+* [Silsila](/dictionary/silsila)
+
+
+# Wird (/dictionary/wird)
+
+
+
+
+
+<img alt="image" src="__img0" />
+
+{/* unsupported: flavour=affine:edgeless&#45;text blockId=PEjLDM&#45;HPn */}
+
+```yaml
+title: Wird
+description: The daily litany of the Tariqa Karkariya, recited morning and evening.
+aliases:
+  - Litany
+  - Daily Litany
+tags:
+  - foundation
+  - practice
+  - daily
+slug: dictionary/wird
+locale: en
+publish: true
+draft: false
+sourcePath: dictionary/wird.md
+contentSource: affine-import
+```
+
+The **wird** (Arabic: وِرْد, pl. *awrad*) is the foundational daily litany assigned to every murid upon entry into the Tariqa. It consists of a sequence of formulas of remembrance (dhikr), prayers upon the Prophet (salawat), and Quranic recitations performed at fixed times — typically at dawn and after the Asr or Maghrib prayer.
+
+## Structure [#structure]
+
+The wird of the Karkariya follows the classical Shadhili pattern, drawn from the lineage through Sidi Ahmad ibn Idris and Shaykh Ahmad al-Alawi. It includes:
+
+* **Istighfar** — seeking forgiveness (100×)
+* **Salat al-Fatih** — the opening prayer upon the Prophet
+* **La ilaha illa Allah** — the declaration of divine unity (100×)
+* **Salat al-Mashishiyya** — the prayer of Ibn Mashish
+
+## Significance [#significance]
+
+The wird is considered the lifeline of the murid's connection to the Shaykh and, through him, to the Prophet ﷺ. Missing it without excuse is considered a serious spiritual lapse. The Shaykh has described it as "the rope between the servant and his Lord."
+
+```
+Q: What is the Arabic root and plural of "wird"?
+A: وِرْد (wird), plural awrad.
+
+Q: What are the four components of the Karkariya wird?
+QI: Pasted image 20260620211928.png
+A: Istighfar (100×), Salat al-Fatih, La ilaha illa Allah (100×), and Salat al-Mashishiyya.
+
+Q: What metaphor does the Shaykh use for the wird's spiritual role?
+A: "The rope between the servant and his Lord."
+```
+
+## See also [#see-also]
+
+* [Zikr](/dictionary/zikr)
+* [Silsila](/dictionary/silsila)
+* [Murid](/dictionary/murid)
+
+nice
+
+
+# Zikr (/dictionary/zikr)
+
+
+
+**Zikr** (also *dhikr*, Arabic: ذِكْر, "remembrance" or "mention") is the practice of remembering God through the repeated utterance of His names, attributes, or formulas of praise. It is the central practice of all Sufi orders and the engine of the spiritual life in the Karkariya.
+
+## Quranic basis [#quranic-basis]
+
+> "Remember God with much remembrance" (Quran 33:41)
+
+> "Verily in the remembrance of God do hearts find rest." (Quran 13:28)
+
+The Quran commands zikr more frequently than almost any other act of worship. The Sufi tradition took this mandate seriously and developed elaborate sciences of its application.
+
+## Forms in the Karkariya [#forms-in-the-karkariya]
+
+| Form          | Description                                                 |
+| ------------- | ----------------------------------------------------------- |
+| Zikr al-lisan | Verbal remembrance with the tongue                          |
+| Zikr al-qalb  | Remembrance with the heart                                  |
+| Zikr al-sirr  | Remembrance in the [Sirr](/dictionary/sirr) — the innermost |
+| Zikr al-ruh   | Remembrance of the spirit                                   |
+| Zikr al-khafi | The hidden remembrance                                      |
+
+## Individual and collective [#individual-and-collective]
+
+The [Wird](/dictionary/wird) is the individual daily zikr. The [Hadra](/dictionary/hadra) is the collective zikr. Both are essential — one trains the private relationship with God, the other the communal fabric of the Tariqa.
+
+## The [Ism al-Mufrad](/dictionary/ism-al-mufrad) [#the-ism-al-mufrad]
+
+The singular name *Allah* represents the summit of dhikr practice in the Karkariya method — the point where all formulas dissolve into pure presence.
+
+## See also [#see-also]
+
+* [Wird](/dictionary/wird)
+* [Hadra](/dictionary/hadra)
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad)
+
+
+# Second Pillar: Hadra (/foundations/hadra)
+
+
+
+The **Hadra** is the second of the seven pillars of the Tariqa Karkariya. See [Hadra](/dictionary/hadra) in the Dictionary for the full definition.
+
+## The hadra as pillar [#the-hadra-as-pillar]
+
+Where the wird is the individual's daily anchor, the hadra is the communal heartbeat of the Tariqa. It is the gathering that makes a dispersed community of individuals into a body.
+
+The Shaykh has said that the murid who lives far from a zawiya and cannot attend regular hadras should seek other murids and organize one, even if small. Two or three gathered in remembrance is a hadra.
+
+## The prophetic assembly [#the-prophetic-assembly]
+
+The hadra is modeled on the assemblies (*majalis*) of the Prophet ﷺ — gatherings where remembrance, recitation, and presence of the divine were the atmosphere. The companions described these gatherings as "gardens of paradise."
+
+## Obligation and encouragement [#obligation-and-encouragement]
+
+The hadra is not obligatory in the same legal sense as prayer, but the Shaykh treats it as close to that in spiritual terms for murids who have access to it. Missing it without reason is considered a weakening of the murid's connection to the community and to the baraka.
+
+<ReviewBlock configBase64="W3siaWQiOiIxZHF4MXBqIiwicXVlc3Rpb24iOiJXaGF0IGlzIHRoZSByb2xlIG9mIHRoZSBoYWRyYSBhbW9uZyB0aGUgc2V2ZW4gcGlsbGFycz8iLCJhbnN3ZXIiOiJUaGUgY29tbXVuYWwgaGVhcnRiZWF0IOKAlCB3aGVyZSB0aGUgd2lyZCBpcyB0aGUgaW5kaXZpZHVhbCdzIGRhaWx5IGFuY2hvciwgdGhlIGhhZHJhIG1ha2VzIGEgZGlzcGVyc2VkIGNvbW11bml0eSBpbnRvIGEgYm9keS4ifSx7ImlkIjoib3htYjdzIiwicXVlc3Rpb24iOiJXaGF0IHNob3VsZCBhIG11cmlkIGRvIGlmIHRoZXkgbGl2ZSBmYXIgZnJvbSBhIHphd2l5YT8iLCJhbnN3ZXIiOiJTZWVrIG90aGVyIG11cmlkcyBhbmQgb3JnYW5pemUgYSBoYWRyYSwgZXZlbiBpZiBzbWFsbCDigJQgdHdvIG9yIHRocmVlIGdhdGhlcmVkIGluIHJlbWVtYnJhbmNlIGlzIHN1ZmZpY2llbnQuIn0seyJpZCI6Ind0ZWI1NCIsInF1ZXN0aW9uIjoiV2hhdCBwcm9waGV0aWMgbW9kZWwgZG9lcyB0aGUgaGFkcmEgZm9sbG93PyIsImFuc3dlciI6IlRoZSBhc3NlbWJsaWVzIChtYWphbGlzKSBvZiB0aGUgUHJvcGhldCDvt7og4oCUIGdhdGhlcmluZ3MgdGhlIGNvbXBhbmlvbnMgZGVzY3JpYmVkIGFzIFwiZ2FyZGVucyBvZiBwYXJhZGlzZS5cIiJ9XQ==" />
+
+## See also [#see-also]
+
+* [Hadra](/dictionary/hadra) (Dictionary)
+* [First Pillar: Wird](/foundations/wird)
+* [Third Pillar: Muraqqa'](/foundations/muraqqa)
+
+
+# Foundations (/foundations)
+
+
+
+# Foundations [#foundations]
+
+* [Second Pillar: Hadra](/foundations/hadra)
+* [Fourth Pillar: Ism al-Mufrad](/foundations/ism-al-mufrad)
+* [Sixth Pillar: Khalwa](/foundations/khalwa)
+* [Third Pillar: Muraqqa'](/foundations/muraqqa)
+* [Seventh Pillar: Sirr](/foundations/sirr)
+* [Fifth Pillar: Siyaha](/foundations/siyaha)
+* [First Pillar: Wird](/foundations/wird)
+
+
+# Fourth Pillar: Ism al-Mufrad (/foundations/ism-al-mufrad)
+
+
+
+The **Ism al-Mufrad** is the fourth of the seven pillars. See [Ism al-Mufrad](/dictionary/ism-al-mufrad) in the Dictionary.
+
+## Centrality [#centrality]
+
+Shaykh al-Alawi, whose method the Karkariya inherits, considered the dhikr of the singular name *Allah* to be the crowning practice of the path. The Shaykh has continued this emphasis, describing it as the practice that "burns the veils" between the servant and the Lord.
+
+## Transmission [#transmission]
+
+The method of the Ism al-Mufrad is transmitted directly from Shaykh to murid. This transmission (*talqin*) is itself considered a spiritual act — the Shaykh breathes the name into the heart of the murid through a specific method, charging it with the baraka of the [Silsila](/dictionary/silsila).
+
+## Without transmission [#without-transmission]
+
+The Shaykh warns against practicing this dhikr without proper transmission and guidance. The concentrated power of the name, practiced incorrectly or without supervision, can lead to spiritual disturbance. The guide is the safety.
+
+## See also [#see-also]
+
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad) (Dictionary)
+* [Fifth Pillar: Siyaha](/foundations/siyaha)
+
+
+# Sixth Pillar: Khalwa (/foundations/khalwa)
+
+
+
+The **Khalwa** is the sixth of the seven pillars. See [Khalwa](/dictionary/khalwa) in the Dictionary.
+
+## When khalwa is given [#when-khalwa-is-given]
+
+The Shaykh does not prescribe khalwa to every murid. It is given when the murid has demonstrated sufficient stability in the earlier pillars — consistent wird, regular hadra attendance, practising muraqaba — and when the Shaykh discerns that the murid is ready for the intensification that khalwa brings.
+
+Premature khalwa can do harm. The Shaykh is explicit about this.
+
+## What changes in khalwa [#what-changes-in-khalwa]
+
+Murids who have completed a khalwa describe a qualitative shift in their inner experience — a deepening of the [Muraqqa'](/dictionary/muraqqa) state, a greater ease in the [Ism al-Mufrad](/dictionary/ism-al-mufrad), and often a clarification of their spiritual state and direction.
+
+## Modern khalwa [#modern-khalwa]
+
+For murids in Western contexts, the logistics of a forty-day khalwa are challenging. The Shaykh has given guidance on adapted forms — shorter retreats, intensified periods within ordinary life. The principle, not the duration, is what matters.
+
+## See also [#see-also]
+
+* [Khalwa](/dictionary/khalwa) (Dictionary)
+* [Seventh Pillar: Sirr](/foundations/sirr)
+
+
+# Third Pillar: Muraqqa' (/foundations/muraqqa)
+
+
+
+The &#x2A;*Muraqqa'** is the third of the seven pillars. See [Muraqqa'](/dictionary/muraqqa) in the Dictionary.
+
+## Muraqqa' as a daily practice [#muraqqa-as-a-daily-practice]
+
+Unlike the [Wird](/dictionary/wird) which has fixed times, muraqaba is ideally a continuous state that is also practiced in formal sitting. The Shaykh prescribes dedicated times for muraqaba — typically after Fajr and after 'Isha — but the deeper aspiration is that the state of inner watchfulness become unbroken.
+
+## The inner teacher [#the-inner-teacher]
+
+The Shaykh teaches that muraqaba, properly practiced, activates an inner guidance that begins to correct the murid from within. Rather than always needing external instruction, the murid starts to feel a pull away from what harms the heart and toward what nourishes it. This is the beginning of the *kashf* (unveiling).
+
+## Stages [#stages]
+
+1. **Muraqabat al-af'al** — watchfulness of actions
+2. **Muraqabat al-ahwal** — watchfulness of states
+3. **Muraqabat al-qalb** — watchfulness of the heart's movements
+4. **Muraqabat al-sirr** — watchfulness in the [Sirr](/dictionary/sirr)
+
+## See also [#see-also]
+
+* [Muraqqa'](/dictionary/muraqqa) (Dictionary)
+* [Fourth Pillar: Ism al-Mufrad](/foundations/ism-al-mufrad)
+
+
+# Seventh Pillar: Sirr (/foundations/sirr)
+
+
+
+The **Sirr** is the seventh and culminating pillar of the Tariqa Karkariya. See [Sirr](/dictionary/sirr) in the Dictionary.
+
+## The goal of the path [#the-goal-of-the-path]
+
+If the earlier six pillars are the ladder, the sirr is what is reached at the top. The entire architecture of the Karkariya method — wird, hadra, muraqaba, ism al-mufrad, siyaha, khalwa — serves the activation and purification of the sirr, the innermost faculty where the divine disclosure (*kashf*) and intimate witnessing (*mushahada*) occur.
+
+## Guarding the sirr [#guarding-the-sirr]
+
+One of the Shaykh's most consistent teachings is the *guarding of the sirr* — the practice of not speaking freely about one's spiritual experiences, visions, and states. The sirr is not to be displayed. When it is exposed, it leaks and diminishes.
+
+> "The secret that is spoken is lost." — Karkariya teaching
+
+## The sirr and the Shaykh [#the-sirr-and-the-shaykh]
+
+There is a dimension of the sirr that belongs to the relationship between murid and Shaykh. The Shaykh has access to the murid's inner state in a way that the murid themselves may not fully understand. This is why the relationship is built on trust and why the murid must be honest with the Shaykh even when it is difficult.
+
+## Completion [#completion]
+
+The seven pillars are not sequential stages that are left behind. They are simultaneous dimensions of the path — each feeding the others, all serving the emergence of the sirr into its fullness.
+
+## See also [#see-also]
+
+* [Sirr](/dictionary/sirr) (Dictionary)
+* [First Pillar: Wird](/foundations/wird)
+
+
+# Fifth Pillar: Siyaha (/foundations/siyaha)
+
+
+
+The **Siyaha** is the fifth of the seven pillars. See [Siyaha](/dictionary/siyaha) in the Dictionary.
+
+## Siyaha and detachment [#siyaha-and-detachment]
+
+The spiritual purpose of siyaha is not tourism. It is the practical training of detachment — learning that one can uproot and move, that home is not in a place but in God. This is why the Sufi masters valued travel even when difficult.
+
+The Shaykh has said: "The murid who cannot leave his city for the sake of God is still attached. Siyaha cuts that rope."
+
+## Visits to Morocco [#visits-to-morocco]
+
+For murids outside Morocco, the journey to Fes and the Shaykh's zawiya is a major form of siyaha. These journeys — especially for the annual gathering (*mawsim*) — are spiritually charged events that murids describe as transformative.
+
+## Inner siyaha [#inner-siyaha]
+
+The outward dimension has an inward correlate: the willingness of the heart to be moved, displaced, and emptied. A murid stuck in routine, unable to be surprised by God's action, needs the practice of siyaha in its inner dimension.
+
+## See also [#see-also]
+
+* [Siyaha](/dictionary/siyaha) (Dictionary)
+* [Sixth Pillar: Khalwa](/foundations/khalwa)
+
+
+# First Pillar: Wird (/foundations/wird)
+
+
+
+The **Wird** is the first of the seven pillars of the Tariqa Karkariya. See [Wird](/dictionary/wird) in the Dictionary for the full definition.
+
+## The wird as pillar [#the-wird-as-pillar]
+
+The Shaykh has described the wird as the foundation of the house — without it, nothing stands. Every other practice (hadra, khalwa, siyaha) rests on the daily habit of the wird.
+
+A murid who abandons the wird has, in effect, stepped off the path. The Shaykh distinguishes between missing it through genuine unavoidable circumstance (travel, illness) — for which there is latitude — and abandoning it through negligence, which severs the inner connection.
+
+## Consistency over intensity [#consistency-over-intensity]
+
+The Karkariya teaching emphasizes consistency over the intensity of any single sitting. A brief wird performed daily is worth more than an extraordinary session followed by weeks of absence. This principle — *al-istimrar* (continuity) — runs through all the pillars.
+
+<ReviewBlock configBase64="W3siaWQiOiJ1bzI4MzQiLCJxdWVzdGlvbiI6IldoYXQgaXMgdGhlIHdpcmQgaW4gdGhlIGNvbnRleHQgb2YgdGhlIFRhcmlxYSBLYXJrYXJpeWE/IiwiYW5zd2VyIjoiVGhlIGZpcnN0IG9mIHRoZSBzZXZlbiBwaWxsYXJzIOKAlCBhIGRhaWx5IGRldm90aW9uYWwgbGl0YW55IHRoYXQgZm9ybXMgdGhlIGZvdW5kYXRpb24gb2YgYWxsIG90aGVyIHByYWN0aWNlcy4ifSx7ImlkIjoia210ZTdwIiwicXVlc3Rpb24iOiJXaGF0IG1ldGFwaG9yIGRvZXMgdGhlIFNoYXlraCB1c2UgdG8gZGVzY3JpYmUgdGhlIHdpcmQncyByb2xlPyIsImFuc3dlciI6IlRoZSBmb3VuZGF0aW9uIG9mIHRoZSBob3VzZSDigJQgd2l0aG91dCBpdCwgbm90aGluZyBzdGFuZHMuIn0seyJpZCI6IjEzc3hianMiLCJxdWVzdGlvbiI6IldoYXQgaXMgYWwtaXN0aW1yYXIsIGFuZCB3aHkgZG9lcyB0aGUgVGFyaXFhIGVtcGhhc2l6ZSBpdD8iLCJhbnN3ZXIiOiJDb250aW51aXR5IOKAlCBhIGJyaWVmIHdpcmQgcGVyZm9ybWVkIGRhaWx5IGlzIHdvcnRoIG1vcmUgdGhhbiBhbiBleHRyYW9yZGluYXJ5IHNlc3Npb24gZm9sbG93ZWQgYnkgd2Vla3Mgb2YgYWJzZW5jZS4ifSx7ImlkIjoiMWRmdTZsOCIsInF1ZXN0aW9uIjoiV2hhdCBkaXN0aW5ndWlzaGVzIGFjY2VwdGFibGUgZnJvbSB1bmFjY2VwdGFibGUgYWJzZW5jZSBmcm9tIHRoZSB3aXJkPyIsImFuc3dlciI6Ik1pc3NpbmcgaXQgdGhyb3VnaCBnZW51aW5lIHVuYXZvaWRhYmxlIGNpcmN1bXN0YW5jZSAodHJhdmVsLCBpbGxuZXNzKSBjYXJyaWVzIGxhdGl0dWRlOyBhYmFuZG9uaW5nIGl0IHRocm91Z2ggbmVnbGlnZW5jZSBzZXZlcnMgdGhlIGlubmVyIGNvbm5lY3Rpb24uIn1d" />
+
+## See also [#see-also]
+
+* [Wird](/dictionary/wird) (Dictionary)
+* [Second Pillar: Hadra](/foundations/hadra)
+
+
+# Abd al-Salam ibn Mashish (/history/abd-al-salam-ibn-mashish)
+
+
+
+**Abd al-Salam ibn Mashish** (Arabic: عبد السلام بن مشيش, d. 625 AH / 1228 CE) is one of the great poles (*aqtab*) of the Sufi tradition and the master of [Abu al-Hasan al-Shadhili](/history/abu-al-hasan-al-shadhili), the founder of the Shadhiliyya from which the Karkariya ultimately descends.
+
+## Life [#life]
+
+Ibn Mashish lived as a recluse on Jabal 'Alam in northern Morocco (near present-day Tetouan), a mountain that became a place of pilgrimage. He was known for extraordinary spiritual states and for receiving visitors from across the Islamic world who sought his blessing and guidance.
+
+## The famous prayer [#the-famous-prayer]
+
+Ibn Mashish composed the **Salat al-Mashishiyya** (صلاة المشيشية), one of the most celebrated prayers upon the Prophet ﷺ in Islamic history, which remains part of the spiritual repertoire of the Karkariya and countless other paths. Its opening lines describe the Prophet as the ocean of divine lights from which all existence flows.
+
+> "O God, send blessings upon him from whom the secrets burst forth and the lights overflow\..."
+
+## Encounter with al-Shadhili [#encounter-with-al-shadhili]
+
+When Abu al-Hasan al-Shadhili came to Ibn Mashish seeking a master, he was instructed to first ritually wash himself of all worldly knowledge. After this symbolic purification, Ibn Mashish took his hand and gave him the wird, saying: "Now you are ready."
+
+## His tomb [#his-tomb]
+
+The tomb of Ibn Mashish on Jabal 'Alam is a major site of *ziyara* (visitation) in Morocco, visited by hundreds of thousands annually.
+
+## See also [#see-also]
+
+* [Silsila](/dictionary/silsila)
+* [Abu al-Hasan al-Shadhili](/history/abu-al-hasan-al-shadhili)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+
+
+# Abu al-Hasan al-Shadhili (/history/abu-al-hasan-al-shadhili)
+
+
+
+**Abu al-Hasan Ali ibn Abdallah al-Shadhili** (Arabic: أبو الحسن الشاذلي, c. 593–656 AH / 1196–1258 CE) was a Moroccan-born Sufi master who founded the **Shadhiliyya** order — the vast family of Sufi paths from which the Karkariya descends.
+
+## Life [#life]
+
+Born near Ceuta (in present-day northern Morocco), al-Shadhili traveled extensively in search of a master, eventually finding his guide in [Abd al-Salam ibn Mashish](/history/abd-al-salam-ibn-mashish) on Jabal 'Alam. After his initiation, he journeyed to Ifriqiya (Tunisia) and then settled in Alexandria, Egypt, where he gathered a major circle of disciples.
+
+He died during the Hajj pilgrimage at Humaythara in the Egyptian desert in 1258 CE.
+
+## Teaching style [#teaching-style]
+
+Al-Shadhili was famous for teaching in the marketplace, not in isolated retreats. He emphasized that the Sufi path was compatible with ordinary professional and family life — that the inward journey did not require withdrawal from the world. This teaching shaped the entire Shadhili tradition.
+
+> "Do not carry the burdens of the world, for this is the Lord's business. Your duty is the path."
+
+## The Shadhili method [#the-shadhili-method]
+
+Key emphases of al-Shadhili's method that carry through to the Karkariya:
+
+* Trust in God (*tawakkul*) without abandoning worldly work
+* The importance of the [Wird](/dictionary/wird) as daily foundation
+* Sincere repentance and moral rectification before mystical aspiration
+* The centrality of the Prophet ﷺ as model and intermediary
+
+## See also [#see-also]
+
+* [Abd al-Salam ibn Mashish](/history/abd-al-salam-ibn-mashish)
+* [Ahmad al-Alawi](/history/ahmad-al-alawi)
+* [Silsila](/dictionary/silsila)
+
+
+# Ahmad al-Alawi (/history/ahmad-al-alawi)
+
+
+
+**Shaykh Ahmad ibn Mustafa al-Alawi** (Arabic: أحمد العلوي, 1869–1934 CE) was an Algerian Sufi master of Moroccan descent, founder of the **Alawiyya** order and one of the most influential Islamic figures of the twentieth century. The Tariqa Karkariya inherits its method most directly through him.
+
+## Life [#life]
+
+Born in Mostaganem, Algeria, al-Alawi first worked as a cobbler and practiced various folk religious traditions before encountering the Shadhili-Darqawi path under Shaykh Muhammad al-Buzidi, who introduced him to the dhikr of the [Ism al-Mufrad](/dictionary/ism-al-mufrad). This encounter transformed him. After al-Buzidi's death, al-Alawi became an independent master and founded the Alawiyya, which spread across North and West Africa, the Middle East, and eventually to European Muslim communities.
+
+## Influence on the Karkariya [#influence-on-the-karkariya]
+
+The Karkariya's distinctive emphasis on the [Ism al-Mufrad](/dictionary/ism-al-mufrad), the method of [Muraqqa'](/dictionary/muraqqa), and the structure of the seven pillars draws directly from the Alawiyya tradition. Shaykh Mohamed Faouzi al-Karkari has described al-Alawi as "the greatest Shaykh of our age."
+
+## European encounter [#european-encounter]
+
+Al-Alawi was one of the first Sufi masters to have significant contact with European seekers. The French scholar Martin Lings (Abu Bakr Siraj al-Din) wrote an influential biography of him: *A Sufi Saint of the Twentieth Century*.
+
+## Written works [#written-works]
+
+Al-Alawi was a prolific writer. His major works include:
+
+* *Minah al-Quddusiyya* — on Sufi stations
+* *Al-Qawl al-Ma'ruf* — responses to critics
+* *Diwan* — collected poetry
+
+## See also [#see-also]
+
+* [Abu al-Hasan al-Shadhili](/history/abu-al-hasan-al-shadhili)
+* [Silsila](/dictionary/silsila)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+
+
+# History (/history)
+
+
+
+# History [#history]
+
+* [Abd al-Salam ibn Mashish](/history/abd-al-salam-ibn-mashish)
+* [Abu al-Hasan al-Shadhili](/history/abu-al-hasan-al-shadhili)
+* [Ahmad al-Alawi](/history/ahmad-al-alawi)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+* [Origins of the Tariqa Karkariya](/history/tariqa-origins)
+
+
+# Shaykh Mohamed Faouzi al-Karkari (/history/shaykh-faouzi-al-karkari)
+
+
+
+**Shaykh Mohamed Faouzi al-Karkari** (Arabic: محمد فوزي الكركري) was born in **Fes, Morocco in 1974** and is the present guide (*murshid*) of the Tariqa Karkariya. He received his spiritual formation within the Shadhili-Alawi tradition and was designated as a master by his own guide before establishing the Karkariya as a distinct expression of that lineage.
+
+## Background [#background]
+
+Shaykh al-Karkari was raised in Fes, the spiritual capital of Morocco and home of the zawiya of Moulay Idris, the tomb of [Abd al-Salam ibn Mashish](/history/abd-al-salam-ibn-mashish)'s spiritual descendants, and centuries of continuous Sufi life. He memorized the Quran and received a traditional Islamic education alongside his Sufi formation.
+
+## The name "Karkariya" [#the-name-karkariya]
+
+The name derives from *karkara* — a sound of flowing water or gentle movement — reflecting the Shaykh's teaching that the path moves like water: without forcing, finding the natural channel, wearing away obstacles gradually.
+
+## Teaching approach [#teaching-approach]
+
+The Shaykh is known for:
+
+* Accessibility to murids across the world, including Western converts
+* Emphasis on the compatibility of the path with ordinary professional life
+* Deep engagement with classical Sufi texts alongside oral transmission
+* A warm and direct teaching style that makes difficult spiritual concepts approachable
+
+## Global community [#global-community]
+
+Through travel and the internet, the Karkariya has gathered murids across Morocco, Europe, North America, and beyond. The Shaykh visits murids in their home countries and holds major gatherings in Fes.
+
+## Published works [#published-works]
+
+The Shaykh has authored and authorized several works on the Karkariya method, including collections of his teachings and explanations of the [Wird](/dictionary/wird) and the seven pillars.
+
+## See also [#see-also]
+
+* [Silsila](/dictionary/silsila)
+* [Ahmad al-Alawi](/history/ahmad-al-alawi)
+* [Bay'a](/dictionary/baya)
+
+
+# Origins of the Tariqa Karkariya (/history/tariqa-origins)
+
+
+
+{/* unsupported: flavour=affine:edgeless&#45;text blockId=xvv4zKyAVb */}
+
+```yaml
+title: Origins of the Tariqa Karkariya
+description: How the Karkariya emerged from the Shadhili-Alawi lineage in contemporary Morocco.
+tags:
+  - history
+  - origins
+slug: history/tariqa-origins
+locale: en
+publish: true
+draft: false
+sourcePath: history/tariqa-origins.md
+contentSource: affine-import
+```
+
+The **Tariqa Karkariya** is a contemporary Sufi order rooted in the **Shadhili-Alawi** tradition of North Africa. It was established by [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari) in Fes, Morocco, in the late twentieth century.
+
+## Lineage summary [#lineage-summary]
+
+The Karkariya's roots reach back through a chain of masters:
+
+| Master                                                                | Period    | Role                       |
+| --------------------------------------------------------------------- | --------- | -------------------------- |
+| [Abu al-Hasan al-Shadhili](/history/abu-al-hasan-al-shadhili)         | 1196–1258 | Founder of the Shadhiliyya |
+| Abu al-Abbas al-Mursi                                                 | 1219–1287 | First successor            |
+| Ibn Ata Allah al-Iskandari                                            | d. 1309   | Author, systematizer       |
+| ...                                                                   | ...       | Chain continues            |
+| Sidi Ahmad ibn Idris al-Fasi                                          | 1760–1837 | Major reformer             |
+| [Ahmad al-Alawi](/history/ahmad-al-alawi)                             | 1869–1934 | Alawiyya branch            |
+| [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari) | b. 1974   | Present guide              |
+
+## What makes it distinct [#what-makes-it-distinct]
+
+Within the broad Shadhili family, the Karkariya is characterized by:
+
+1. **Centrality of the [Ism al-Mufrad](/dictionary/ism-al-mufrad)** — inherited directly from the Alawiyya
+2. **The seven-pillar framework** — a clear pedagogical structure for the path
+3. **Openness to global murids** — active outreach to Western seekers
+4. **Contemporary language** — the Shaykh translates classical teaching into modern terms without diluting it
+
+## Fes as spiritual home [#fes-as-spiritual-home]
+
+The Tariqa is centered in **Fes**, Morocco — a city with an unbroken tradition of Islamic scholarship and Sufi life since the ninth century. The city is home to the Qarawiyyin mosque-university (founded 859 CE), numerous zawiyas, and the shrines of great Moroccan saints.
+
+## See also [#see-also]
+
+* [Silsila](/dictionary/silsila)
+* [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+* [Ahmad al-Alawi](/history/ahmad-al-alawi)
+
+
+# Episode 1: What is the Tariqa Karkariya? (/podcasts/episode-001-what-is-the-tariqa)
+
+
+
+## Episode details [#episode-details]
+
+**Guest:** Murid speaking on behalf of the community (anonymized)
+&#x2A;*Length:** \~45 minutes
+&#x2A;*Topics:** Introduction to the Tariqa, the [Silsila](/dictionary/silsila), the role of the [Shaykh Mohamed Faouzi al-Karkari](/history/shaykh-faouzi-al-karkari)
+
+***
+
+## Transcript excerpt [#transcript-excerpt]
+
+**Host:** We're starting from the beginning today. For someone who has never heard of the Tariqa Karkariya, what would you say it is?
+
+**Guest:** It's a Sufi path — a school of the heart. The word "tariqa" itself means a way or a road. It's a school for traveling toward God, with a living guide who has himself traveled the road and can help you navigate it.
+
+**Host:** Why do you need a guide? Can't you just read books?
+
+**Guest:** You can read all the maps in the world and still get lost. The guide isn't a teacher in the academic sense — he's more like a doctor. He can see things in your inner state that you can't see yourself, because he's been through those stages and because he has a specific kind of perception that comes from his own realization.
+
+**Host:** How does one enter?
+
+**Guest:** Through the [baya](/dictionary/baya) — the pledge. You come to the Shaykh, or to one of his representatives, and you take his hand and make a commitment. You receive the [Wird](/dictionary/wird). And then you begin.
+
+**Host:** Is it a big commitment?
+
+**Guest:** It's a lifelong commitment — but it begins small. Daily wird, attendance at the [Hadra](/dictionary/hadra) when you can. The Shaykh meets you where you are.
+
+***
+
+*Full transcript available. See also: [What is the Tariqa?](/articles/what-is-the-tariqa) in Articles.*
+
+
+# Episode 2: The Seven Pillars Explained (/podcasts/episode-002-the-seven-pillars)
+
+
+
+## Episode details [#episode-details]
+
+**Length:** \~60 minutes
+&#x2A;*Topics:** All seven pillars — [Wird](/dictionary/wird), [Hadra](/dictionary/hadra), [Muraqqa'](/dictionary/muraqqa), [Ism al-Mufrad](/dictionary/ism-al-mufrad), [Siyaha](/dictionary/siyaha), [Khalwa](/dictionary/khalwa), [Sirr](/dictionary/sirr)
+
+***
+
+## Transcript excerpt [#transcript-excerpt]
+
+**Host:** Today we're going through the seven pillars. Let's start with the wird. What is it, and why is it the foundation?
+
+**Guest:** The wird is the daily litany — a specific sequence of remembrance formulas that you recite morning and evening. It's the foundation because it's what keeps the connection alive day by day. The Shaykh describes it as the rope between the murid and his Lord.
+
+**Host:** It sounds simple.
+
+**Guest:** It is simple. That's the point. Consistency beats complexity every time. A short wird done every single day for twenty years will transform a person completely. An elaborate practice done once a week won't.
+
+**Host:** What about the hadra — the gathering?
+
+**Guest:** The hadra is where individual practice becomes communal. When people gather in remembrance, something happens that can't happen alone. There's a collective elevation. You feel it even if you can't explain it.
+
+**Host:** And the Ism al-Mufrad — the singular name?
+
+**Guest:** This is the crown of the method. The name *Allah* — just the name, nothing else. You practice it until it fills the whole interior. Shaykh al-Alawi described it as the key that unlocks everything. The Shaykh has continued that emphasis.
+
+**Host:** What about khalwa — the retreat? Is that for everyone?
+
+**Guest:** Not immediately. The Shaykh gives khalwa when he judges a murid is ready. It requires a stable foundation in the earlier pillars. But it's available to everyone — it's not reserved for specialists or full-time students.
+
+***
+
+*Full transcript available.*
+
+
+# Episode 3: The Role of the Shaykh (/podcasts/episode-003-on-the-shaykh)
+
+
+
+## Episode details [#episode-details]
+
+**Length:** \~50 minutes
+&#x2A;*Topics:** The role of the Shaykh, the [Bay'a](/dictionary/baya), trust and obedience, common misconceptions
+
+***
+
+## Transcript excerpt [#transcript-excerpt]
+
+**Host:** The concept of a spiritual guide — a Shaykh — is strange to many people raised in the modern West. What is the Shaykh actually doing?
+
+**Guest:** He's a spiritual physician. The Quran and Sunna are the medicine, and the Shaykh is the one who knows how to administer it. Anyone can read a medical textbook. That doesn't make them a doctor. The Shaykh has been trained — through the [Silsila](/dictionary/silsila), through years of practice, through his own transformation — to see the diseases of the soul and prescribe the right treatment.
+
+**Host:** Isn't that a lot of trust to place in one person?
+
+**Guest:** It is. That's why you don't just trust anyone. You look at the fruits. Does this person's company produce goodness in those around him? Are the murids of this Shaykh becoming better human beings — more honest, more generous, more God-conscious? If yes, that's evidence. And then you trust.
+
+**Host:** What does "obedience to the Shaykh" mean in practice?
+
+**Guest:** People imagine something more dramatic than it usually is. In practice, it means: when the Shaykh gives you a prescription — do your wird at this time, attend this gathering, undertake this khalwa — you do it. You don't argue with the doctor about whether you need the medicine. You've come because you acknowledge you're ill and you trust him to help you.
+
+**Host:** What if he gives guidance you don't understand?
+
+**Guest:** That happens often. And the response is to do it and then reflect. Understanding usually comes after the action, not before. This is the opposite of how the modern mind works — we want to understand first and then do. The path reverses this.
+
+***
+
+*Full transcript available. See also: [Murid](/dictionary/murid), [Bay'a](/dictionary/baya).*
+
+
+# Podcasts (/podcasts)
+
+
+
+# Podcasts [#podcasts]
+
+* [Episode 1: What is the Tariqa Karkariya?](/podcasts/episode-001-what-is-the-tariqa)
+* [Episode 2: The Seven Pillars Explained](/podcasts/episode-002-the-seven-pillars)
+* [Episode 3: The Role of the Shaykh](/podcasts/episode-003-on-the-shaykh)
+
+
+# Foundation (/tags/foundation)
+
+
+
+Notes covering the foundations of the path — the pillars, the covenant, and the core concepts a murid encounters first.
+
+
+# Tags (/tags)
+
+
+
+# Tags [#tags]
+
+* [Foundation](/tags/foundation)
+* [Practice](/tags/practice)
+
+
+# Practice (/tags/practice)
+
+
+
+The lived practices of the Tariqa — [Wird](/dictionary/wird), [Zikr](/dictionary/zikr), and the daily discipline that carries them.
+
+
+# I Saw the Prophet Take My Heart and Soak It in a Golden Cup (/testimonies/abdelkhabir-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=iZDI58OrPQ0).
+
+
+# I Saw the Prophet ﷺ After My Bay'a (/testimonies/abdullah-bangladesh-baya)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=piBoLC60kHE).
+
+
+# The Vision of the Divine Light — Abdullah from Bangladesh (/testimonies/abdullah-bangladesh)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=6ZoVfOPdkis).
+
+
+# The Vision of the Divine Light — Abdulqadir (/testimonies/abdulqadir)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=v_6o5R3ed6w).
+
+
+# I Went to the Seventh Heaven (/testimonies/abu-al-muaid-oman)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=c4VO5JMqsec).
+
+
+# My Path on the Tariqa Karkariya and the Vision of Light (/testimonies/ahmed-australia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=3zkPNsNWqR0).
+
+
+# How Abdul Qadir al-Jilani Guided Me to the Karkariya — Ahmed Mobeen (/testimonies/ahmed-mobeen-usa)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=GVPWi9Tq3zE).
+
+
+# An American Non-Muslim Researcher's Experience in the Zawiya (/testimonies/american-researcher-zawiya)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=lKIJkFSNaLg).
+
+
+# Faqir Aseef on the Vision of the Light (/testimonies/aseef-united-kingdom)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=i9asQC8Lca8).
+
+
+# Testimony About the Vision of the Divine Light — Asmaa (/testimonies/asmaa-morocco)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=5kazmc_ffcI).
+
+
+# Confined in a Sufi Zawiya: My Experience, My Vision (Mushahada) (/testimonies/confined-in-a-sufi-zawiya)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=GEn7qyDTdIo).
+
+
+# Vision of the Divine Light — Emmanuel Ibrahim (/testimonies/emmanuel-ibrahim-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=x8d0pEpN61k).
+
+
+# Entering an Atom and Discovering a New Universe (/testimonies/entering-an-atom)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=KcZuP7o30XU).
+
+
+# Vision of the Divine Light — Florian from France (/testimonies/florian-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=pHW9Krp5GDk).
+
+
+# The Vision of the Divine Light — Hakim from Japan (/testimonies/hakim-japan)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=ioE84b-00zM).
+
+
+# The Vision of the Divine Light — Hamza from Canada (/testimonies/hamza-canada)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=5KqEVFa6wQs).
+
+
+# I Asked for Guidance and Allah Brought Me to the Karkariya (/testimonies/hasna-morocco)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=H_mxxb0Z6hM).
+
+
+# Testimony of Faqir Hassan from America (/testimonies/hassan-america)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=bW4UZSwrqMQ).
+
+
+# How I Met the Prophet ﷺ (/testimonies/how-i-met-the-prophet)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=iJtlGwu7gn8).
+
+
+# A Fake Hindu Guru Led Me to the Light of Allah — Hussayn (/testimonies/hussayn-saudi-arabia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=tpYBTtcGWOo).
+
+
+# Vision of the Divine Light — Ibtissem (/testimonies/ibtissem-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=ARK9etTUP18).
+
+
+# I See the Light of the Prophet ﷺ — Ikram from Khemisset (/testimonies/ikram-morocco)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=u1sAzbbZRkI).
+
+
+# What I Experienced in My Spiritual Retreat — Imene (/testimonies/imene-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=z74vVR_GbpE).
+
+
+# Testimonies (/testimonies)
+
+
+
+# Testimonies [#testimonies]
+
+* [I Saw the Prophet Take My Heart and Soak It in a Golden Cup](/testimonies/abdelkhabir-france)
+* [The Vision of the Divine Light — Abdullah from Bangladesh](/testimonies/abdullah-bangladesh)
+* [I Saw the Prophet ﷺ After My Bay'a](/testimonies/abdullah-bangladesh-baya)
+* [The Vision of the Divine Light — Abdulqadir](/testimonies/abdulqadir)
+* [I Went to the Seventh Heaven](/testimonies/abu-al-muaid-oman)
+* [My Path on the Tariqa Karkariya and the Vision of Light](/testimonies/ahmed-australia)
+* [How Abdul Qadir al-Jilani Guided Me to the Karkariya — Ahmed Mobeen](/testimonies/ahmed-mobeen-usa)
+* [An American Non-Muslim Researcher's Experience in the Zawiya](/testimonies/american-researcher-zawiya)
+* [Faqir Aseef on the Vision of the Light](/testimonies/aseef-united-kingdom)
+* [Testimony About the Vision of the Divine Light — Asmaa](/testimonies/asmaa-morocco)
+* [Confined in a Sufi Zawiya: My Experience, My Vision (Mushahada)](/testimonies/confined-in-a-sufi-zawiya)
+* [Vision of the Divine Light — Emmanuel Ibrahim](/testimonies/emmanuel-ibrahim-france)
+* [Entering an Atom and Discovering a New Universe](/testimonies/entering-an-atom)
+* [Vision of the Divine Light — Florian from France](/testimonies/florian-france)
+* [The Vision of the Divine Light — Hakim from Japan](/testimonies/hakim-japan)
+* [The Vision of the Divine Light — Hamza from Canada](/testimonies/hamza-canada)
+* [I Asked for Guidance and Allah Brought Me to the Karkariya](/testimonies/hasna-morocco)
+* [Testimony of Faqir Hassan from America](/testimonies/hassan-america)
+* [How I Met the Prophet ﷺ](/testimonies/how-i-met-the-prophet)
+* [A Fake Hindu Guru Led Me to the Light of Allah — Hussayn](/testimonies/hussayn-saudi-arabia)
+* [Vision of the Divine Light — Ibtissem](/testimonies/ibtissem-france)
+* [I See the Light of the Prophet ﷺ — Ikram from Khemisset](/testimonies/ikram-morocco)
+* [What I Experienced in My Spiritual Retreat — Imene](/testimonies/imene-france)
+* [How a Disabled Man Found Hope and Peace in the Tariqa Karkariya](/testimonies/ismail-belgium)
+* [Testimony on the Vision of Light — Jamil from Belgium](/testimonies/jamil-belgium)
+* [Seeing the Light of God — A Japanese Testimony (English Subtitles)](/testimonies/japanese-testimony)
+* [Jesus Erased My Fear of the Prophet Muhammad ﷺ](/testimonies/jesus-erased-my-fear)
+* [Vision of the Divine Light — Khadija](/testimonies/khadija-france)
+* [Vision of the Divine Light — Layla from the USA](/testimonies/layla-usa)
+* [How God Taught Me True Love and Led Me to Him — Mahdi](/testimonies/mahdi-morocco)
+* [Testimony of Mahmoud, Syrian Refugee in Luxembourg](/testimonies/mahmoud-luxembourg)
+* [The Light Grew and Became Like a Sun](/testimonies/mahmoud-luxembourg-light)
+* [Testimony of Mahmoud from Oman About the Karkariya](/testimonies/mahmoud-oman)
+* [About My Spiritual Retreat in the Karkariya — Marouen](/testimonies/marouen-tunisia)
+* [During the Dhikr I Saw My Soul Leaving My Body — Marwan](/testimonies/marwan-usa-tunisia)
+* [From Atheism to Islam (Sufism) — Maxime](/testimonies/maxime-france)
+* [Testimony of Mohamed Aziz on the Vision of the Divine Light](/testimonies/mohamed-aziz)
+* [The Divine Light, Proof of the Existence of God — Mohamed](/testimonies/mohamed-tunisia)
+* [I've Seen in My Khalwa What You Can't Even Imagine](/testimonies/muhammad-tunisia)
+* [In Search of My Son in Morocco, I Found a Father (Shaykh)](/testimonies/mustafa-usa)
+* [My Path to the Vision of the Light](/testimonies/my-path-to-the-vision-of-the-light)
+* [My Spiritual Path in the Tariqa Karkariya (Part 1)](/testimonies/my-spiritual-path-part-1)
+* [My Spiritual Retreat in the Karkariya](/testimonies/my-spiritual-retreat)
+* [What I Learned from My Visit to the Zawiya](/testimonies/my-visit-to-the-zawiya)
+* [Testimony of Najat from France](/testimonies/najat-france)
+* [I Found Proof of God's Existence in the Karkariya and Converted to Islam](/testimonies/proof-of-gods-existence)
+* [Like the Prophet Abraham, the Karkari Experiences the Visions](/testimonies/samy-france)
+* [The Need for the Intermediary in the Spiritual Journey — Sarha](/testimonies/sarha-france)
+* [My Experience in Seeing the Light of Allah](/testimonies/seeing-the-light-of-allah)
+* [I Saw Seven Prophets in My Khalwa](/testimonies/seven-prophets-in-my-khalwa)
+* [Vision of the Nur Muhammadi, the Reality of the Prophet ﷺ](/testimonies/siddiq-ghana)
+* [This Way Is the Way to Success](/testimonies/the-way-to-success)
+* [Vision of the Prophet ﷺ in Madinah](/testimonies/vision-of-the-prophet-in-madinah)
+* [Wherever I Turn, I See the Light of the Prophet ﷺ](/testimonies/wherever-i-turn-i-see-the-light)
+* [The True Connection to God by His Light — Ustadh Yaslem](/testimonies/yaslem-mauritania)
+* ["Why Should I Give You the Bay'a? You Already Have It!" — Zineb](/testimonies/zineb)
+
+
+# How a Disabled Man Found Hope and Peace in the Tariqa Karkariya (/testimonies/ismail-belgium)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=djAFo2l1Rt0).
+
+
+# Testimony on the Vision of Light — Jamil from Belgium (/testimonies/jamil-belgium)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=YR5_aye-yJM).
+
+
+# Seeing the Light of God — A Japanese Testimony (English Subtitles) (/testimonies/japanese-testimony)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=Xs2jnbuYskQ).
+
+
+# Jesus Erased My Fear of the Prophet Muhammad ﷺ (/testimonies/jesus-erased-my-fear)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=ayGb_gxQBDA).
+
+
+# Vision of the Divine Light — Khadija (/testimonies/khadija-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=LVi6cfVGtUA).
+
+
+# Vision of the Divine Light — Layla from the USA (/testimonies/layla-usa)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=15R0PrpWiAY).
+
+
+# How God Taught Me True Love and Led Me to Him — Mahdi (/testimonies/mahdi-morocco)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=gtROezuO9mM).
+
+
+# The Light Grew and Became Like a Sun (/testimonies/mahmoud-luxembourg-light)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=1aKypxl7TWc).
+
+
+# Testimony of Mahmoud, Syrian Refugee in Luxembourg (/testimonies/mahmoud-luxembourg)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=cCcaW09TYRQ).
+
+
+# Testimony of Mahmoud from Oman About the Karkariya (/testimonies/mahmoud-oman)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=YwIAJK3Qkdg).
+
+
+# About My Spiritual Retreat in the Karkariya — Marouen (/testimonies/marouen-tunisia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=mWdwC6B3Yi8).
+
+
+# During the Dhikr I Saw My Soul Leaving My Body — Marwan (/testimonies/marwan-usa-tunisia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=VDtRDKyWusU).
+
+
+# From Atheism to Islam (Sufism) — Maxime (/testimonies/maxime-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=7G-hXG0Ngb4).
+
+
+# Testimony of Mohamed Aziz on the Vision of the Divine Light (/testimonies/mohamed-aziz)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=1kikGmOWMZA).
+
+
+# The Divine Light, Proof of the Existence of God — Mohamed (/testimonies/mohamed-tunisia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=kA7i_kK2rYg).
+
+
+# I've Seen in My Khalwa What You Can't Even Imagine (/testimonies/muhammad-tunisia)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=wHSemIF9Bf4).
+
+
+# In Search of My Son in Morocco, I Found a Father (Shaykh) (/testimonies/mustafa-usa)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=46KqZdBvLSM).
+
+
+# My Path to the Vision of the Light (/testimonies/my-path-to-the-vision-of-the-light)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=l4yRzGKMPxI).
+
+
+# My Spiritual Path in the Tariqa Karkariya (Part 1) (/testimonies/my-spiritual-path-part-1)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=UZa8-4vUPTE).
+
+
+# My Spiritual Retreat in the Karkariya (/testimonies/my-spiritual-retreat)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=xb7GGUwFcPQ).
+
+
+# What I Learned from My Visit to the Zawiya (/testimonies/my-visit-to-the-zawiya)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=7riGj1YdH2Y).
+
+
+# Testimony of Najat from France (/testimonies/najat-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=nDsR3Ox6i5k).
+
+
+# I Found Proof of God's Existence in the Karkariya and Converted to Islam (/testimonies/proof-of-gods-existence)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=w0q6kOrILG0).
+
+
+# Like the Prophet Abraham, the Karkari Experiences the Visions (/testimonies/samy-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=5T4wJnF_haU).
+
+
+# The Need for the Intermediary in the Spiritual Journey — Sarha (/testimonies/sarha-france)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=EyykJ7m_5Ks).
+
+
+# My Experience in Seeing the Light of Allah (/testimonies/seeing-the-light-of-allah)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=B76YWneQvbo).
+
+
+# I Saw Seven Prophets in My Khalwa (/testimonies/seven-prophets-in-my-khalwa)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=xgy3BjTfCfI).
+
+
+# Vision of the Nur Muhammadi, the Reality of the Prophet ﷺ (/testimonies/siddiq-ghana)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=p7ncwbVbb2s).
+
+
+# This Way Is the Way to Success (/testimonies/the-way-to-success)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=iKoZkV2bhb0).
+
+
+# Vision of the Prophet ﷺ in Madinah (/testimonies/vision-of-the-prophet-in-madinah)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=lwUD4Bsovns).
+
+
+# Wherever I Turn, I See the Light of the Prophet ﷺ (/testimonies/wherever-i-turn-i-see-the-light)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=lxBYL0PIGlE).
+
+
+# The True Connection to God by His Light — Ustadh Yaslem (/testimonies/yaslem-mauritania)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=3YE1HYRDJrM).
+
+
+# "Why Should I Give You the Bay'a? You Already Have It!" — Zineb (/testimonies/zineb)
+
+
+
+Watch this testimony on [YouTube](https://www.youtube.com/watch?v=Q56MRy2x0kU).

@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+3:I[1145,["/alkarkari/fr/_next/static/chunks/0x6ct0yup6i9y.js","/alkarkari/fr/_next/static/chunks/2jkeskvxxpq88.js","/alkarkari/fr/_next/static/chunks/3jk7fhpl7b5s-.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+:HL["/alkarkari/fr/_next/static/chunks/3jw4tk8a9ojrm.css","style"]
+0:{"rsc":["$","$1","c",{"children":["$L2",[["$","link","0",{"rel":"stylesheet","href":"/alkarkari/fr/_next/static/chunks/3jw4tk8a9ojrm.css","precedence":"next"}],["$","script","script-0",{"src":"/alkarkari/fr/_next/static/chunks/3h83f1uzf6fql.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"5gXX1GwyGUN13sEKiqxe0"}
+5:null
+2:E{"digest":"NEXT_HTTP_ERROR_FALLBACK;404"}

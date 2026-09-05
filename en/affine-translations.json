@@ -1,0 +1,538 @@
+{
+  "generatedAt": "2026-09-05T21:39:36.128Z",
+  "locales": [
+    {
+      "code": "en",
+      "label": "English",
+      "languageTag": "en"
+    },
+    {
+      "code": "fr",
+      "label": "Français",
+      "languageTag": "fr"
+    },
+    {
+      "code": "cn",
+      "label": "简体中文",
+      "languageTag": "zh-CN"
+    }
+  ],
+  "routes": {
+    "en": {
+      "/articles/on-faqr": "articles/on-faqr",
+      "/articles/on-the-wird": "articles/on-the-wird",
+      "/articles/style-test": "articles/style-test",
+      "/articles/what-is-the-tariqa": "articles/what-is-the-tariqa",
+      "/base-test/note-001": "base-test/note-001",
+      "/base-test/note-002": "base-test/note-002",
+      "/base-test/note-003": "base-test/note-003",
+      "/base-test/note-004": "base-test/note-004",
+      "/base-test/note-005": "base-test/note-005",
+      "/base-test/note-006": "base-test/note-006",
+      "/base-test/note-007": "base-test/note-007",
+      "/base-test/note-008": "base-test/note-008",
+      "/base-test/note-009": "base-test/note-009",
+      "/base-test/note-010": "base-test/note-010",
+      "/base-test/note-011": "base-test/note-011",
+      "/base-test/note-012": "base-test/note-012",
+      "/books/at-the-service-of-destiny": "books/at-the-service-of-destiny",
+      "/books/candles-on-the-path": "books/candles-on-the-path",
+      "/books/etiquette-of-spiritual-companionship": "books/etiquette-of-spiritual-companionship",
+      "/books/guided-by-the-divine-light": "books/guided-by-the-divine-light",
+      "/books/in-the-footsteps-of-moses": "books/in-the-footsteps-of-moses",
+      "/books/introduction-to-islamic-metaphysics": "books/introduction-to-islamic-metaphysics",
+      "/books/sufism-revived": "books/sufism-revived",
+      "/books/the-foundations-of-the-karkariya-order": "books/the-foundations-of-the-karkariya-order",
+      "/books/the-sufi-path-of-light": "books/the-sufi-path-of-light",
+      "/books/wisdoms-of-the-heart": "books/wisdoms-of-the-heart",
+      "/books/zamzam-of-spiritual-knowledge": "books/zamzam-of-spiritual-knowledge",
+      "/canvas/getting-started": "canvas/getting-started",
+      "/dictionary/baya": "dictionary/baya",
+      "/dictionary/faqr": "dictionary/faqr",
+      "/dictionary/hadra": "dictionary/hadra",
+      "/dictionary/ism-al-mufrad": "dictionary/ism-al-mufrad",
+      "/dictionary/khalwa": "dictionary/khalwa",
+      "/dictionary/muraqqa": "dictionary/muraqqa",
+      "/dictionary/murid": "dictionary/murid",
+      "/dictionary/silsila": "dictionary/silsila",
+      "/dictionary/sirr": "dictionary/sirr",
+      "/dictionary/siyaha": "dictionary/siyaha",
+      "/dictionary/wird": "dictionary/wird",
+      "/dictionary/zikr": "dictionary/zikr",
+      "/foundations/hadra": "foundations/hadra",
+      "/foundations/ism-al-mufrad": "foundations/ism-al-mufrad",
+      "/foundations/khalwa": "foundations/khalwa",
+      "/foundations/muraqqa": "foundations/muraqqa",
+      "/foundations/sirr": "foundations/sirr",
+      "/foundations/siyaha": "foundations/siyaha",
+      "/foundations/wird": "foundations/wird",
+      "/history/abd-al-salam-ibn-mashish": "history/abd-al-salam-ibn-mashish",
+      "/history/abu-al-hasan-al-shadhili": "history/abu-al-hasan-al-shadhili",
+      "/history/ahmad-al-alawi": "history/ahmad-al-alawi",
+      "/history/shaykh-faouzi-al-karkari": "history/shaykh-faouzi-al-karkari",
+      "/history/tariqa-origins": "history/tariqa-origins",
+      "/podcasts/episode-001-what-is-the-tariqa": "podcasts/episode-001-what-is-the-tariqa",
+      "/podcasts/episode-002-the-seven-pillars": "podcasts/episode-002-the-seven-pillars",
+      "/podcasts/episode-003-on-the-shaykh": "podcasts/episode-003-on-the-shaykh",
+      "/slides-demo": "slides-demo",
+      "/tags/foundation": "tags/foundation",
+      "/tags/practice": "tags/practice",
+      "/testimonies/abdelkhabir-france": "testimonies/abdelkhabir-france",
+      "/testimonies/abdullah-bangladesh": "testimonies/abdullah-bangladesh",
+      "/testimonies/abdullah-bangladesh-baya": "testimonies/abdullah-bangladesh-baya",
+      "/testimonies/abdulqadir": "testimonies/abdulqadir",
+      "/testimonies/abu-al-muaid-oman": "testimonies/abu-al-muaid-oman",
+      "/testimonies/ahmed-australia": "testimonies/ahmed-australia",
+      "/testimonies/ahmed-mobeen-usa": "testimonies/ahmed-mobeen-usa",
+      "/testimonies/american-researcher-zawiya": "testimonies/american-researcher-zawiya",
+      "/testimonies/aseef-united-kingdom": "testimonies/aseef-united-kingdom",
+      "/testimonies/asmaa-morocco": "testimonies/asmaa-morocco",
+      "/testimonies/confined-in-a-sufi-zawiya": "testimonies/confined-in-a-sufi-zawiya",
+      "/testimonies/emmanuel-ibrahim-france": "testimonies/emmanuel-ibrahim-france",
+      "/testimonies/entering-an-atom": "testimonies/entering-an-atom",
+      "/testimonies/florian-france": "testimonies/florian-france",
+      "/testimonies/hakim-japan": "testimonies/hakim-japan",
+      "/testimonies/hamza-canada": "testimonies/hamza-canada",
+      "/testimonies/hasna-morocco": "testimonies/hasna-morocco",
+      "/testimonies/hassan-america": "testimonies/hassan-america",
+      "/testimonies/how-i-met-the-prophet": "testimonies/how-i-met-the-prophet",
+      "/testimonies/hussayn-saudi-arabia": "testimonies/hussayn-saudi-arabia",
+      "/testimonies/ibtissem-france": "testimonies/ibtissem-france",
+      "/testimonies/ikram-morocco": "testimonies/ikram-morocco",
+      "/testimonies/imene-france": "testimonies/imene-france",
+      "/testimonies/ismail-belgium": "testimonies/ismail-belgium",
+      "/testimonies/jamil-belgium": "testimonies/jamil-belgium",
+      "/testimonies/japanese-testimony": "testimonies/japanese-testimony",
+      "/testimonies/jesus-erased-my-fear": "testimonies/jesus-erased-my-fear",
+      "/testimonies/khadija-france": "testimonies/khadija-france",
+      "/testimonies/layla-usa": "testimonies/layla-usa",
+      "/testimonies/mahdi-morocco": "testimonies/mahdi-morocco",
+      "/testimonies/mahmoud-luxembourg": "testimonies/mahmoud-luxembourg",
+      "/testimonies/mahmoud-luxembourg-light": "testimonies/mahmoud-luxembourg-light",
+      "/testimonies/mahmoud-oman": "testimonies/mahmoud-oman",
+      "/testimonies/marouen-tunisia": "testimonies/marouen-tunisia",
+      "/testimonies/marwan-usa-tunisia": "testimonies/marwan-usa-tunisia",
+      "/testimonies/maxime-france": "testimonies/maxime-france",
+      "/testimonies/mohamed-aziz": "testimonies/mohamed-aziz",
+      "/testimonies/mohamed-tunisia": "testimonies/mohamed-tunisia",
+      "/testimonies/muhammad-tunisia": "testimonies/muhammad-tunisia",
+      "/testimonies/mustafa-usa": "testimonies/mustafa-usa",
+      "/testimonies/my-path-to-the-vision-of-the-light": "testimonies/my-path-to-the-vision-of-the-light",
+      "/testimonies/my-spiritual-path-part-1": "testimonies/my-spiritual-path-part-1",
+      "/testimonies/my-spiritual-retreat": "testimonies/my-spiritual-retreat",
+      "/testimonies/my-visit-to-the-zawiya": "testimonies/my-visit-to-the-zawiya",
+      "/testimonies/najat-france": "testimonies/najat-france",
+      "/testimonies/proof-of-gods-existence": "testimonies/proof-of-gods-existence",
+      "/testimonies/samy-france": "testimonies/samy-france",
+      "/testimonies/sarha-france": "testimonies/sarha-france",
+      "/testimonies/seeing-the-light-of-allah": "testimonies/seeing-the-light-of-allah",
+      "/testimonies/seven-prophets-in-my-khalwa": "testimonies/seven-prophets-in-my-khalwa",
+      "/testimonies/siddiq-ghana": "testimonies/siddiq-ghana",
+      "/testimonies/the-way-to-success": "testimonies/the-way-to-success",
+      "/testimonies/vision-of-the-prophet-in-madinah": "testimonies/vision-of-the-prophet-in-madinah",
+      "/testimonies/wherever-i-turn-i-see-the-light": "testimonies/wherever-i-turn-i-see-the-light",
+      "/testimonies/yaslem-mauritania": "testimonies/yaslem-mauritania",
+      "/testimonies/zineb": "testimonies/zineb"
+    },
+    "fr": {
+      "/articles": "articles",
+      "/articles/quest-ce-que-la-tariqa": "articles/what-is-the-tariqa",
+      "/books": "books",
+      "/dictionary": "dictionary",
+      "/dictionary/dhikr": "dictionary/zikr",
+      "/dictionary/hadra": "dictionary/hadra",
+      "/dictionary/wird": "dictionary/wird",
+      "/foundations": "foundations",
+      "/history": "history",
+      "/podcasts": "podcasts"
+    },
+    "cn": {
+      "/articles": "articles",
+      "/articles/shenme-shi-daocheng": "articles/what-is-the-tariqa",
+      "/books": "books",
+      "/dictionary": "dictionary",
+      "/dictionary/dhikr": "dictionary/zikr",
+      "/dictionary/hadra": "dictionary/hadra",
+      "/dictionary/wird": "dictionary/wird",
+      "/foundations": "foundations",
+      "/history": "history",
+      "/podcasts": "podcasts"
+    }
+  },
+  "translations": {
+    "articles/on-faqr": {
+      "en": "/articles/on-faqr"
+    },
+    "articles/on-the-wird": {
+      "en": "/articles/on-the-wird"
+    },
+    "articles/style-test": {
+      "en": "/articles/style-test"
+    },
+    "articles/what-is-the-tariqa": {
+      "en": "/articles/what-is-the-tariqa",
+      "fr": "/articles/quest-ce-que-la-tariqa",
+      "cn": "/articles/shenme-shi-daocheng"
+    },
+    "base-test/note-001": {
+      "en": "/base-test/note-001"
+    },
+    "base-test/note-002": {
+      "en": "/base-test/note-002"
+    },
+    "base-test/note-003": {
+      "en": "/base-test/note-003"
+    },
+    "base-test/note-004": {
+      "en": "/base-test/note-004"
+    },
+    "base-test/note-005": {
+      "en": "/base-test/note-005"
+    },
+    "base-test/note-006": {
+      "en": "/base-test/note-006"
+    },
+    "base-test/note-007": {
+      "en": "/base-test/note-007"
+    },
+    "base-test/note-008": {
+      "en": "/base-test/note-008"
+    },
+    "base-test/note-009": {
+      "en": "/base-test/note-009"
+    },
+    "base-test/note-010": {
+      "en": "/base-test/note-010"
+    },
+    "base-test/note-011": {
+      "en": "/base-test/note-011"
+    },
+    "base-test/note-012": {
+      "en": "/base-test/note-012"
+    },
+    "books/at-the-service-of-destiny": {
+      "en": "/books/at-the-service-of-destiny"
+    },
+    "books/candles-on-the-path": {
+      "en": "/books/candles-on-the-path"
+    },
+    "books/etiquette-of-spiritual-companionship": {
+      "en": "/books/etiquette-of-spiritual-companionship"
+    },
+    "books/guided-by-the-divine-light": {
+      "en": "/books/guided-by-the-divine-light"
+    },
+    "books/in-the-footsteps-of-moses": {
+      "en": "/books/in-the-footsteps-of-moses"
+    },
+    "books/introduction-to-islamic-metaphysics": {
+      "en": "/books/introduction-to-islamic-metaphysics"
+    },
+    "books/sufism-revived": {
+      "en": "/books/sufism-revived"
+    },
+    "books/the-foundations-of-the-karkariya-order": {
+      "en": "/books/the-foundations-of-the-karkariya-order"
+    },
+    "books/the-sufi-path-of-light": {
+      "en": "/books/the-sufi-path-of-light"
+    },
+    "books/wisdoms-of-the-heart": {
+      "en": "/books/wisdoms-of-the-heart"
+    },
+    "books/zamzam-of-spiritual-knowledge": {
+      "en": "/books/zamzam-of-spiritual-knowledge"
+    },
+    "canvas/getting-started": {
+      "en": "/canvas/getting-started"
+    },
+    "dictionary/baya": {
+      "en": "/dictionary/baya"
+    },
+    "dictionary/faqr": {
+      "en": "/dictionary/faqr"
+    },
+    "dictionary/hadra": {
+      "en": "/dictionary/hadra",
+      "fr": "/dictionary/hadra",
+      "cn": "/dictionary/hadra"
+    },
+    "dictionary/ism-al-mufrad": {
+      "en": "/dictionary/ism-al-mufrad"
+    },
+    "dictionary/khalwa": {
+      "en": "/dictionary/khalwa"
+    },
+    "dictionary/muraqqa": {
+      "en": "/dictionary/muraqqa"
+    },
+    "dictionary/murid": {
+      "en": "/dictionary/murid"
+    },
+    "dictionary/silsila": {
+      "en": "/dictionary/silsila"
+    },
+    "dictionary/sirr": {
+      "en": "/dictionary/sirr"
+    },
+    "dictionary/siyaha": {
+      "en": "/dictionary/siyaha"
+    },
+    "dictionary/wird": {
+      "en": "/dictionary/wird",
+      "fr": "/dictionary/wird",
+      "cn": "/dictionary/wird"
+    },
+    "dictionary/zikr": {
+      "en": "/dictionary/zikr",
+      "fr": "/dictionary/dhikr",
+      "cn": "/dictionary/dhikr"
+    },
+    "foundations/hadra": {
+      "en": "/foundations/hadra"
+    },
+    "foundations/ism-al-mufrad": {
+      "en": "/foundations/ism-al-mufrad"
+    },
+    "foundations/khalwa": {
+      "en": "/foundations/khalwa"
+    },
+    "foundations/muraqqa": {
+      "en": "/foundations/muraqqa"
+    },
+    "foundations/sirr": {
+      "en": "/foundations/sirr"
+    },
+    "foundations/siyaha": {
+      "en": "/foundations/siyaha"
+    },
+    "foundations/wird": {
+      "en": "/foundations/wird"
+    },
+    "history/abd-al-salam-ibn-mashish": {
+      "en": "/history/abd-al-salam-ibn-mashish"
+    },
+    "history/abu-al-hasan-al-shadhili": {
+      "en": "/history/abu-al-hasan-al-shadhili"
+    },
+    "history/ahmad-al-alawi": {
+      "en": "/history/ahmad-al-alawi"
+    },
+    "history/shaykh-faouzi-al-karkari": {
+      "en": "/history/shaykh-faouzi-al-karkari"
+    },
+    "history/tariqa-origins": {
+      "en": "/history/tariqa-origins"
+    },
+    "podcasts/episode-001-what-is-the-tariqa": {
+      "en": "/podcasts/episode-001-what-is-the-tariqa"
+    },
+    "podcasts/episode-002-the-seven-pillars": {
+      "en": "/podcasts/episode-002-the-seven-pillars"
+    },
+    "podcasts/episode-003-on-the-shaykh": {
+      "en": "/podcasts/episode-003-on-the-shaykh"
+    },
+    "slides-demo": {
+      "en": "/slides-demo"
+    },
+    "tags/foundation": {
+      "en": "/tags/foundation"
+    },
+    "tags/practice": {
+      "en": "/tags/practice"
+    },
+    "testimonies/abdelkhabir-france": {
+      "en": "/testimonies/abdelkhabir-france"
+    },
+    "testimonies/abdullah-bangladesh": {
+      "en": "/testimonies/abdullah-bangladesh"
+    },
+    "testimonies/abdullah-bangladesh-baya": {
+      "en": "/testimonies/abdullah-bangladesh-baya"
+    },
+    "testimonies/abdulqadir": {
+      "en": "/testimonies/abdulqadir"
+    },
+    "testimonies/abu-al-muaid-oman": {
+      "en": "/testimonies/abu-al-muaid-oman"
+    },
+    "testimonies/ahmed-australia": {
+      "en": "/testimonies/ahmed-australia"
+    },
+    "testimonies/ahmed-mobeen-usa": {
+      "en": "/testimonies/ahmed-mobeen-usa"
+    },
+    "testimonies/american-researcher-zawiya": {
+      "en": "/testimonies/american-researcher-zawiya"
+    },
+    "testimonies/aseef-united-kingdom": {
+      "en": "/testimonies/aseef-united-kingdom"
+    },
+    "testimonies/asmaa-morocco": {
+      "en": "/testimonies/asmaa-morocco"
+    },
+    "testimonies/confined-in-a-sufi-zawiya": {
+      "en": "/testimonies/confined-in-a-sufi-zawiya"
+    },
+    "testimonies/emmanuel-ibrahim-france": {
+      "en": "/testimonies/emmanuel-ibrahim-france"
+    },
+    "testimonies/entering-an-atom": {
+      "en": "/testimonies/entering-an-atom"
+    },
+    "testimonies/florian-france": {
+      "en": "/testimonies/florian-france"
+    },
+    "testimonies/hakim-japan": {
+      "en": "/testimonies/hakim-japan"
+    },
+    "testimonies/hamza-canada": {
+      "en": "/testimonies/hamza-canada"
+    },
+    "testimonies/hasna-morocco": {
+      "en": "/testimonies/hasna-morocco"
+    },
+    "testimonies/hassan-america": {
+      "en": "/testimonies/hassan-america"
+    },
+    "testimonies/how-i-met-the-prophet": {
+      "en": "/testimonies/how-i-met-the-prophet"
+    },
+    "testimonies/hussayn-saudi-arabia": {
+      "en": "/testimonies/hussayn-saudi-arabia"
+    },
+    "testimonies/ibtissem-france": {
+      "en": "/testimonies/ibtissem-france"
+    },
+    "testimonies/ikram-morocco": {
+      "en": "/testimonies/ikram-morocco"
+    },
+    "testimonies/imene-france": {
+      "en": "/testimonies/imene-france"
+    },
+    "testimonies/ismail-belgium": {
+      "en": "/testimonies/ismail-belgium"
+    },
+    "testimonies/jamil-belgium": {
+      "en": "/testimonies/jamil-belgium"
+    },
+    "testimonies/japanese-testimony": {
+      "en": "/testimonies/japanese-testimony"
+    },
+    "testimonies/jesus-erased-my-fear": {
+      "en": "/testimonies/jesus-erased-my-fear"
+    },
+    "testimonies/khadija-france": {
+      "en": "/testimonies/khadija-france"
+    },
+    "testimonies/layla-usa": {
+      "en": "/testimonies/layla-usa"
+    },
+    "testimonies/mahdi-morocco": {
+      "en": "/testimonies/mahdi-morocco"
+    },
+    "testimonies/mahmoud-luxembourg": {
+      "en": "/testimonies/mahmoud-luxembourg"
+    },
+    "testimonies/mahmoud-luxembourg-light": {
+      "en": "/testimonies/mahmoud-luxembourg-light"
+    },
+    "testimonies/mahmoud-oman": {
+      "en": "/testimonies/mahmoud-oman"
+    },
+    "testimonies/marouen-tunisia": {
+      "en": "/testimonies/marouen-tunisia"
+    },
+    "testimonies/marwan-usa-tunisia": {
+      "en": "/testimonies/marwan-usa-tunisia"
+    },
+    "testimonies/maxime-france": {
+      "en": "/testimonies/maxime-france"
+    },
+    "testimonies/mohamed-aziz": {
+      "en": "/testimonies/mohamed-aziz"
+    },
+    "testimonies/mohamed-tunisia": {
+      "en": "/testimonies/mohamed-tunisia"
+    },
+    "testimonies/muhammad-tunisia": {
+      "en": "/testimonies/muhammad-tunisia"
+    },
+    "testimonies/mustafa-usa": {
+      "en": "/testimonies/mustafa-usa"
+    },
+    "testimonies/my-path-to-the-vision-of-the-light": {
+      "en": "/testimonies/my-path-to-the-vision-of-the-light"
+    },
+    "testimonies/my-spiritual-path-part-1": {
+      "en": "/testimonies/my-spiritual-path-part-1"
+    },
+    "testimonies/my-spiritual-retreat": {
+      "en": "/testimonies/my-spiritual-retreat"
+    },
+    "testimonies/my-visit-to-the-zawiya": {
+      "en": "/testimonies/my-visit-to-the-zawiya"
+    },
+    "testimonies/najat-france": {
+      "en": "/testimonies/najat-france"
+    },
+    "testimonies/proof-of-gods-existence": {
+      "en": "/testimonies/proof-of-gods-existence"
+    },
+    "testimonies/samy-france": {
+      "en": "/testimonies/samy-france"
+    },
+    "testimonies/sarha-france": {
+      "en": "/testimonies/sarha-france"
+    },
+    "testimonies/seeing-the-light-of-allah": {
+      "en": "/testimonies/seeing-the-light-of-allah"
+    },
+    "testimonies/seven-prophets-in-my-khalwa": {
+      "en": "/testimonies/seven-prophets-in-my-khalwa"
+    },
+    "testimonies/siddiq-ghana": {
+      "en": "/testimonies/siddiq-ghana"
+    },
+    "testimonies/the-way-to-success": {
+      "en": "/testimonies/the-way-to-success"
+    },
+    "testimonies/vision-of-the-prophet-in-madinah": {
+      "en": "/testimonies/vision-of-the-prophet-in-madinah"
+    },
+    "testimonies/wherever-i-turn-i-see-the-light": {
+      "en": "/testimonies/wherever-i-turn-i-see-the-light"
+    },
+    "testimonies/yaslem-mauritania": {
+      "en": "/testimonies/yaslem-mauritania"
+    },
+    "testimonies/zineb": {
+      "en": "/testimonies/zineb"
+    },
+    "articles": {
+      "fr": "/articles",
+      "cn": "/articles"
+    },
+    "books": {
+      "fr": "/books",
+      "cn": "/books"
+    },
+    "dictionary": {
+      "fr": "/dictionary",
+      "cn": "/dictionary"
+    },
+    "foundations": {
+      "fr": "/foundations",
+      "cn": "/foundations"
+    },
+    "history": {
+      "fr": "/history",
+      "cn": "/history"
+    },
+    "podcasts": {
+      "fr": "/podcasts",
+      "cn": "/podcasts"
+    }
+  }
+}

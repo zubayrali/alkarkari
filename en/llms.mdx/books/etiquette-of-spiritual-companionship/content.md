@@ -1,0 +1,5 @@
+# Etiquette of Spiritual Companionship (/books/etiquette-of-spiritual-companionship)
+
+
+
+It is crucial for those who seek to reach the Divine Presence to carefully study the conditions for embarking on the journey with the divinely connected righteous walī. Through this preparation, one gains insight into their own self and the true aim of their heart when placing their foot in the presence of the Cupbearer (as-Sāqī), i.e., the Shaykh. One should not approach impulsively, driven by a fleeting desire for discovery or a wish for seclusion to escape worldly troubles. Indeed, this station is not an ordinary one; it is the holy assembly (hadra) of the intermediate world, subsisting between the highest heavens and the lowest earths — a great, noble, powerful, and dangerous station, crowned with the holder of the secret of transcendence (tanzīh) in the realm of comparability (tashbīh) without a comparable (shabīh). It is the gateway to salvation for those who revere it, and a path to downfall for those who belittle it.

@@ -1,0 +1,30 @@
+# Wird (/dictionary/wird)
+
+
+
+Le **wird** (arabe : وِرْد, pl. *awrād*) est la litanie quotidienne fondamentale
+confiée à chaque murid dès son entrée dans la Tariqa. Il se compose d'une
+séquence de formules d'invocation (dhikr), de prières sur le Prophète
+(salawāt) et de récitations coraniques, accomplies à heures fixes — le plus
+souvent à l'aube et après la prière de l'Asr ou du Maghrib.
+
+## Structure [#structure]
+
+Le wird de la Karkariya suit le modèle shadhili classique, hérité de la chaîne
+passant par Sidi Ahmad ibn Idris et le Shaykh Ahmad al-Alawi :
+
+* **Istighfār** — la demande de pardon (100×)
+* **Salāt al-Fātih** — la prière d'ouverture sur le Prophète
+* **Lā ilāha illā Allāh** — l'attestation de l'unicité divine (100×)
+* **Salāt al-Mashīshiyya** — la prière d'Ibn Mashish
+
+## Portée [#portée]
+
+Le wird est considéré comme le lien vital entre le murid et le Shaykh — et, à
+travers lui, le Prophète ﷺ. Le Shaykh l'a décrit comme « la corde entre le
+serviteur et son Seigneur ».
+
+## Voir aussi [#voir-aussi]
+
+* [Dhikr](/dictionary/dhikr)
+* [Hadra](/dictionary/hadra)

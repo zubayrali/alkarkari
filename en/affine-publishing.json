@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-05T21:16:13.921Z",
+  "source": "affine-mcp",
+  "locale": "en",
+  "portals": [
+    {
+      "id": "books",
+      "route": "books",
+      "label": "Library",
+      "description": "Books and longer teachings published from the shared AFFiNE workspace.",
+      "layout": "library",
+      "collection": "Language · English",
+      "pages": [
+        {
+          "id": "u2HejKKwLB",
+          "title": "At the Service of Destiny",
+          "slug": "books/at-the-service-of-destiny",
+          "href": "/books/at-the-service-of-destiny",
+          "description": "A biography of Shaykh Mohamed Faouzi al-Karkari — how a young orphan became a blacksmith of hearts, absorbed in the Divine Presence and occupied with the purification of hearts.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:52.700Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2021/06/At-theServiceofDestiny-MohamedFaouziAlKarkari-YousefCasewit.jpg"
+          }
+        },
+        {
+          "id": "uNYOCemBnp",
+          "title": "Candles on the Path",
+          "slug": "books/candles-on-the-path",
+          "href": "/books/candles-on-the-path",
+          "description": "Excerpts from the teachings of Shaykh Mohamed Faouzi al-Karkari on spiritual guidance, visions of Light, and the practical wisdom of the Sufi path.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:52.342Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2024/01/Candles-on-the-Path.jpg"
+          }
+        },
+        {
+          "id": "K-HPSwfiCI",
+          "title": "Etiquette of Spiritual Companionship",
+          "slug": "books/etiquette-of-spiritual-companionship",
+          "href": "/books/etiquette-of-spiritual-companionship",
+          "description": "A study of the conditions for embarking on the spiritual journey with a divinely connected walī, and the gravity of the Shaykh's holy assembly.",
+          "featured": false,
+          "modified": "2026-09-03T06:20:00.522Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2024/09/Etiquette-of-Spiritual-Companionship2.jpg"
+          }
+        },
+        {
+          "id": "nqiLwA9NAs",
+          "title": "Guided By The Divine Light",
+          "slug": "books/guided-by-the-divine-light",
+          "href": "/books/guided-by-the-divine-light",
+          "description": "Notes from the Shaykh's lectures responding to disciples' questions about their visions of Light and spiritual experiences, across thirty chapters.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:53.884Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2024/07/Guided-By-The-Divine-Light-Vol.-I.jpg"
+          }
+        },
+        {
+          "id": "dhVmVg_1iO",
+          "title": "In the Footsteps of Moses",
+          "slug": "books/in-the-footsteps-of-moses",
+          "href": "/books/in-the-footsteps-of-moses",
+          "description": "A contemporary Sufi commentary on the story of God's Confidant (kalīm Allāh) in the Qurʾān — Moses' birth, training under Shuʿayb, Mount Ṭūr, the Red Sea, and al-Khiḍr.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:56.190Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2021/06/IntheFootstepsofMoses-MohamedFaouziAlKarkari-YousefCasewit.jpg"
+          }
+        },
+        {
+          "id": "JMSPCrZhBH",
+          "title": "Introduction to Islamic Metaphysics",
+          "slug": "books/introduction-to-islamic-metaphysics",
+          "href": "/books/introduction-to-islamic-metaphysics",
+          "description": "A Sufi treatise mapping the mystical journey to God as an initiatic progression through seven degrees of realization of the divine Name Allāh.",
+          "featured": false,
+          "modified": "2026-09-03T06:20:00.645Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2021/08/Introduction-to-Islamic-Metaphysics.jpg"
+          }
+        },
+        {
+          "id": "HBzpoO1I1J",
+          "title": "Sufism Revived",
+          "slug": "books/sufism-revived",
+          "href": "/books/sufism-revived",
+          "description": "A contemporary treatise on divine Light, prophecy, and sainthood — Sufi commentary on the degrees of prophethood (nubūwa), messengerhood (risāla), and sainthood (wilāya).",
+          "featured": false,
+          "modified": "2026-09-03T06:20:01.034Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2021/06/SufismRevived-MohamedFaouziAlKarkari-YousefCasewit.jpg"
+          }
+        },
+        {
+          "id": "uBLsuX3lSc",
+          "title": "The Foundations of the Karkariya Order",
+          "slug": "books/the-foundations-of-the-karkariya-order",
+          "href": "/books/the-foundations-of-the-karkariya-order",
+          "description": "The seven foundational principles of the spiritual path — the Pact, the Sacred Dance, the Patched Cloak, the Singular Name, Wandering, the Spiritual Retreat, and the Innermost Secret.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:52.584Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2021/07/The-Foundation-of-the-Karkariya-Order.jpg"
+          }
+        },
+        {
+          "id": "jP_8GOThIm",
+          "title": "The Sufi Path of Light",
+          "slug": "books/the-sufi-path-of-light",
+          "href": "/books/the-sufi-path-of-light",
+          "description": "A major contemporary treatise on divine Light in the Qurʾān, the Hadith, and the Sufi tradition, with commentary on the Light Verse and the aphorisms of Ibn ʿAṭāʾ Illāh.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:55.360Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2023/03/The-Sufi-Path-of-Light.jpg"
+          }
+        },
+        {
+          "id": "KiLok6as8S",
+          "title": "Wisdoms of the Heart",
+          "slug": "books/wisdoms-of-the-heart",
+          "href": "/books/wisdoms-of-the-heart",
+          "description": "A collection of mudhākara (spiritual discourses) on self-knowledge, the nafs, and the necessity of a living Shaykh for the seeker.",
+          "featured": false,
+          "modified": "2026-09-03T06:20:00.391Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2022/06/Wisdoms-of-the-Heart.jpg"
+          }
+        },
+        {
+          "id": "T9z-pVsaCs",
+          "title": "Zamzam of Spiritual Knowledge",
+          "slug": "books/zamzam-of-spiritual-knowledge",
+          "href": "/books/zamzam-of-spiritual-knowledge",
+          "description": "A guide to how the Shaykh navigates the disciple through the body's vessels to the heart, where the divine secret — the disciple's Zamzam — is experienced.",
+          "featured": false,
+          "modified": "2026-09-03T06:19:59.350Z",
+          "tags": [],
+          "properties": {
+            "Book Cover": "https://les7lectures.com/en/wp-content/uploads/2024/10/Zamzam-of-Spiritual-Knowledge.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "route": "media",
+      "label": "Media library",
+      "description": "Reviewed recordings and transcripts published from AFFiNE.",
+      "layout": "media",
+      "collection": "Media · Transcript review queue",
+      "pages": []
+    }
+  ],
+  "homepage": {
+    "featured": [
+      {
+        "id": "tkSQ1UYBo0",
+        "title": "What is the Tariqa?",
+        "href": "/articles/what-is-the-tariqa",
+        "description": "A foundational Q&A in which the Shaykh explains what the Tariqa Karkariya is and is not.",
+        "modified": "2026-09-04T03:21:32.276Z",
+        "tags": []
+      }
+    ],
+    "recent": [
+      {
+        "id": "tkSQ1UYBo0",
+        "title": "What is the Tariqa?",
+        "href": "/articles/what-is-the-tariqa",
+        "description": "A foundational Q&A in which the Shaykh explains what the Tariqa Karkariya is and is not.",
+        "modified": "2026-09-04T03:21:32.276Z",
+        "tags": []
+      },
+      {
+        "id": "wnMVQK3wEP",
+        "title": "Wird",
+        "href": "/dictionary/wird",
+        "description": "The daily litany of the Tariqa Karkariya, recited morning and evening.",
+        "modified": "2026-09-04T02:56:47.219Z",
+        "tags": []
+      },
+      {
+        "id": "ayIjuYI49o",
+        "title": "Murid",
+        "href": "/dictionary/murid",
+        "description": "The spiritual aspirant who has taken initiation (bay'a) into the Tariqa.",
+        "modified": "2026-09-04T02:55:37.184Z",
+        "tags": []
+      },
+      {
+        "id": "gFEeUpWCSv",
+        "title": "Origins of the Tariqa Karkariya",
+        "href": "/history/tariqa-origins",
+        "description": "How the Karkariya emerged from the Shadhili-Alawi lineage in contemporary Morocco.",
+        "modified": "2026-09-03T11:55:43.286Z",
+        "tags": []
+      },
+      {
+        "id": "aaZW7HjJB5",
+        "title": "Abu al-Hasan al-Shadhili",
+        "href": "/history/abu-al-hasan-al-shadhili",
+        "description": "Founder of the Shadhiliyya order and the central ancestral figure of the Karkariya lineage.",
+        "modified": "2026-09-03T06:56:55.728Z",
+        "tags": []
+      },
+      {
+        "id": "-UIuYrL-ql",
+        "title": "Style Test",
+        "href": "/articles/style-test",
+        "description": "Test page for rough-notation annotations, sidenotes, and aliases — delete when done.",
+        "modified": "2026-09-03T06:20:04.671Z",
+        "tags": []
+      }
+    ],
+    "keyTerms": [
+      {
+        "id": "Yp47fCLIG4",
+        "title": "Bay'a",
+        "href": "/dictionary/baya",
+        "description": "The act of initiation into the Tariqa — the pledge of allegiance between murid and Shaykh.",
+        "modified": "2026-09-03T06:19:50.811Z",
+        "tags": []
+      },
+      {
+        "id": "buNkiHh-LT",
+        "title": "Faqr",
+        "href": "/dictionary/faqr",
+        "description": "Spiritual poverty — the station of total dependence on God and freedom from all but Him.",
+        "modified": "2026-09-03T06:19:50.433Z",
+        "tags": []
+      },
+      {
+        "id": "nAmalPqwoc",
+        "title": "Hadra",
+        "href": "/dictionary/hadra",
+        "description": "The collective spiritual gathering of the Tariqa, combining dhikr, poetry, and presence.",
+        "modified": "2026-09-03T06:19:49.749Z",
+        "tags": []
+      },
+      {
+        "id": "QDJAdoG2br",
+        "title": "Ism al-Mufrad",
+        "href": "/dictionary/ism-al-mufrad",
+        "description": "The Singular Name — the dhikr of the divine name \"Allah\" as the heart's sole occupation.",
+        "modified": "2026-09-03T06:19:51.079Z",
+        "tags": []
+      },
+      {
+        "id": "qsmSosbupd",
+        "title": "Khalwa",
+        "href": "/dictionary/khalwa",
+        "description": "Spiritual retreat; a period of seclusion undertaken for intensive worship and purification.",
+        "modified": "2026-09-03T06:19:49.600Z",
+        "tags": []
+      },
+      {
+        "id": "Kyq7gmRudY",
+        "title": "Muraqqa'",
+        "href": "/dictionary/muraqqa",
+        "description": "Spiritual watchfulness and contemplative meditation; the practice of inner vigilance.",
+        "modified": "2026-09-03T06:19:51.324Z",
+        "tags": []
+      },
+      {
+        "id": "ayIjuYI49o",
+        "title": "Murid",
+        "href": "/dictionary/murid",
+        "description": "The spiritual aspirant who has taken initiation (bay'a) into the Tariqa.",
+        "modified": "2026-09-04T02:55:37.184Z",
+        "tags": []
+      },
+      {
+        "id": "gMXE98Etwc",
+        "title": "Silsila",
+        "href": "/dictionary/silsila",
+        "description": "The initiatic chain of transmission connecting the present Shaykh back to the Prophet ﷺ through an unbroken line of masters.",
+        "modified": "2026-09-03T06:19:50.047Z",
+        "tags": []
+      },
+      {
+        "id": "StAFXyveUp",
+        "title": "Sirr",
+        "href": "/dictionary/sirr",
+        "description": "The innermost secret of the heart; the deepest faculty of the human being, where divine disclosure occurs.",
+        "modified": "2026-09-03T06:19:50.949Z",
+        "tags": []
+      },
+      {
+        "id": "zHxwig4bxA",
+        "title": "Siyaha",
+        "href": "/dictionary/siyaha",
+        "description": "Spiritual wandering or journey; the practice of leaving one's familiar world for the sake of God.",
+        "modified": "2026-09-03T06:19:49.252Z",
+        "tags": []
+      }
+    ]
+  }
+}

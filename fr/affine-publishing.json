@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-05T03:01:02.965Z",
+  "source": "affine-mcp",
+  "locale": "fr",
+  "portals": [],
+  "homepage": {
+    "featured": [
+      {
+        "id": "C2vqWqNVX3",
+        "title": "Qu'est-ce que la Tariqa ?",
+        "href": "/articles/quest-ce-que-la-tariqa",
+        "description": "Une introduction à la voie Karkariya — son but, sa méthode, sa chaîne.",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ],
+    "recent": [
+      {
+        "id": "P1gmqclxaG",
+        "title": "Articles & Enseignements",
+        "href": "/articles",
+        "description": "Questions-réponses, durūs et écrits sur la voie",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "C2vqWqNVX3",
+        "title": "Qu'est-ce que la Tariqa ?",
+        "href": "/articles/quest-ce-que-la-tariqa",
+        "description": "Une introduction à la voie Karkariya — son but, sa méthode, sa chaîne.",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "XKXlgUXKax",
+        "title": "Livres",
+        "href": "/books",
+        "description": "Œuvres du Shaykh Mohamed Faouzi al-Karkari — en cours de traduction",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "TcwNzbfuAC",
+        "title": "Dhikr",
+        "href": "/dictionary/dhikr",
+        "description": "L'invocation — le souvenir de Dieu par la langue et par le cœur.",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "0VnyyRYmFE",
+        "title": "Hadra",
+        "href": "/dictionary/hadra",
+        "description": "L'assemblée d'invocation collective — la « présence ».",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "WqMVTP1j51",
+        "title": "Dictionnaire",
+        "href": "/dictionary",
+        "description": "Termes et concepts fondamentaux de la Tariqa Karkariya",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ],
+    "keyTerms": [
+      {
+        "id": "TcwNzbfuAC",
+        "title": "Dhikr",
+        "href": "/dictionary/dhikr",
+        "description": "L'invocation — le souvenir de Dieu par la langue et par le cœur.",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "0VnyyRYmFE",
+        "title": "Hadra",
+        "href": "/dictionary/hadra",
+        "description": "L'assemblée d'invocation collective — la « présence ».",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "8wx97skzZm",
+        "title": "Wird",
+        "href": "/dictionary/wird",
+        "description": "La litanie quotidienne de la Tariqa Karkariya, récitée matin et soir.",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ]
+  }
+}

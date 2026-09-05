@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "releaseId": "2026-09-05T21-42-36-696Z",
+  "createdAt": "2026-09-05T21:42:42.576Z",
+  "locale": "all",
+  "locales": [
+    "cn",
+    "en",
+    "fr"
+  ],
+  "snapshotGeneratedAt": "2026-09-05T21:34:42.496Z",
+  "workspaceId": "9ce702a7-9abb-417c-a3b8-203b3b553365",
+  "pages": 134,
+  "htmlFiles": 454
+}
