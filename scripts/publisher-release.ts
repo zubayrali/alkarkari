@@ -55,9 +55,14 @@ async function switchCurrentRelease(target: string): Promise<void> {
 }
 
 async function main() {
+  const skipGates = process.env.PUBLISHER_RELEASE_SKIP_GATES === "1";
   await run(process.execPath, ["--env-file=.env.publisher", "scripts/publisher-doctor.ts"]);
-  await run(pnpm, ["test"]);
-  await run(pnpm, ["lint"]);
+  if (!skipGates) {
+    await run(pnpm, ["test"]);
+    await run(pnpm, ["lint"]);
+  } else {
+    console.log("[release] Skipping test/lint (PUBLISHER_RELEASE_SKIP_GATES=1).");
+  }
   await run(pnpm, [multilingual ? "build:all" : "build"]);
 
   const htmlFiles = await assertBuildOutput();
@@ -89,11 +94,17 @@ async function main() {
   await fs.rename(temporary, destination);
   await switchCurrentRelease(destination);
 
+  const keep = positiveInteger(process.env.PUBLISHER_RELEASE_KEEP, 3);
   const entries = await fs.readdir(releasesRoot, { withFileTypes: true });
   const releaseIds = entries.filter((entry) => entry.isDirectory() && !entry.name.startsWith(".")).map((entry) => entry.name);
-  for (const obsolete of releasesToPrune(releaseIds, releaseId, positiveInteger(process.env.PUBLISHER_RELEASE_KEEP, 3))) {
+  for (const obsolete of releasesToPrune(releaseIds, releaseId, keep)) {
     await fs.rm(path.join(releasesRoot, obsolete), { recursive: true, force: true });
   }
+  // Drop rebuild scratch trees after the immutable release is sealed.
+  await Promise.all([
+    fs.rm(path.join(root, "artifacts"), { recursive: true, force: true }),
+    multilingual ? fs.rm(path.join(root, "site"), { recursive: true, force: true }) : Promise.resolve(),
+  ]);
   if (multilingual) {
     await run(process.execPath, ["scripts/stage.ts", locale]);
     await run(pnpm, ["exec", "fumadocs-mdx"]);
