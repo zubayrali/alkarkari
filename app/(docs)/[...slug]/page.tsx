@@ -21,7 +21,6 @@ import { ReaderToggle } from "@/components/reader-toggle";
 import { getBacklinks } from "@/lib/backlinks";
 import { resolveAliasUrl } from "@/lib/alias-index";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ViewTransition } from "react";
 import { getMDXComponents } from "@/components/mdx";
@@ -58,15 +57,10 @@ import {
   OpenIslamMobileToc,
   OpenIslamToc,
 } from "@/components/openislam-toc";
-
-const LocalGraph = dynamic(
-  () => import("@/components/local-graph").then((m) => m.LocalGraph),
-  { ssr: false },
-);
-const CusdisComments = dynamic(
-  () => import("@/components/cusdis-comments").then((m) => m.CusdisComments),
-  { ssr: false },
-);
+import {
+  CusdisComments,
+  LocalGraph,
+} from "@/components/docs-lazy-widgets";
 
 function pageProperty(data: Record<string, unknown>, name: string): string | undefined {
   const direct = data[name];
