@@ -126,6 +126,24 @@ On a small VPS, set `PUBLISHER_RELEASE_SKIP_GATES=1` so auto-releases skip
 `PUBLISHER_RELEASE_KEEP=2` and `AFFINE_EXPORT_CONCURRENCY=6` (default) for
 faster bridge exports without probing every page for a canvas.
 
+`PUBLISHER_RELEASE_DEBOUNCE_SECONDS` (default `180`) waits that long after a
+successful snapshot refresh before running build+deploy, resetting the timer on
+further AFFiNE changes so bursty edits produce one release. Set `0` for
+immediate releases.
+
+After each `generate:affine:all`, the publisher writes
+`.affine-publisher/changed-locales.json` from content fingerprints versus the
+last successful release. `pnpm build:all` then rebuilds only those locales and
+reuses `artifacts/out-<locale>` (backed by `.affine-publisher/build-cache/`)
+for the rest, still stitching a full multi-locale `site/`. Override with
+`PUBLISHER_BUILD_LOCALES=all` or a comma list (`en,fr`).
+
+`generate:affine:all` also skips MCP export for locales whose published pages
+still match the last-seen AFFiNE `updatedAt` baselines in
+`.affine-publisher/source-revisions.json` (and probes only brand-new workspace
+docs for publish/locale). Override with `AFFINE_GENERATE_LOCALES=all` or a
+comma list when you need a forced refresh.
+
 The command requires a healthy publisher, then runs tests, lint, and the static
 production build. Only a successful build becomes an immutable release under
 `.affine-publisher/releases/<release-id>`. The `current` symlink switches

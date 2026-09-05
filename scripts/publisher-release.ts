@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { markFingerprintsReleased } from "../lib/affine/incremental-build.ts";
 import { releasesToPrune } from "../lib/affine/releases.ts";
 import type { AffineSnapshotManifest } from "../lib/affine/types.ts";
 
@@ -23,7 +24,15 @@ function positiveInteger(value: string | undefined, fallback: number): number {
 
 function run(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd: root, env: process.env, stdio: "inherit" });
+    const child = spawn(command, args, {
+      cwd: root,
+      env: {
+        ...process.env,
+        // Avoid pnpm interactive module-dir prompts under systemd.
+        CI: process.env.CI ?? "true",
+      },
+      stdio: "inherit",
+    });
     child.once("error", reject);
     child.once("exit", (code, signal) => code === 0
       ? resolve()
@@ -63,7 +72,8 @@ async function main() {
   } else {
     console.log("[release] Skipping test/lint (PUBLISHER_RELEASE_SKIP_GATES=1).");
   }
-  await run(pnpm, [multilingual ? "build:all" : "build"]);
+  // Prefer node over `pnpm build:all` so systemd releases skip pnpm's install gate.
+  await run(process.execPath, [multilingual ? "scripts/build-all.ts" : "scripts/build.ts"]);
 
   const htmlFiles = await assertBuildOutput();
   const manifest = JSON.parse(await fs.readFile(path.join(snapshotRoot, "manifest.json"), "utf8")) as AffineSnapshotManifest;
@@ -100,14 +110,15 @@ async function main() {
   for (const obsolete of releasesToPrune(releaseIds, releaseId, keep)) {
     await fs.rm(path.join(releasesRoot, obsolete), { recursive: true, force: true });
   }
-  // Drop rebuild scratch trees after the immutable release is sealed.
-  await Promise.all([
-    fs.rm(path.join(root, "artifacts"), { recursive: true, force: true }),
-    multilingual ? fs.rm(path.join(root, "site"), { recursive: true, force: true }) : Promise.resolve(),
-  ]);
+  // Keep artifacts/out-* for incremental locale rebuilds. Drop only the stitched
+  // site/ scratch tree (the immutable release already holds a copy).
+  if (multilingual) {
+    await fs.rm(path.join(root, "site"), { recursive: true, force: true });
+  }
+  await markFingerprintsReleased(root);
   if (multilingual) {
     await run(process.execPath, ["scripts/stage.ts", locale]);
-    await run(pnpm, ["exec", "fumadocs-mdx"]);
+    await run(path.join(root, "node_modules", ".bin", "fumadocs-mdx"), []);
   }
   console.log(`[release] ${releaseId} is current (${release.pages} pages across ${release.locales.join(", ")}, ${htmlFiles} HTML files).`);
   await run(process.execPath, ["--env-file=.env.publisher", "scripts/publisher-deploy.ts"]);
