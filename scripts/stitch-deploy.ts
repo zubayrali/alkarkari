@@ -143,3 +143,7 @@ if (!fs.existsSync(path.join(outDir, "robots.txt"))) {
 }
 
 console.log(`Site assembled at ${path.relative(root, outDir)}/`);
+
+// GitHub Pages runs Jekyll by default, which skips paths starting with `_`
+// (including Next's `_next/` assets). An empty `.nojekyll` disables that.
+fs.writeFileSync(path.join(outDir, ".nojekyll"), "");
