@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Karkari Wiki</title>
+    <link>https://example.com</link>
+    <description>Karkari Wiki RSS feed</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 05 Sep 2026 21:39:10 GMT</lastBuildDate>
+    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title><![CDATA[Slides Demo]]></title>
+      <link>https://example.com/slides-demo</link>
+      <guid isPermaLink="true">https://example.com/slides-demo</guid>
+      <description><![CDATA[A demonstration of the slides feature with images, code, lists, and more]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Articles]]></title>
+      <link>https://example.com/articles</link>
+      <guid isPermaLink="true">https://example.com/articles</guid>
+      <description><![CDATA[Published AFFiNE pages in Articles.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[On Faqr: The Secret of the Path]]></title>
+      <link>https://example.com/articles/on-faqr</link>
+      <guid isPermaLink="true">https://example.com/articles/on-faqr</guid>
+      <description><![CDATA[An essay-style teaching from the Shaykh on spiritual poverty as the destination of the Tariqa.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[On the Wird: Why It Cannot Be Skipped]]></title>
+      <link>https://example.com/articles/on-the-wird</link>
+      <guid isPermaLink="true">https://example.com/articles/on-the-wird</guid>
+      <description><![CDATA[The Shaykh's teaching on the centrality and non-negotiability of the daily wird.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Style Test]]></title>
+      <link>https://example.com/articles/style-test</link>
+      <guid isPermaLink="true">https://example.com/articles/style-test</guid>
+      <description><![CDATA[Test page for rough-notation annotations, sidenotes, and aliases — delete when done.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[What is the Tariqa?]]></title>
+      <link>https://example.com/articles/what-is-the-tariqa</link>
+      <guid isPermaLink="true">https://example.com/articles/what-is-the-tariqa</guid>
+      <description><![CDATA[A foundational Q&A in which the Shaykh explains what the Tariqa Karkariya is and is not.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Base Test]]></title>
+      <link>https://example.com/base-test</link>
+      <guid isPermaLink="true">https://example.com/base-test</guid>
+      <description><![CDATA[Published AFFiNE pages in Base Test.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Science of the Letters]]></title>
+      <link>https://example.com/base-test/note-001</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-001</guid>
+      <description><![CDATA[The Science of the Letters]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Stations of the Seekers]]></title>
+      <link>https://example.com/base-test/note-002</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-002</guid>
+      <description><![CDATA[Stations of the Seekers]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Niche of Lights]]></title>
+      <link>https://example.com/base-test/note-003</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-003</guid>
+      <description><![CDATA[The Niche of Lights]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Alchemy of Happiness]]></title>
+      <link>https://example.com/base-test/note-004</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-004</guid>
+      <description><![CDATA[The Alchemy of Happiness]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Bezels of Wisdom]]></title>
+      <link>https://example.com/base-test/note-005</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-005</guid>
+      <description><![CDATA[The Bezels of Wisdom]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Revival of the Religious Sciences]]></title>
+      <link>https://example.com/base-test/note-006</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-006</guid>
+      <description><![CDATA[Revival of the Religious Sciences]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Conference of the Birds]]></title>
+      <link>https://example.com/base-test/note-007</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-007</guid>
+      <description><![CDATA[The Conference of the Birds]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Masnavi]]></title>
+      <link>https://example.com/base-test/note-008</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-008</guid>
+      <description><![CDATA[The Masnavi]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Principles of Sufism]]></title>
+      <link>https://example.com/base-test/note-009</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-009</guid>
+      <description><![CDATA[Principles of Sufism]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Book of Assistance]]></title>
+      <link>https://example.com/base-test/note-010</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-010</guid>
+      <description><![CDATA[The Book of Assistance]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Kashf al-Mahjub]]></title>
+      <link>https://example.com/base-test/note-011</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-011</guid>
+      <description><![CDATA[The Kashf al-Mahjub]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Divan of Hafiz]]></title>
+      <link>https://example.com/base-test/note-012</link>
+      <guid isPermaLink="true">https://example.com/base-test/note-012</guid>
+      <description><![CDATA[The Divan of Hafiz]]></description>
+    </item>
+    <item>
+      <title><![CDATA[At the Service of Destiny]]></title>
+      <link>https://example.com/books/at-the-service-of-destiny</link>
+      <guid isPermaLink="true">https://example.com/books/at-the-service-of-destiny</guid>
+      <description><![CDATA[A biography of Shaykh Mohamed Faouzi al-Karkari — how a young orphan became a blacksmith of hearts, absorbed in the Divine Presence and occupied with the purification of hearts.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Candles on the Path]]></title>
+      <link>https://example.com/books/candles-on-the-path</link>
+      <guid isPermaLink="true">https://example.com/books/candles-on-the-path</guid>
+      <description><![CDATA[Excerpts from the teachings of Shaykh Mohamed Faouzi al-Karkari on spiritual guidance, visions of Light, and the practical wisdom of the Sufi path.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Etiquette of Spiritual Companionship]]></title>
+      <link>https://example.com/books/etiquette-of-spiritual-companionship</link>
+      <guid isPermaLink="true">https://example.com/books/etiquette-of-spiritual-companionship</guid>
+      <description><![CDATA[A study of the conditions for embarking on the spiritual journey with a divinely connected walī, and the gravity of the Shaykh's holy assembly.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Guided By The Divine Light]]></title>
+      <link>https://example.com/books/guided-by-the-divine-light</link>
+      <guid isPermaLink="true">https://example.com/books/guided-by-the-divine-light</guid>
+      <description><![CDATA[Notes from the Shaykh's lectures responding to disciples' questions about their visions of Light and spiritual experiences, across thirty chapters.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[In the Footsteps of Moses]]></title>
+      <link>https://example.com/books/in-the-footsteps-of-moses</link>
+      <guid isPermaLink="true">https://example.com/books/in-the-footsteps-of-moses</guid>
+      <description><![CDATA[A contemporary Sufi commentary on the story of God's Confidant (kalīm Allāh) in the Qurʾān — Moses' birth, training under Shuʿayb, Mount Ṭūr, the Red Sea, and al-Khiḍr.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Books]]></title>
+      <link>https://example.com/books</link>
+      <guid isPermaLink="true">https://example.com/books</guid>
+      <description><![CDATA[Published AFFiNE pages in Books.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Introduction to Islamic Metaphysics]]></title>
+      <link>https://example.com/books/introduction-to-islamic-metaphysics</link>
+      <guid isPermaLink="true">https://example.com/books/introduction-to-islamic-metaphysics</guid>
+      <description><![CDATA[A Sufi treatise mapping the mystical journey to God as an initiatic progression through seven degrees of realization of the divine Name Allāh.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Sufism Revived]]></title>
+      <link>https://example.com/books/sufism-revived</link>
+      <guid isPermaLink="true">https://example.com/books/sufism-revived</guid>
+      <description><![CDATA[A contemporary treatise on divine Light, prophecy, and sainthood — Sufi commentary on the degrees of prophethood (nubūwa), messengerhood (risāla), and sainthood (wilāya).]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Foundations of the Karkariya Order]]></title>
+      <link>https://example.com/books/the-foundations-of-the-karkariya-order</link>
+      <guid isPermaLink="true">https://example.com/books/the-foundations-of-the-karkariya-order</guid>
+      <description><![CDATA[The seven foundational principles of the spiritual path — the Pact, the Sacred Dance, the Patched Cloak, the Singular Name, Wandering, the Spiritual Retreat, and the Innermost Secret.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[The Sufi Path of Light]]></title>
+      <link>https://example.com/books/the-sufi-path-of-light</link>
+      <guid isPermaLink="true">https://example.com/books/the-sufi-path-of-light</guid>
+      <description><![CDATA[A major contemporary treatise on divine Light in the Qurʾān, the Hadith, and the Sufi tradition, with commentary on the Light Verse and the aphorisms of Ibn ʿAṭāʾ Illāh.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Wisdoms of the Heart]]></title>
+      <link>https://example.com/books/wisdoms-of-the-heart</link>
+      <guid isPermaLink="true">https://example.com/books/wisdoms-of-the-heart</guid>
+      <description><![CDATA[A collection of mudhākara (spiritual discourses) on self-knowledge, the nafs, and the necessity of a living Shaykh for the seeker.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Zamzam of Spiritual Knowledge]]></title>
+      <link>https://example.com/books/zamzam-of-spiritual-knowledge</link>
+      <guid isPermaLink="true">https://example.com/books/zamzam-of-spiritual-knowledge</guid>
+      <description><![CDATA[A guide to how the Shaykh navigates the disciple through the body's vessels to the heart, where the divine secret — the disciple's Zamzam — is experienced.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Getting Started]]></title>
+      <link>https://example.com/canvas/getting-started</link>
+      <guid isPermaLink="true">https://example.com/canvas/getting-started</guid>
+      <description><![CDATA[Getting Started]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Canvas]]></title>
+      <link>https://example.com/canvas</link>
+      <guid isPermaLink="true">https://example.com/canvas</guid>
+      <description><![CDATA[Published AFFiNE pages in Canvas.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Bay'a]]></title>
+      <link>https://example.com/dictionary/baya</link>
+      <guid isPermaLink="true">https://example.com/dictionary/baya</guid>
+      <description><![CDATA[The act of initiation into the Tariqa — the pledge of allegiance between murid and Shaykh.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Faqr]]></title>
+      <link>https://example.com/dictionary/faqr</link>
+      <guid isPermaLink="true">https://example.com/dictionary/faqr</guid>
+      <description><![CDATA[Spiritual poverty — the station of total dependence on God and freedom from all but Him.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Hadra]]></title>
+      <link>https://example.com/dictionary/hadra</link>
+      <guid isPermaLink="true">https://example.com/dictionary/hadra</guid>
+      <description><![CDATA[The collective spiritual gathering of the Tariqa, combining dhikr, poetry, and presence.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Dictionary]]></title>
+      <link>https://example.com/dictionary</link>
+      <guid isPermaLink="true">https://example.com/dictionary</guid>
+      <description><![CDATA[Published AFFiNE pages in Dictionary.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Ism al-Mufrad]]></title>
+      <link>https://example.com/dictionary/ism-al-mufrad</link>
+      <guid isPermaLink="true">https://example.com/dictionary/ism-al-mufrad</guid>
+      <description><![CDATA[The Singular Name — the dhikr of the divine name "Allah" as the heart's sole occupation.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Khalwa]]></title>
+      <link>https://example.com/dictionary/khalwa</link>
+      <guid isPermaLink="true">https://example.com/dictionary/khalwa</guid>
+      <description><![CDATA[Spiritual retreat; a period of seclusion undertaken for intensive worship and purification.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Muraqqa']]></title>
+      <link>https://example.com/dictionary/muraqqa</link>
+      <guid isPermaLink="true">https://example.com/dictionary/muraqqa</guid>
+      <description><![CDATA[Spiritual watchfulness and contemplative meditation; the practice of inner vigilance.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Murid]]></title>
+      <link>https://example.com/dictionary/murid</link>
+      <guid isPermaLink="true">https://example.com/dictionary/murid</guid>
+      <description><![CDATA[The spiritual aspirant who has taken initiation (bay'a) into the Tariqa.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Silsila]]></title>
+      <link>https://example.com/dictionary/silsila</link>
+      <guid isPermaLink="true">https://example.com/dictionary/silsila</guid>
+      <description><![CDATA[The initiatic chain of transmission connecting the present Shaykh back to the Prophet ﷺ through an unbroken line of masters.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Sirr]]></title>
+      <link>https://example.com/dictionary/sirr</link>
+      <guid isPermaLink="true">https://example.com/dictionary/sirr</guid>
+      <description><![CDATA[The innermost secret of the heart; the deepest faculty of the human being, where divine disclosure occurs.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Siyaha]]></title>
+      <link>https://example.com/dictionary/siyaha</link>
+      <guid isPermaLink="true">https://example.com/dictionary/siyaha</guid>
+      <description><![CDATA[Spiritual wandering or journey; the practice of leaving one's familiar world for the sake of God.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Wird]]></title>
+      <link>https://example.com/dictionary/wird</link>
+      <guid isPermaLink="true">https://example.com/dictionary/wird</guid>
+      <description><![CDATA[The daily litany of the Tariqa Karkariya, recited morning and evening.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Zikr]]></title>
+      <link>https://example.com/dictionary/zikr</link>
+      <guid isPermaLink="true">https://example.com/dictionary/zikr</guid>
+      <description><![CDATA[The remembrance of God; the central practice of all Sufi orders, taking many forms in the Karkariya.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Second Pillar: Hadra]]></title>
+      <link>https://example.com/foundations/hadra</link>
+      <guid isPermaLink="true">https://example.com/foundations/hadra</guid>
+      <description><![CDATA[The collective spiritual gathering as a foundational pillar of the Tariqa Karkariya.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Foundations]]></title>
+      <link>https://example.com/foundations</link>
+      <guid isPermaLink="true">https://example.com/foundations</guid>
+      <description><![CDATA[Published AFFiNE pages in Foundations.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Fourth Pillar: Ism al-Mufrad]]></title>
+      <link>https://example.com/foundations/ism-al-mufrad</link>
+      <guid isPermaLink="true">https://example.com/foundations/ism-al-mufrad</guid>
+      <description><![CDATA[The Singular Name as a foundational pillar of the Tariqa Karkariya.]]></description>
+    </item>
+    <item>
+      <title><![CDATA[Sixth Pillar: Khalwa]]></title>
+      <link>https://example.com/foundations/khalwa</link>
+      <guid isPermaLink="true">https://example.com/foundations/khalwa</guid>
+      <description><![CDATA[Spiritual retreat as a foundational pillar of the Tariqa Karkariya.]]></description>
+    </item>
+  </channel>
+</rss>

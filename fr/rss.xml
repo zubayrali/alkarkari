@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Karkari Wiki</title>
+    <link>https://example.com</link>
+    <description>Karkari Wiki RSS feed</description>
+    <language>fr</language>
+    <lastBuildDate>Sat, 05 Sep 2026 03:07:13 GMT</lastBuildDate>
+    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title><![CDATA[Livres]]></title>
+      <link>https://example.com/books</link>
+      <guid isPermaLink="true">https://example.com/books</guid>
+      <description><![CDATA[Œuvres du Shaykh Mohamed Faouzi al-Karkari — en cours de traduction]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Fondements]]></title>
+      <link>https://example.com/foundations</link>
+      <guid isPermaLink="true">https://example.com/foundations</guid>
+      <description><![CDATA[Les piliers de la voie — en cours de traduction]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Histoire]]></title>
+      <link>https://example.com/history</link>
+      <guid isPermaLink="true">https://example.com/history</guid>
+      <description><![CDATA[Les origines et la chaîne initiatique — en cours de traduction]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Podcasts & Transcriptions]]></title>
+      <link>https://example.com/podcasts</link>
+      <guid isPermaLink="true">https://example.com/podcasts</guid>
+      <description><![CDATA[Épisodes et transcriptions — en cours de traduction]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Articles & Enseignements]]></title>
+      <link>https://example.com/articles</link>
+      <guid isPermaLink="true">https://example.com/articles</guid>
+      <description><![CDATA[Questions-réponses, durūs et écrits sur la voie]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Qu'est-ce que la Tariqa ?]]></title>
+      <link>https://example.com/articles/quest-ce-que-la-tariqa</link>
+      <guid isPermaLink="true">https://example.com/articles/quest-ce-que-la-tariqa</guid>
+      <description><![CDATA[Une introduction à la voie Karkariya — son but, sa méthode, sa chaîne.]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Dhikr]]></title>
+      <link>https://example.com/dictionary/dhikr</link>
+      <guid isPermaLink="true">https://example.com/dictionary/dhikr</guid>
+      <description><![CDATA[L'invocation — le souvenir de Dieu par la langue et par le cœur.]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Hadra]]></title>
+      <link>https://example.com/dictionary/hadra</link>
+      <guid isPermaLink="true">https://example.com/dictionary/hadra</guid>
+      <description><![CDATA[L'assemblée d'invocation collective — la « présence ».]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Dictionnaire]]></title>
+      <link>https://example.com/dictionary</link>
+      <guid isPermaLink="true">https://example.com/dictionary</guid>
+      <description><![CDATA[Termes et concepts fondamentaux de la Tariqa Karkariya]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Wird]]></title>
+      <link>https://example.com/dictionary/wird</link>
+      <guid isPermaLink="true">https://example.com/dictionary/wird</guid>
+      <description><![CDATA[La litanie quotidienne de la Tariqa Karkariya, récitée matin et soir.]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

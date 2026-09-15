@@ -1,0 +1,24 @@
+# Fifth Pillar: Siyaha (/foundations/siyaha)
+
+
+
+The **Siyaha** is the fifth of the seven pillars. See [Siyaha](/dictionary/siyaha) in the Dictionary.
+
+## Siyaha and detachment [#siyaha-and-detachment]
+
+The spiritual purpose of siyaha is not tourism. It is the practical training of detachment — learning that one can uproot and move, that home is not in a place but in God. This is why the Sufi masters valued travel even when difficult.
+
+The Shaykh has said: "The murid who cannot leave his city for the sake of God is still attached. Siyaha cuts that rope."
+
+## Visits to Morocco [#visits-to-morocco]
+
+For murids outside Morocco, the journey to Fes and the Shaykh's zawiya is a major form of siyaha. These journeys — especially for the annual gathering (*mawsim*) — are spiritually charged events that murids describe as transformative.
+
+## Inner siyaha [#inner-siyaha]
+
+The outward dimension has an inward correlate: the willingness of the heart to be moved, displaced, and emptied. A murid stuck in routine, unable to be surprised by God's action, needs the practice of siyaha in its inner dimension.
+
+## See also [#see-also]
+
+* [Siyaha](/dictionary/siyaha) (Dictionary)
+* [Sixth Pillar: Khalwa](/foundations/khalwa)

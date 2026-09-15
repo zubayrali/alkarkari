@@ -1,0 +1,30 @@
+# Sirr (/dictionary/sirr)
+
+
+
+**Sirr** (Arabic: سِرّ, "secret" or "innermost") refers to the most inward faculty of the human being — deeper than the *qalb* (heart) and *ruh* (spirit). It is in the sirr that divine disclosure (*kashf*) and intimate conversation (*munajat*) with the divine occur. It is one of the seven foundational pillars of the Tariqa Karkariya.
+
+## The subtle centers (lata'if) [#the-subtle-centers-lataif]
+
+Classical Sufi anthropology describes the human being as having several subtle spiritual centers (*lata'if*, sing. *latifa*):
+
+| Center | Arabic | Locus           |
+| ------ | ------ | --------------- |
+| Nafs   | نفس    | Lower self      |
+| Qalb   | قلب    | Heart           |
+| Ruh    | روح    | Spirit          |
+| Sirr   | سرّ    | Innermost       |
+| Khafi  | خفي    | The hidden      |
+| Akhfa  | أخفى   | The most hidden |
+
+The Karkariya's method involves the progressive illumination of these centers through dhikr and the guidance of the Shaykh.
+
+## Sirr as a pillar [#sirr-as-a-pillar]
+
+As a foundational practice, "Sirr" in the context of the Karkariya's seven pillars refers to the cultivation and guarding of this innermost faculty — keeping it sealed from the world and open only toward God. The murid is taught to recognize and protect the sirr from dispersion through excessive speech, sensory indulgence, and attachment.
+
+## See also [#see-also]
+
+* [Muraqqa'](/dictionary/muraqqa)
+* [Khalwa](/dictionary/khalwa)
+* [Ism al-Mufrad](/dictionary/ism-al-mufrad)

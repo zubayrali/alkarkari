@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-05T03:01:24.635Z",
+  "source": "affine-mcp",
+  "locale": "cn",
+  "portals": [],
+  "homepage": {
+    "featured": [
+      {
+        "id": "IHHoq2Xu22",
+        "title": "什么是道乘？",
+        "href": "/articles/shenme-shi-daocheng",
+        "description": "卡尔卡里亚道乘简介——其宗旨、方法与传承。",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ],
+    "recent": [
+      {
+        "id": "IHHoq2Xu22",
+        "title": "什么是道乘？",
+        "href": "/articles/shenme-shi-daocheng",
+        "description": "卡尔卡里亚道乘简介——其宗旨、方法与传承。",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "LWPgKgEuAP",
+        "title": "文章与教导",
+        "href": "/articles",
+        "description": "问答、课程与道路上的文字",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "sFDpqbXHF6",
+        "title": "书籍",
+        "href": "/books",
+        "description": "谢赫穆罕默德·法乌齐·卡尔卡里的著作——翻译中",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "cP74iet27G",
+        "title": "Dhikr（齐克尔）",
+        "href": "/dictionary/dhikr",
+        "description": "记念——以舌与心记念真主。",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "yfgU4Ip4jV",
+        "title": "Hadra（哈德拉）",
+        "href": "/dictionary/hadra",
+        "description": "集体记念的聚会——「临在」。",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "UkY4QB7jXU",
+        "title": "词典",
+        "href": "/dictionary",
+        "description": "卡尔卡里亚道团的核心术语与概念",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ],
+    "keyTerms": [
+      {
+        "id": "cP74iet27G",
+        "title": "Dhikr（齐克尔）",
+        "href": "/dictionary/dhikr",
+        "description": "记念——以舌与心记念真主。",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "yfgU4Ip4jV",
+        "title": "Hadra（哈德拉）",
+        "href": "/dictionary/hadra",
+        "description": "集体记念的聚会——「临在」。",
+        "modified": "2026-07-02",
+        "tags": []
+      },
+      {
+        "id": "Oj5sJC9J0k",
+        "title": "Wird（维尔德）",
+        "href": "/dictionary/wird",
+        "description": "卡尔卡里亚道团的每日功课，于晨昏两时念诵。",
+        "modified": "2026-07-02",
+        "tags": []
+      }
+    ]
+  }
+}

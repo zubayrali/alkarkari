@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Karkari Wiki</title>
+    <link>https://example.com</link>
+    <description>Karkari Wiki RSS feed</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 05 Sep 2026 03:08:26 GMT</lastBuildDate>
+    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title><![CDATA[书籍]]></title>
+      <link>https://example.com/books</link>
+      <guid isPermaLink="true">https://example.com/books</guid>
+      <description><![CDATA[谢赫穆罕默德·法乌齐·卡尔卡里的著作——翻译中]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[根基]]></title>
+      <link>https://example.com/foundations</link>
+      <guid isPermaLink="true">https://example.com/foundations</guid>
+      <description><![CDATA[道路的支柱——翻译中]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[历史]]></title>
+      <link>https://example.com/history</link>
+      <guid isPermaLink="true">https://example.com/history</guid>
+      <description><![CDATA[起源与传承链——翻译中]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[播客与文字稿]]></title>
+      <link>https://example.com/podcasts</link>
+      <guid isPermaLink="true">https://example.com/podcasts</guid>
+      <description><![CDATA[节目与文字稿——翻译中]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[文章与教导]]></title>
+      <link>https://example.com/articles</link>
+      <guid isPermaLink="true">https://example.com/articles</guid>
+      <description><![CDATA[问答、课程与道路上的文字]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[什么是道乘？]]></title>
+      <link>https://example.com/articles/shenme-shi-daocheng</link>
+      <guid isPermaLink="true">https://example.com/articles/shenme-shi-daocheng</guid>
+      <description><![CDATA[卡尔卡里亚道乘简介——其宗旨、方法与传承。]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Dhikr（齐克尔）]]></title>
+      <link>https://example.com/dictionary/dhikr</link>
+      <guid isPermaLink="true">https://example.com/dictionary/dhikr</guid>
+      <description><![CDATA[记念——以舌与心记念真主。]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Hadra（哈德拉）]]></title>
+      <link>https://example.com/dictionary/hadra</link>
+      <guid isPermaLink="true">https://example.com/dictionary/hadra</guid>
+      <description><![CDATA[集体记念的聚会——「临在」。]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[词典]]></title>
+      <link>https://example.com/dictionary</link>
+      <guid isPermaLink="true">https://example.com/dictionary</guid>
+      <description><![CDATA[卡尔卡里亚道团的核心术语与概念]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title><![CDATA[Wird（维尔德）]]></title>
+      <link>https://example.com/dictionary/wird</link>
+      <guid isPermaLink="true">https://example.com/dictionary/wird</guid>
+      <description><![CDATA[卡尔卡里亚道团的每日功课，于晨昏两时念诵。]]></description>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

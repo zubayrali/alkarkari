@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-05T03:01:24.635Z",
+  "source": "affine-mcp",
+  "locale": "cn",
+  "sourceDocId": "KG9dhrdcap",
+  "heroTagline": "卡尔卡里亚道团的活知识库",
+  "home": {
+    "instituteLabel": "卡尔卡里研究院",
+    "country": "摩洛哥",
+    "translit": "Ṭarīqa Karkariyya",
+    "enter": "进入",
+    "bismillahGloss": "奉至仁至慈的真主之名",
+    "intentionLead": "卡尔卡里亚道团的活图书馆——其术语、教导与记念。",
+    "intentionSub": "为求道者与同行者而存，与记念者为伴。",
+    "galleryLabel": "来自道堂",
+    "startHereLabel": "从这里开始",
+    "featuredFallbackTitle": "词典",
+    "featuredFallbackDescription": "从卡尔卡里亚道团的核心术语与概念开始。",
+    "waysInLabel": "入门之径",
+    "waysInHint": "——每位求道者都知道自己的饮水之处",
+    "recentLabel": "最近更新",
+    "keyTermsLabel": "关键术语",
+    "moreLabel": "+ 更多 →",
+    "footerLine": "Al-Zāwiya al-Karkariyya · 摩洛哥",
+    "lightVerseGloss": "真主是诸天与大地的光",
+    "lightVerseCitation": "《古兰经》24:35——光明章经文",
+    "prismCaption": "一道光——十二种颜色",
+    "journeyLine": "从重重黑暗走向光明",
+    "journeyGloss": "min aẓ-ẓulumāt ilā n-nūr",
+    "guideLabel": "在世的导师",
+    "guideName": "谢赫穆罕默德·法乌齐·卡尔卡里",
+    "guideLine": "光来自真主；导师是使光临近之门。",
+    "wallLabel": "Al-Jidār",
+    "wallAlt": "道堂的彩色拼块墙",
+    "cloakAlt": "百衲斗篷",
+    "hadraAlt": "ḥaḍra 聚会",
+    "zawiyaAlt": "摩洛哥的道堂",
+    "shaykhAlt": "谢赫穆罕默德·法乌齐·卡尔卡里坐于道堂",
+    "lightUponLight": "光上之光",
+    "cloakLine1": "众多颜色，一件斗篷。",
+    "cloakLine2": "众多碎片，一条道路。",
+    "pathways": {
+      "dictionary": {
+        "title": "词典",
+        "tag": "入门",
+        "description": "道团的核心术语与概念——先读于此，常来回顾。"
+      },
+      "foundations": {
+        "title": "根基",
+        "tag": "功修",
+        "description": "道路的支柱：Wird、Ḥaḍra、Muraqqaʿa、Ism al-Mufrad 等。"
+      },
+      "articles": {
+        "title": "文章与教导",
+        "tag": "研习",
+        "description": "问答选编、课程讲义与长篇论述。"
+      },
+      "books": {
+        "title": "书籍",
+        "tag": "研习",
+        "description": "谢赫穆罕默德·法乌齐·卡尔卡里的著作。"
+      },
+      "podcasts": {
+        "title": "播客与文字稿",
+        "tag": "聆听",
+        "description": "附完整可检索文字稿的节目。"
+      },
+      "history": {
+        "title": "历史",
+        "tag": "传承",
+        "description": "起源与传承链——自先知 ﷺ 至卡尔卡里。"
+      }
+    },
+    "footerLinks": {
+      "dictionary": "词典",
+      "foundations": "根基",
+      "graph": "图谱",
+      "tags": "标签"
+    },
+    "story": {
+      "wayKicker": "道途",
+      "wayTitle": "何谓卡尔卡里亚？",
+      "wayReveal": "苏菲之学是我们宗教的精神，也是其最高的层次。道路是清晰的——由至爱者 ﷺ 铺平，他将其归纳为一句话。",
+      "wayHadith": "敬拜真主，犹如你看见祂。",
+      "wayHadithSource": "真主的使者 ﷺ",
+      "wayMaxim": "谦卑自己，尊重你的邻人。",
+      "wayMaximGloss": "一切教诲，尽在一言。",
+      "wayLink": "从头开始",
+      "shaykhKicker": "导师",
+      "shaykhTitle": "谢赫即是道",
+      "shaykhPoem1": "你所见的，是我还是我的影子？",
+      "shaykhPoem2": "唯有成为我者，方能领会。",
+      "shaykhLine": "谢赫穆罕默德·法乌齐·卡尔卡里——出身高贵的圣裔，伊德里斯与哈桑世系。十九岁时，他舍弃一切，徒步而行。",
+      "wanderTitle": "十年云游",
+      "wanderKicker1": "启程",
+      "wanderKicker2": "托靠",
+      "wanderKicker3": "应答",
+      "wanderQuote1": "我以大地为床，以繁星为被。",
+      "wanderQuote2": "我翻越群山，却将行囊托付于真主。",
+      "wanderQuote3": "每当我祈求真主，祂都应答我的祈求。",
+      "khalwaLead": "后来，在叔父道堂的一间暗室中——即静修室——他的忏悔得到了回应。",
+      "khalwaScript": "我已宽恕你。",
+      "khalwaGloss": "他看见这句话以光之字迹写在眼前。",
+      "shaykhLink": "谢赫的生平",
+      "silsilaKicker": "传承链",
+      "silsilaTitle": "绵延不断的线",
+      "silsilaLead": "手递手，心传心——此道的许可经由历代导师的链条传承，上溯至真主的使者 ﷺ。",
+      "silsilaMore": "还有二十一环",
+      "silsilaSeal": "……直至真主的使者 ﷺ",
+      "silsilaLink": "查看完整的传承链",
+      "nurKicker": "光",
+      "nurLead": "此道即是对那道光的寻求——直到亲眼看见它，不是比喻，而是真见。",
+      "nurHadith": "贾比尔啊，真主最先创造的，是你先知的光，源自祂的光。",
+      "nurHadithSource": "贾比尔圣训——白哈基辑录",
+      "nurLink": "从这里开始：光之所见",
+      "wayMercy": "在我们的道路上，我们从不轻视任何见证真主独一的人——真理者在我们心中安放了对祂一切造化的慈悯，哪怕是最小的蚂蚁。",
+      "wayHidden": "这门知识源自于祂，我们并不隐藏它。我们只将它避开那些戏弄祂的人；对每一位真诚的求道者，门都是敞开的。",
+      "shaykhReturn": "归来时，他焚烧了自己所有的一切，借了兄弟的一件衣裳，赤足含泪，走向泰姆塞门的谢赫。",
+      "shaykhDatesLabel": "一生，四个转折",
+      "shaykhDates": [
+        {
+          "year": "1973",
+          "label": "生于里夫地区，一个记念真主的家庭"
+        },
+        {
+          "year": "1992",
+          "label": "十九岁时，舍弃一切——十年云游"
+        },
+        {
+          "year": "2004",
+          "label": "静修——至大的开启，隐秘的尊名"
+        },
+        {
+          "year": "2007",
+          "label": "导师归真后，印记降临——道统的执掌"
+        }
+      ],
+      "silsilaGather": "收起传承链",
+      "nurDoor": "经由使者 ﷺ 之门走向真主——凡拒绝者，必被遮蔽，被排除于道途之外。",
+      "nurWhat": "穆罕默德之光是先知 ﷺ 可见形象背后的光明实在——真主最先造化之物，取自祂自身的光。",
+      "nurSeen": "它以肉眼所见，而非比喻——唯有在承载它的人、即光的子民的陪伴中，方能抵达。",
+      "mishkatKicker": "光的明证",
+      "mishkatLead": "明证并不稀少——它充满《古兰经》、圣训与知者的言辞。请翻阅。",
+      "mishkatQuran": "在《古兰经》中",
+      "mishkatHadith": "在圣训中",
+      "mishkatKhabar": "在传述中",
+      "mishkatHint": "轻触翻页",
+      "nurCouplet1": "月身之中，一缕光之魂，",
+      "nurCouplet2": "一袭披风，绣满璀璨繁星。",
+      "nurCoupletSource": "哈桑·本·萨比特——咏使者 ﷺ",
+      "foundationsKicker": "功修",
+      "foundationsTitle": "七大基石",
+      "foundationsLead": "蒙真主的恩典，我们的道路清晰而简明。",
+      "foundationsReadOn": "继续阅读",
+      "foundations": {
+        "subha": {
+          "arabic": "السُّبْحَة",
+          "title": "念珠",
+          "line": "有数的记念——朝夕相伴的功课。"
+        },
+        "siyaha": {
+          "arabic": "السِّيَاحَة",
+          "title": "云游",
+          "line": "为敬拜而行走大地——唯独依靠真主。"
+        },
+        "hadra": {
+          "arabic": "الحَضْرَة",
+          "title": "圣舞",
+          "line": "记念的聚会——临在、亲近、动中之名。"
+        },
+        "muraqqaa": {
+          "arabic": "المُرَقَّعَة",
+          "title": "百衲衣",
+          "line": "千百碎片，一件衣裳——将谦卑穿在身上。"
+        },
+        "ism": {
+          "arabic": "الاِسْم",
+          "title": "尊名",
+          "line": "记念威严之名——安拉——众名之本。"
+        },
+        "khalwa": {
+          "arabic": "الخَلْوَة",
+          "title": "静修",
+          "line": "于黑暗中独处，寻求光明——求道者的山洞。"
+        },
+        "sirr": {
+          "arabic": "السِّرّ",
+          "title": "奥秘",
+          "line": "隐藏于仆人与其主之间——承载于心，不诉于口。"
+        }
+      },
+      "voicesKicker": "见证者",
+      "voicesTitle": "道途之声",
+      "voicesLead": "来自四方的求道者，讲述他们的所见。",
+      "voicesLink": "全部见证",
+      "beginKicker": "启程",
+      "beginTitle": "维尔德功课向所有人开放",
+      "beginLead": "卡尔卡里亚的维尔德功课向所有人开放，没有任何限制——每日早晚诵念。",
+      "beginPrimary": "阅读维尔德",
+      "beginSecondary": "从这里开始",
+      "mishkatFacetsLabel": "光的层面",
+      "mishkatPreviousLabel": "上一条引文",
+      "mishkatNextLabel": "下一条引文",
+      "mishkatCitations": {
+        "quran": [
+          {
+            "text": "God is the Light of the heavens and the earth.",
+            "source": "an-Nūr 35 — the Verse of Light"
+          },
+          {
+            "text": "And he to whom God has not granted light — for him there is no light.",
+            "source": "an-Nūr 40"
+          },
+          {
+            "text": "God brings the believers out from the darknesses into the light.",
+            "source": "al-Baqara 257"
+          },
+          {
+            "text": "There has come to you from God a light and a clear Book.",
+            "source": "al-Māʾida 15"
+          },
+          {
+            "text": "So believe in God and His Messenger, and the Light which We have sent down.",
+            "source": "at-Taghābun 8"
+          }
+        ],
+        "hadith": [
+          {
+            "text": "O God, place light in my heart, and light in my tongue; light in my hearing, and light in my sight… and make me light.",
+            "source": "the Prophet ﷺ — Bukhārī"
+          },
+          {
+            "text": "The first thing God created was the light of your Prophet, from His own light.",
+            "source": "ḥadīth of Jābir — al-Bayhaqī"
+          },
+          {
+            "text": "Fear the perception of the believer, for he sees with the light of God.",
+            "source": "the Prophet ﷺ — Tirmidhī"
+          },
+          {
+            "text": "God created His creation in darkness, then cast His light upon them; whoever it touched was guided.",
+            "source": "the Prophet ﷺ — Tirmidhī"
+          },
+          {
+            "text": "His veil is light; were He to lift it, the glories of His Face would burn all creation His sight reaches.",
+            "source": "the Prophet ﷺ — Muslim"
+          }
+        ],
+        "khabar": [
+          {
+            "text": "Knowledge is a light God places in the heart.",
+            "source": "Imām Mālik"
+          },
+          {
+            "text": "When the attributes of darkness lift, light takes their place — and the one with the eye of the soul sees.",
+            "source": "ʿAbd al-Qādir al-Jīlānī"
+          },
+          {
+            "text": "Sufism is a lightning that burns everything.",
+            "source": "al-Shiblī"
+          },
+          {
+            "text": "The knowers are the lamps of their age; by them the people are guided.",
+            "source": "al-Ḥasan al-Baṣrī"
+          },
+          {
+            "text": "God created the Muhammadan Light so that intellects, hearts and souls would be illumined.",
+            "source": "Shaykh Ṣāliḥ al-Jaʿfarī"
+          }
+        ]
+      }
+    }
+  }
+}
